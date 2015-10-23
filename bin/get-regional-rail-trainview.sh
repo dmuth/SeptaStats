@@ -10,6 +10,20 @@
 #
 set -e
 
+#
+# Sanity check to see if jq is present.
+#
+if test ! $(which jq)
+then
+	echo "! "
+	echo "! $0: Error! You need the 'jq' utility installed!"
+	echo "! "
+	echo "! This can likely be installed with apt-get or yum, or from the webite at: "
+	echo "!		https://stedolan.github.io/jq/"
+	echo "! "
+	exit 1
+fi
+
 
 while true
 do
