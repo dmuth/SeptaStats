@@ -14,9 +14,26 @@ set -e
 while true
 do
 
-	curl http://www3.septa.org/hackathon/TrainView/
+	#
+	# Grab our JSON
+	#
+	OUTPUT=$(curl -s http://www3.septa.org/hackathon/TrainView/)
+	LEN=$(echo $OUTPUT | jq length)
 
-	sleep 60
+	#
+	# Now loop through those arrays, and print each array on a line.
+	# This makes the data easier to digest in Splunk, as we'll have a 
+	# separate event for each train.
+	#
+	END=$(($LEN - 1))
+	for I in $(seq 0 $END)
+	do
+		echo $OUTPUT | jq .[${I}] | tr -d "\n"
+		echo ""
+	done
+
+
+	sleep 50
 
 done
 
