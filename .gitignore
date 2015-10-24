@@ -1,0 +1,7 @@
+
+# Vim droppings
+*.swp
+
+# Don't check in our log
+bin/train-log.txt
+
