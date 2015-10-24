@@ -58,7 +58,12 @@ do
 	#
 	# Store our complete output to the log in case we need it later.
 	#
-	echo $OUTPUT | ts >> $LOG
+	echo $OUTPUT | ts "%Y-%m-%d %H:%M:%S" >> $LOG
+
+	#
+	# Grab the current timestamp
+	#
+	DATE=$(date "+%Y-%m-%d %H:%M:%S" |tr -d "\n")
 
 	#
 	# Now loop through those arrays, and print each array on a line.
@@ -67,11 +72,15 @@ do
 	#
 	END=$(($LEN - 1))
 	for I in $(seq 0 $END)
+
 	do
 		#
 		# Write to stdout so that Splunk picks it up
+		# We're also going insert the timestamp here.  This is so that if
+		# we use the "dump" command to export that data from Splunk in 
+		# the future, we'll have timestamps.
 		#
-		echo $OUTPUT | jq .[${I}] | tr -d "\n"
+		echo $OUTPUT | jq .[${I}] | sed -e s/"{"/"{\"_timestamp\": \"${DATE}\", "/ | tr -d "\n"
 		echo ""
 
 	done
