@@ -60,6 +60,31 @@ function file_open($filename) {
 
 
 /**
+* This adds a timestamp into a row, but we specifically need the timestamp 
+* to be first, so that Splunk will see it when the row is imported.
+*
+* @param array $data The current piece of train data we're working with.
+*
+* @param string $timestamp The timestamp assocaited with this train data.
+*
+* @return string A JSON-encoded string with the timestamp in the beginning.
+*/
+function add_timestamp($data, $timestamp) {
+
+	$row = array();
+	$row["_timestamp"] = $timestamp;
+	foreach ($data as $key => $value) {
+		$row[$key] = $value;
+	}
+
+	$retval = json_encode($row);
+
+	return($retval);
+
+} // End of add_timestamp()
+
+
+/**
 * Process our line--grab the timestamp and split up the JSON
 * into separate rows, each with the timestamp.
 *
@@ -85,9 +110,9 @@ function process_line($line) {
 		if (!isset($data["error"])) {
 
 			foreach ($data as $key => $value) {
-				$value["_timestamp"] = $timestamp;
-				$row = json_encode($value);
+				$row = add_timestamp($value, $timestamp);
 				$retval .= $row . "\n";
+
 			}
 
 		} else {
