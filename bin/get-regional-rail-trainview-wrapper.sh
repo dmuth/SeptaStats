@@ -10,6 +10,11 @@
 #
 set -e
 
+#
+# Change into this script's directory
+#
+pushd $(dirname $0) > /dev/null
+
 
 #
 # Where are we logging our JSON?
