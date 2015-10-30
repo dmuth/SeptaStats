@@ -22,6 +22,16 @@ pushd $(dirname $0) > /dev/null
 HERE=$(dirname $0)
 LOG="${HERE}/train-log.txt"
 
+#
+# I kept getting this error when running the script from Splunk:
+# /opt/splunk/lib/libcrypto.so.1.0.0: version `OPENSSL_1.0.0' not found (required by php)
+#
+# According to:
+#	https://answers.splunk.com/answers/185635/why-splunk-triggered-alert-is-not-working-for-my-s.html
+#
+# ...I need to put this in.  No idea why...
+#
+unset LD_LIBRARY_PATH
 
 while true
 do
