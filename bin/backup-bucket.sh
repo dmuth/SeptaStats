@@ -48,6 +48,7 @@ fi
 #
 cd $SOURCE
 
+
 #
 # Now find all buckets under it
 #
@@ -70,14 +71,27 @@ do
 	#
 	pushd $DIR/.. > /dev/null
 
-	#
-	# Now tar up the bucket
-	#
-	echo "# "
-	echo "# Tarring up directory ${DIR2} to ${TARGET_TGZ}..."
-	echo "# "
+	TARGET_SANITIZED=$(echo $TARGET | sed -e "s/[^A-Za-z0-9]/_/g")
+	TOUCH_FILE="${DIR2}/.backedup-${TARGET_SANITIZED}"
 
-	tar cfz $TARGET_TGZ $DIR2
+	if test -f $TOUCH_FILE
+	then
+		echo "# "
+		echo "# The directory $DIR2 has already been backed up! Skipping..."
+		echo "# "
+
+	else 
+		#
+		# Now tar up the bucket
+		#
+		echo "# "
+		echo "# Tarring up directory ${DIR2} to ${TARGET_TGZ}..."
+		echo "# "
+
+		tar cfz $TARGET_TGZ $DIR2
+		touch $TOUCH_FILE
+
+	fi
 
 	#
 	# Return to the previous directory
