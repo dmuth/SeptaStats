@@ -91,6 +91,10 @@ do
 		tar cfz "$TARGET_TGZ" $DIR2
 		touch $TOUCH_FILE
 
+		echo "# "
+		echo "# Done!"
+		echo "# "
+
 	fi
 
 	#
@@ -99,6 +103,12 @@ do
 	popd >/dev/null
 
 done
+
+
+#
+# Change ownership to Ubuntu so that BitTorrent Sync can replicate it.
+#
+chown -R ubuntu:ubuntu "$TARGET"
 
 
 
