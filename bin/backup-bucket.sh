@@ -63,7 +63,7 @@ do
 	#
 	# Make sure our target directory exists and set our target filename
 	#
-	mkdir -p $TARGET
+	mkdir -p "$TARGET"
 	TARGET_TGZ="${TARGET}/${DIR2}.tgz"
 
 	#
@@ -88,8 +88,12 @@ do
 		echo "# Tarring up directory ${DIR2} to ${TARGET_TGZ}..."
 		echo "# "
 
-		tar cfz $TARGET_TGZ $DIR2
+		tar cfz "$TARGET_TGZ" $DIR2
 		touch $TOUCH_FILE
+
+		echo "# "
+		echo "# Done!"
+		echo "# "
 
 	fi
 
@@ -99,6 +103,12 @@ do
 	popd >/dev/null
 
 done
+
+
+#
+# Change ownership to Ubuntu so that BitTorrent Sync can replicate it.
+#
+chown -R ubuntu:ubuntu "$TARGET"
 
 
 
