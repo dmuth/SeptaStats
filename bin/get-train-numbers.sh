@@ -33,7 +33,7 @@ function get_trains() {
 } # End of get_trains()
 
 
-echo "train, train_line"
+echo "trainno, train_line"
 
 #
 # Loop through weekly, Saturday, and Sunday/holiday schedules.
