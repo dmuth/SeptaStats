@@ -1,0 +1,163 @@
+<dashboard>
+  <label>Current System Status Report (All Trains)</label>
+  <row>
+    <panel>
+      <title>Airport Line</title>
+      <table>
+        <search>
+          <query>index="septa_analytics" train_line="Airport*" | eval direction=if(like(train_line, "Airport%Inbound%"), "Inbound", "Outbound") | chart latest(late) AS "Minutes Late", latest(nextstop) AS "Next Stop", latest(direction) AS Direction by trainno |sort Direction trainno |fields Direction trainno "Minutes Late"</query>
+          <earliest>-15m</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="wrap">true</option>
+        <option name="rowNumbers">false</option>
+        <option name="dataOverlayMode">none</option>
+        <option name="drilldown">cell</option>
+        <option name="count">10</option>
+      </table>
+    </panel>
+    <panel>
+      <title>Chestnut Hill East</title>
+      <table>
+        <search>
+          <query>index="septa_analytics" train_line="Chestnut Hill East*" | eval direction=if(like(train_line, "Chestnut Hill East%Inbound%"), "Inbound", "Outbound") | chart latest(late) AS "Minutes Late", latest(nextstop) AS "Next Stop", latest(direction) AS Direction by trainno |sort Direction trainno |fields Direction trainno "Minutes Late"</query>
+          <earliest>-15m</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="wrap">true</option>
+        <option name="rowNumbers">false</option>
+        <option name="dataOverlayMode">none</option>
+        <option name="drilldown">cell</option>
+        <option name="count">10</option>
+      </table>
+    </panel>
+    <panel>
+      <title>Chestnut Hill West</title>
+      <table>
+        <search>
+          <query>index="septa_analytics" train_line="Chestnut Hill West*" | eval direction=if(like(train_line, "Chestnut Hill West%Inbound%"), "Inbound", "Outbound") | chart latest(late) AS "Minutes Late", latest(nextstop) AS "Next Stop", latest(direction) AS Direction by trainno |sort Direction trainno |fields Direction trainno "Minutes Late"</query>
+          <earliest>-15m</earliest>
+          <latest>now</latest>
+        </search>
+      </table>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Cynwyd Line</title>
+      <table>
+        <search>
+          <query>index="septa_analytics" train_line="Cynwyd*" | eval direction=if(like(train_line, "Cynwyd%Inbound%"), "Inbound", "Outbound") | chart latest(late) AS "Minutes Late", latest(nextstop) AS "Next Stop", latest(direction) AS Direction by trainno |sort Direction trainno |fields Direction trainno "Minutes Late"</query>
+          <earliest>-15m</earliest>
+          <latest>now</latest>
+        </search>
+      </table>
+    </panel>
+    <panel>
+      <title>Fox Chase Line</title>
+      <table>
+        <search>
+          <query>index="septa_analytics" train_line="Fox Chase*" | eval direction=if(like(train_line, "Fox Chase%Inbound%"), "Inbound", "Outbound") | chart latest(late) AS "Minutes Late", latest(nextstop) AS "Next Stop", latest(direction) AS Direction by trainno |sort Direction trainno |fields Direction trainno "Minutes Late"</query>
+          <earliest>-15m</earliest>
+          <latest>now</latest>
+        </search>
+      </table>
+    </panel>
+    <panel>
+      <title>Glenside Line</title>
+      <table>
+        <search>
+          <query>index="septa_analytics" train_line="Glenside*" | eval direction=if(like(train_line, "Glenside%Inbound%"), "Inbound", "Outbound") | chart latest(late) AS "Minutes Late", latest(nextstop) AS "Next Stop", latest(direction) AS Direction by trainno |sort Direction trainno |fields Direction trainno "Minutes Late"</query>
+          <earliest>-15m</earliest>
+          <latest>now</latest>
+        </search>
+      </table>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Lansdale/Doylestown Line</title>
+      <table>
+        <search>
+          <query>index="septa_analytics" train_line="Lansdale/Doylestown*" | eval direction=if(like(train_line, "Lansdale/Doylestown%Inbound%"), "Inbound", "Outbound") | chart latest(late) AS "Minutes Late", latest(nextstop) AS "Next Stop", latest(direction) AS Direction by trainno |sort Direction trainno |fields Direction trainno "Minutes Late"</query>
+          <earliest>-15m</earliest>
+          <latest>now</latest>
+        </search>
+      </table>
+    </panel>
+    <panel>
+      <title>Manayunk/Norristown Line</title>
+      <table>
+        <search>
+          <query>index="septa_analytics" train_line="Manayunk/Norristown*" | eval direction=if(like(train_line, "Manayunk/Norristown%Inbound%"), "Inbound", "Outbound") | chart latest(late) AS "Minutes Late", latest(nextstop) AS "Next Stop", latest(direction) AS Direction by trainno |sort Direction trainno |fields Direction trainno "Minutes Late"</query>
+          <earliest>-15m</earliest>
+          <latest>now</latest>
+        </search>
+      </table>
+    </panel>
+    <panel>
+      <title>Media/Elwyn Line</title>
+      <table>
+        <search>
+          <query>index="septa_analytics" train_line="Media/Elwyn*" | eval direction=if(like(train_line, "Media/Elwyn%Inbound%"), "Inbound", "Outbound") | chart latest(late) AS "Minutes Late", latest(nextstop) AS "Next Stop", latest(direction) AS Direction by trainno |sort Direction trainno |fields Direction trainno "Minutes Late"</query>
+          <earliest></earliest>
+          <latest></latest>
+        </search>
+      </table>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Paoli/Thorndale Line</title>
+      <table>
+        <search>
+          <query>index="septa_analytics" train_line="Paoli/Thorndale*" | eval direction=if(like(train_line, "Paoli/Thorndale%Inbound%"), "Inbound", "Outbound") | chart latest(late) AS "Minutes Late", latest(nextstop) AS "Next Stop", latest(direction) AS Direction by trainno |sort Direction trainno |fields Direction trainno "Minutes Late"</query>
+          <earliest>-15m</earliest>
+          <latest>now</latest>
+        </search>
+      </table>
+    </panel>
+    <panel>
+      <title>Trenton Line</title>
+      <table>
+        <search>
+          <query>index="septa_analytics" train_line="Trenton*" | eval direction=if(like(train_line, "Trenton%Inbound%"), "Inbound", "Outbound") | chart latest(late) AS "Minutes Late", latest(nextstop) AS "Next Stop", latest(direction) AS Direction by trainno |sort Direction trainno |fields Direction trainno "Minutes Late"</query>
+          <earliest></earliest>
+          <latest></latest>
+        </search>
+      </table>
+    </panel>
+    <panel>
+      <title>Warminster Line</title>
+      <table>
+        <search>
+          <query>index="septa_analytics" train_line="Warminster*" | eval direction=if(like(train_line, "Warminster%Inbound%"), "Inbound", "Outbound") | chart latest(late) AS "Minutes Late", latest(nextstop) AS "Next Stop", latest(direction) AS Direction by trainno |sort Direction trainno |fields Direction trainno "Minutes Late"</query>
+          <earliest>-15m</earliest>
+          <latest>now</latest>
+        </search>
+      </table>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>West Trenton Line</title>
+      <table>
+        <search>
+          <query>index="septa_analytics" earliest=-1h train_line="West Trenton*" | eval direction=if(like(train_line, "West Trenton%Inbound%"), "Inbound", "Outbound") | chart latest(late) AS "Minutes Late", latest(nextstop) AS "Next Stop", latest(direction) AS Direction by trainno |sort Direction trainno |fields Direction trainno "Minutes Late"</query>
+          <earliest></earliest>
+          <latest></latest>
+        </search>
+      </table>
+    </panel>
+    <panel>
+      <title>Wilmington/Newark Line</title>
+      <table>
+        <search>
+          <query>index="septa_analytics" earliest=-1h train_line="Wilmington/Newark*" | eval direction=if(like(train_line, "Wilmington/Newark%Inbound%"), "Inbound", "Outbound") | chart latest(late) AS "Minutes Late", latest(nextstop) AS "Next Stop", latest(direction) AS Direction by trainno |sort Direction trainno |fields Direction trainno "Minutes Late"</query>
+          <earliest>-15m</earliest>
+          <latest>now</latest>
+        </search>
+      </table>
+    </panel>
+  </row>
+</dashboard>

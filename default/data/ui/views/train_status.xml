@@ -1,0 +1,59 @@
+<form>
+  <label>Train Status</label>
+  <fieldset submitButton="false">
+    <input type="dropdown" token="trainno" searchWhenChanged="true">
+      <search>
+        <query>index="septa_analytics"  |fields trainno   |dedup trainno  |sort trainno</query>
+        <earliest>-4d@d</earliest>
+        <latest>now</latest>
+      </search>
+      <fieldForLabel>trainno</fieldForLabel>
+      <fieldForValue>trainno</fieldForValue>
+    </input>
+    <input type="time" token="field2">
+      <label>Time to search</label>
+      <default>
+        <earliest>@d</earliest>
+        <latest>now</latest>
+      </default>
+    </input>
+  </fieldset>
+  <row>
+    <panel>
+      <title>Train Status</title>
+      <chart>
+        <search>
+          <query>index="septa_analytics" trainno=$trainno$  | eval time=strftime(_time,"%Y-%m-%d %H:%M:%S")   
+| chart latest(late) AS "Minutes Late", latest(time) by nextstop  
+| sort latest(time)
+| fields nextstop "Minutes Late"</query>
+          <earliest>$field2.earliest$</earliest>
+          <latest>$field2.latest$</latest>
+        </search>
+        <option name="charting.chart">area</option>
+        <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
+        <option name="charting.axisLabelsX.majorLabelStyle.rotation">45</option>
+        <option name="charting.axisTitleX.visibility">visible</option>
+        <option name="charting.axisTitleY.visibility">visible</option>
+        <option name="charting.axisTitleY2.visibility">visible</option>
+        <option name="charting.axisX.scale">linear</option>
+        <option name="charting.axisY.scale">linear</option>
+        <option name="charting.axisY2.enabled">0</option>
+        <option name="charting.axisY2.scale">inherit</option>
+        <option name="charting.chart.bubbleMaximumSize">50</option>
+        <option name="charting.chart.bubbleMinimumSize">10</option>
+        <option name="charting.chart.bubbleSizeBy">area</option>
+        <option name="charting.chart.nullValueMode">zero</option>
+        <option name="charting.chart.showDataLabels">none</option>
+        <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
+        <option name="charting.chart.stackMode">stacked</option>
+        <option name="charting.chart.style">shiny</option>
+        <option name="charting.drilldown">all</option>
+        <option name="charting.layout.splitSeries">0</option>
+        <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
+        <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
+        <option name="charting.legend.placement">right</option>
+      </chart>
+    </panel>
+  </row>
+</form>
