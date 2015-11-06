@@ -8,5 +8,29 @@ modtime = 1445568915.410766000
 
 [indexes/septa_analytics]
 owner = admin
-version = 6.2.0
-modtime = 1445569902.860194000
+version = 6.3.0
+modtime = 1446433866.052346000
+
+[views/late_trains]
+owner = admin
+version = 6.3.0
+modtime = 1446436559.842233000
+
+[views/train_status]
+export = none
+owner = admin
+version = 6.3.0
+modtime = 1446703194.824621000
+
+[views/current_system_status]
+export = none
+owner = admin
+version = 6.3.0
+modtime = 1446690730.936213000
+
+[views/current_system_status_dashboard]
+access = read : [ * ], write : [ admin, power ]
+export = none
+owner = admin
+version = 6.3.0
+modtime = 1446691505.167956000
