@@ -1,5 +1,5 @@
 <form>
-  <label>Trains Arriving and Arrived At</label>
+  <label>Station Report</label>
   <fieldset submitButton="false">
     <input type="dropdown" token="nextstop" searchWhenChanged="true">
       <label>Station</label>
