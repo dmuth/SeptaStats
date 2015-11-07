@@ -85,41 +85,9 @@
     <panel>
       <title>Train Status - Average Over Last 7 Days</title>
       <chart>
+        <title>Area is average minutes late per stop.  Line is minutes late for today's train.</title>
         <search>
-          <query>index="septa_analytics" trainno=$trainno$ earliest=-0d@d 
-| append [search index="septa_analytics" trainno=$trainno$ earliest=-0d@d |eval late0=late] 
-| append [search index="septa_analytics" trainno=$trainno$ earliest=-1d@d latest=-0d@d |eval late1=late] 
-| append [search index="septa_analytics" trainno=$trainno$ earliest=-2d@d latest=-1d@d |eval late2=late] 
-| append [search index="septa_analytics" trainno=$trainno$ earliest=-3d@d latest=-2d@d |eval late3=late] 
-| append [search index="septa_analytics" trainno=$trainno$ earliest=-4d@d latest=-3d@d |eval late4=late] 
-| append [search index="septa_analytics" trainno=$trainno$ earliest=-5d@d latest=-4d@d |eval late5=late] 
-| append [search index="septa_analytics" trainno=$trainno$ earliest=-6d@d latest=-5d@d |eval late6=late] 
-| append [search index="septa_analytics" trainno=$trainno$ earliest=-7d@d latest=-6d@d |eval late7=late] 
-| eval time=strftime(_time,"%Y-%m-%d %H:%M:%S") 
-| chart      latest(late0) AS "Minutes Late",
-      latest(late1) AS "Minutes Late - Yesterday",
-      latest(late2) AS "Minutes Late - 2 Days Ago",
-      latest(late3) AS "Minutes Late - 3 Days Ago",
-      latest(late4) AS "Minutes Late - 4 Days Ago",
-      latest(late5) AS "Minutes Late - 5 Days Ago",
-      latest(late6) AS "Minutes Late - 6 Days Ago",
-      latest(late7) AS "Minutes Late - 7 Days Ago",
-      latest(time) by nextstop 
-
-| sort latest(time)
-| eval "Average Minutes Late"=
-(
-  if(isnotnull($$Minutes Late - Yesterday$$), $$Minutes Late - Yesterday$$, 0)
-+ if(isnotnull($$Minutes Late - 2 Days Ago$$), $$Minutes Late - 2 Days Ago$$, 0)
-+ if(isnotnull($$Minutes Late - 3 Days Ago$$), $$Minutes Late - 3 Days Ago$$, 0)
-+ if(isnotnull($$Minutes Late - 4 Days Ago$$), $$Minutes Late - 4 Days Ago$$, 0)
-+ if(isnotnull($$Minutes Late - 5 Days Ago$$), $$Minutes Late - 5 Days Ago$$, 0)
-+ if(isnotnull($$Minutes Late - 6 Days Ago$$), $$Minutes Late - 6 Days Ago$$, 0)
-+ if(isnotnull($$Minutes Late - 7 Days Ago$$), $$Minutes Late - 7 Days Ago$$, 0)
-) / 7
-| fields
-     nextstop
-     "Average Minutes Late"</query>
+          <query>index="septa_analytics" trainno=$trainno$ earliest=-0d@d  | append [search index="septa_analytics" trainno=$trainno$ earliest=-0d@d |eval late0=late]  | append [search index="septa_analytics" trainno=$trainno$ earliest=-1d@d latest=-0d@d |eval late1=late]  | append [search index="septa_analytics" trainno=$trainno$ earliest=-2d@d latest=-1d@d |eval late2=late]  | append [search index="septa_analytics" trainno=$trainno$ earliest=-3d@d latest=-2d@d |eval late3=late]  | append [search index="septa_analytics" trainno=$trainno$ earliest=-4d@d latest=-3d@d |eval late4=late]  | append [search index="septa_analytics" trainno=$trainno$ earliest=-5d@d latest=-4d@d |eval late5=late]  | append [search index="septa_analytics" trainno=$trainno$ earliest=-6d@d latest=-5d@d |eval late6=late]  | append [search index="septa_analytics" trainno=$trainno$ earliest=-7d@d latest=-6d@d |eval late7=late]  | eval time=strftime(_time,"%Y-%m-%d %H:%M:%S")  | chart      latest(late0) AS "Minutes Late",       latest(late1) AS "Minutes Late - Yesterday",       latest(late2) AS "Minutes Late - 2 Days Ago",       latest(late3) AS "Minutes Late - 3 Days Ago",       latest(late4) AS "Minutes Late - 4 Days Ago",       latest(late5) AS "Minutes Late - 5 Days Ago",       latest(late6) AS "Minutes Late - 6 Days Ago",       latest(late7) AS "Minutes Late - 7 Days Ago",       latest(time) by nextstop   | sort latest(time) | eval "Average Minutes Late"= (   if(isnotnull($$Minutes Late - Yesterday$$), $$Minutes Late - Yesterday$$, 0) + if(isnotnull($$Minutes Late - 2 Days Ago$$), $$Minutes Late - 2 Days Ago$$, 0) + if(isnotnull($$Minutes Late - 3 Days Ago$$), $$Minutes Late - 3 Days Ago$$, 0) + if(isnotnull($$Minutes Late - 4 Days Ago$$), $$Minutes Late - 4 Days Ago$$, 0) + if(isnotnull($$Minutes Late - 5 Days Ago$$), $$Minutes Late - 5 Days Ago$$, 0) + if(isnotnull($$Minutes Late - 6 Days Ago$$), $$Minutes Late - 6 Days Ago$$, 0) + if(isnotnull($$Minutes Late - 7 Days Ago$$), $$Minutes Late - 7 Days Ago$$, 0) ) / 7 | fields      nextstop      "Average Minutes Late" "Minutes Late"</query>
           <earliest>-1d@d</earliest>
           <latest>@d</latest>
         </search>
@@ -146,6 +114,7 @@
         <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
         <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
         <option name="charting.legend.placement">right</option>
+        <option name="charting.chart.overlayFields">"Minutes Late"</option>
       </chart>
     </panel>
   </row>
