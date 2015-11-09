@@ -24,30 +24,22 @@
       <title>Recently Arriving/Arrived Trains</title>
       <table>
         <search>
-          <query>index="septa_analytics" nextstop="$nextstop$" 
-| eval time=strftime(_time,"%Y-%m-%d %H:%M:%S") 
-| stats max(late) AS "Minutes Late", max(time) AS "time", max(train_line) AS "Train Line" by trainno
-| sort time desc</query>
+          <query>index="septa_analytics"  late != 999 nextstop="$nextstop$"  | eval time=strftime(_time,"%Y-%m-%d %H:%M:%S")  | stats max(late) AS "Minutes Late", max(time) AS "time", max(train_line) AS "Train Line" by trainno | sort time desc</query>
           <earliest>$field1.earliest$</earliest>
           <latest>$field1.latest$</latest>
         </search>
         <option name="wrap">undefined</option>
         <option name="rowNumbers">undefined</option>
         <option name="drilldown">row</option>
+        <option name="dataOverlayMode">none</option>
+        <option name="count">10</option>
       </table>
     </panel>
     <panel>
       <title>Latest Trains at this Station</title>
       <chart>
         <search>
-          <query>index="septa_analytics" nextstop="$nextstop$"
-| eval time=strftime(_time,"%Y-%m-%d %H:%M:%S") 
-| eval id = trainno . "-" . dest 
-| stats max(late) AS "Minutes Late", max(time) AS "time", max(train_line) AS "Train Line" by id
-| sort "Minutes Late" desc 
-| head
-| chart max("Minutes Late") AS "Minutes Late" by id
-| sort "Minutes Late" desc</query>
+          <query>index="septa_analytics"   late != 999 nextstop="$nextstop$" | eval time=strftime(_time,"%Y-%m-%d %H:%M:%S")  | eval id = trainno . "-" . dest  | stats max(late) AS "Minutes Late", max(time) AS "time", max(train_line) AS "Train Line" by id | sort "Minutes Late" desc  | head | chart max("Minutes Late") AS "Minutes Late" by id | sort "Minutes Late" desc</query>
           <earliest>$field1.earliest$</earliest>
           <latest>$field1.latest$</latest>
         </search>
@@ -79,52 +71,38 @@
   </row>
   <row>
     <panel>
-      <title>Number of Trains At This Station</title>
-      <single>
+      <chart>
+        <title>Number of Trains versus Total Minutes Late</title>
         <search>
-          <query>index="septa_analytics" nextstop="$nextstop$" 
-| eval time=strftime(_time,"%Y-%m-%d %H:%M:%S") 
-| stats count by trainno
-| stats count</query>
+          <query>index="septa_analytics" late != 999 nextstop="$nextstop$" |eval id = trainno . "-" . dest | timechart span=1h latest(late) AS late by id |addtotals |timechart span=1h latest(Total) AS "Total Minutes Late" | join _time [search index="septa_analytics" late != 999 late &gt;= 5 nextstop="30th*" |eval id = trainno . "-" . dest | timechart span=1h count(id) AS "# Trains"]</query>
           <earliest>$field1.earliest$</earliest>
           <latest>$field1.latest$</latest>
         </search>
-        <option name="drilldown">none</option>
-        <option name="colorBy">value</option>
-        <option name="colorMode">none</option>
-        <option name="numberPrecision">0</option>
-        <option name="showSparkline">1</option>
-        <option name="showTrendIndicator">1</option>
-        <option name="trendColorInterpretation">standard</option>
-        <option name="trendDisplayMode">absolute</option>
-        <option name="useColors">0</option>
-        <option name="useThousandSeparators">1</option>
-        <option name="linkView">search</option>
-      </single>
-    </panel>
-    <panel>
-      <title>Number of Trains &gt;= 10m Late At This Station</title>
-      <single>
-        <search>
-          <query>index="septa_analytics" nextstop="$nextstop$" late &gt;= 10
-| eval time=strftime(_time,"%Y-%m-%d %H:%M:%S") 
-| stats count by trainno
-| stats count</query>
-          <earliest>$field1.earliest$</earliest>
-          <latest>$field1.latest$</latest>
-        </search>
-        <option name="drilldown">none</option>
-        <option name="colorBy">value</option>
-        <option name="colorMode">none</option>
-        <option name="numberPrecision">0</option>
-        <option name="showSparkline">1</option>
-        <option name="showTrendIndicator">1</option>
-        <option name="trendColorInterpretation">standard</option>
-        <option name="trendDisplayMode">absolute</option>
-        <option name="useColors">0</option>
-        <option name="useThousandSeparators">1</option>
-        <option name="linkView">search</option>
-      </single>
+        <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
+        <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
+        <option name="charting.axisTitleX.visibility">collapsed</option>
+        <option name="charting.axisTitleY.visibility">visible</option>
+        <option name="charting.axisTitleY2.visibility">visible</option>
+        <option name="charting.axisX.scale">linear</option>
+        <option name="charting.axisY.scale">linear</option>
+        <option name="charting.axisY2.enabled">0</option>
+        <option name="charting.axisY2.scale">inherit</option>
+        <option name="charting.chart">area</option>
+        <option name="charting.chart.bubbleMaximumSize">50</option>
+        <option name="charting.chart.bubbleMinimumSize">10</option>
+        <option name="charting.chart.bubbleSizeBy">area</option>
+        <option name="charting.chart.nullValueMode">zero</option>
+        <option name="charting.chart.overlayFields">"# Trains"</option>
+        <option name="charting.chart.showDataLabels">none</option>
+        <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
+        <option name="charting.chart.stackMode">default</option>
+        <option name="charting.chart.style">shiny</option>
+        <option name="charting.drilldown">all</option>
+        <option name="charting.layout.splitSeries">0</option>
+        <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
+        <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
+        <option name="charting.legend.placement">bottom</option>
+      </chart>
     </panel>
   </row>
 </form>
