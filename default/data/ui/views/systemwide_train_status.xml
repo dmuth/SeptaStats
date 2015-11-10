@@ -1,5 +1,5 @@
 <form>
-  <label>Systemwide Train Status</label>
+  <label>3 Systemwide Train Status</label>
   <fieldset submitButton="false">
     <input type="time" token="field1">
       <label></label>
@@ -90,10 +90,10 @@
   </row>
   <row>
     <panel>
-      <title>Total Minutes Late per hour, across today and the previous 7 days.</title>
+      <title>Total Minutes Late per hour (averaged by minute), across today and the previous 7 days.</title>
       <chart>
         <search>
-          <query>index="septa_analytics" late != 0 late != 999 earliest=-7d@d  | eval id = trainno . "-" . dest | eval time=strftime(_time,"%Y-%m-%d %H:%M:%S") | timechart      span=1h      eval(sum(late)/60) AS "Minutes Late"
+          <query>index="septa_analytics" late != 0 late != 999 earliest=-7d@d  | eval id = trainno . "-" . dest | eval time=strftime(_time,"%Y-%m-%d %H:%M:%S") | timechart      span=1h      eval(sum(late)/60) AS "Minutes Late" 
 | timewrap d</query>
           <earliest>0</earliest>
           <latest></latest>
