@@ -93,7 +93,10 @@
       <title>Total Minutes Late per hour, across today and the previous 7 days.</title>
       <chart>
         <search>
-          <query>index="septa_analytics" late != 0 late != 999 earliest=-7d@d  | eval id = trainno . "-" . dest | eval time=strftime(_time,"%Y-%m-%d %H:%M:%S") | timechart      span=1h      eval(sum(late)/60) AS "Minutes Late", | timewrap d series=exact</query>
+          <query>index="septa_analytics" late != 0 late != 999 earliest=-7d@d  | eval id = trainno . "-" . dest | eval time=strftime(_time,"%Y-%m-%d %H:%M:%S") | timechart      span=1h      eval(sum(late)/60) AS "Minutes Late"
+| timewrap d</query>
+          <earliest>0</earliest>
+          <latest></latest>
         </search>
         <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
         <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
