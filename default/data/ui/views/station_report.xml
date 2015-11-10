@@ -74,7 +74,7 @@
       <chart>
         <title>Number of Trains versus Total Minutes Late</title>
         <search>
-          <query>index="septa_analytics" late != 999 nextstop="$nextstop$" |eval id = trainno . "-" . dest | timechart span=1h latest(late) AS late by id |addtotals |timechart span=1h latest(Total) AS "Total Minutes Late" | join _time [search index="septa_analytics" late != 999 late &gt;= 5 nextstop="30th*" |eval id = trainno . "-" . dest | timechart span=1h count(id) AS "# Trains"]</query>
+          <query>index="septa_analytics" late != 999 nextstop="$nextstop$" |eval id = trainno . "-" . dest | timechart span=1h latest(late) AS late by id |addtotals |timechart span=1h latest(Total) AS "Total Minutes Late" | join _time [search index="septa_analytics" late != 999 nextstop="$nextstop$" |eval id = trainno . "-" . dest | timechart span=1h count(id) AS "# Trains"]</query>
           <earliest>$field1.earliest$</earliest>
           <latest>$field1.latest$</latest>
         </search>
