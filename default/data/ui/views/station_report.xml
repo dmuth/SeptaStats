@@ -66,6 +66,7 @@
         <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
         <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
         <option name="charting.legend.placement">bottom</option>
+        <option name="charting.axisTitleY.text">Minutes Late</option>
       </chart>
     </panel>
   </row>
@@ -102,6 +103,7 @@
         <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
         <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
         <option name="charting.legend.placement">bottom</option>
+        <option name="charting.axisTitleY.text">Minutes Late</option>
       </chart>
     </panel>
   </row>

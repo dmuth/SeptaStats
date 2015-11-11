@@ -5,13 +5,7 @@
       <title>Airport Line</title>
       <chart>
         <search>
-          <query>index="septa_analytics" late != 999
-train_line="Airport*"
-| eval time=strftime(_time,"%Y-%m-%d %H:%M")
-| eval direction=if(like(train_line, "Airport%Inbound%"), "Inbound", "Outbound")
-| eval id = trainno . "-" . dest . "-" . direction
-| stats max(late) AS "Minutes Late" by time direction id
-| chart sum("Minutes Late") AS "Average Minutes Late" by time direction</query>
+          <query>index="septa_analytics" late != 999 train_line="Airport*" | eval time=strftime(_time,"%Y-%m-%d %H:%M") | eval direction=if(like(train_line, "Airport%Inbound%"), "Inbound", "Outbound") | eval id = trainno . "-" . dest . "-" . direction | stats max(late) AS "Minutes Late" by time direction id | chart sum("Minutes Late") AS "Average Minutes Late" by time direction</query>
           <earliest>-60m@m</earliest>
           <latest>now</latest>
         </search>
@@ -42,19 +36,14 @@ train_line="Airport*"
         <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
         <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
         <option name="charting.legend.placement">bottom</option>
+        <option name="charting.axisTitleY.text">Minutes Late</option>
       </chart>
     </panel>
     <panel>
       <title>Chestnut Hill East</title>
       <chart>
         <search>
-          <query>index="septa_analytics" late != 999
-train_line="Chestnut Hill East*"
-| eval time=strftime(_time,"%Y-%m-%d %H:%M")
-| eval direction=if(like(train_line, "Chestnut Hill East%Inbound%"), "Inbound", "Outbound")
-| eval id = trainno . "-" . dest . "-" . direction
-| stats max(late) AS "Minutes Late" by time direction id
-| chart sum("Minutes Late") AS "Average Minutes Late" by time direction</query>
+          <query>index="septa_analytics" late != 999 train_line="Chestnut Hill East*" | eval time=strftime(_time,"%Y-%m-%d %H:%M") | eval direction=if(like(train_line, "Chestnut Hill East%Inbound%"), "Inbound", "Outbound") | eval id = trainno . "-" . dest . "-" . direction | stats max(late) AS "Minutes Late" by time direction id | chart sum("Minutes Late") AS "Average Minutes Late" by time direction</query>
           <earliest>-60m@m</earliest>
           <latest>now</latest>
         </search>
@@ -81,19 +70,14 @@ train_line="Chestnut Hill East*"
         <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
         <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
         <option name="charting.legend.placement">bottom</option>
+        <option name="charting.axisTitleY.text">Minutes Late</option>
       </chart>
     </panel>
     <panel>
       <title>Chestnut Hill West</title>
       <chart>
         <search>
-          <query>index="septa_analytics" late != 999
-train_line="Chestnut Hill West*"
-| eval time=strftime(_time,"%Y-%m-%d %H:%M")
-| eval direction=if(like(train_line, "Chestnut Hill West%Inbound%"), "Inbound", "Outbound")
-| eval id = trainno . "-" . dest . "-" . direction
-| stats max(late) AS "Minutes Late" by time direction id
-| chart sum("Minutes Late") AS "Average Minutes Late" by time direction</query>
+          <query>index="septa_analytics" late != 999 train_line="Chestnut Hill West*" | eval time=strftime(_time,"%Y-%m-%d %H:%M") | eval direction=if(like(train_line, "Chestnut Hill West%Inbound%"), "Inbound", "Outbound") | eval id = trainno . "-" . dest . "-" . direction | stats max(late) AS "Minutes Late" by time direction id | chart sum("Minutes Late") AS "Average Minutes Late" by time direction</query>
           <earliest>-60m@m</earliest>
           <latest>now</latest>
         </search>
@@ -120,6 +104,7 @@ train_line="Chestnut Hill West*"
         <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
         <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
         <option name="charting.legend.placement">bottom</option>
+        <option name="charting.axisTitleY.text">Minutes Late</option>
       </chart>
     </panel>
   </row>
@@ -128,13 +113,7 @@ train_line="Chestnut Hill West*"
       <title>Cynwyd Line</title>
       <chart>
         <search>
-          <query>index="septa_analytics" late != 999
-train_line="Cynwyd*"
-| eval time=strftime(_time,"%Y-%m-%d %H:%M")
-| eval direction=if(like(train_line, "Cynwyd%Inbound%"), "Inbound", "Outbound")
-| eval id = trainno . "-" . dest . "-" . direction
-| stats max(late) AS "Minutes Late" by time direction id
-| chart sum("Minutes Late") AS "Average Minutes Late" by time direction</query>
+          <query>index="septa_analytics" late != 999 train_line="Cynwyd*" | eval time=strftime(_time,"%Y-%m-%d %H:%M") | eval direction=if(like(train_line, "Cynwyd%Inbound%"), "Inbound", "Outbound") | eval id = trainno . "-" . dest . "-" . direction | stats max(late) AS "Minutes Late" by time direction id | chart sum("Minutes Late") AS "Average Minutes Late" by time direction</query>
           <earliest>-60m@m</earliest>
           <latest>now</latest>
         </search>
@@ -161,19 +140,14 @@ train_line="Cynwyd*"
         <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
         <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
         <option name="charting.legend.placement">bottom</option>
+        <option name="charting.axisTitleY.text">Minutes Late</option>
       </chart>
     </panel>
     <panel>
       <title>Fox Chase Line</title>
       <chart>
         <search>
-          <query>index="septa_analytics" late != 999
-train_line="Fox Chase*"
-| eval time=strftime(_time,"%Y-%m-%d %H:%M")
-| eval direction=if(like(train_line, "Fox Chase%Inbound%"), "Inbound", "Outbound")
-| eval id = trainno . "-" . dest . "-" . direction
-| stats max(late) AS "Minutes Late" by time direction id
-| chart sum("Minutes Late") AS "Average Minutes Late" by time direction</query>
+          <query>index="septa_analytics" late != 999 train_line="Fox Chase*" | eval time=strftime(_time,"%Y-%m-%d %H:%M") | eval direction=if(like(train_line, "Fox Chase%Inbound%"), "Inbound", "Outbound") | eval id = trainno . "-" . dest . "-" . direction | stats max(late) AS "Minutes Late" by time direction id | chart sum("Minutes Late") AS "Average Minutes Late" by time direction</query>
           <earliest>-60m@m</earliest>
           <latest>now</latest>
         </search>
@@ -200,19 +174,14 @@ train_line="Fox Chase*"
         <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
         <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
         <option name="charting.legend.placement">bottom</option>
+        <option name="charting.axisTitleY.text">Minutes Late</option>
       </chart>
     </panel>
     <panel>
       <title>Glenside Line</title>
       <chart>
         <search>
-          <query>index="septa_analytics" late != 999
-train_line="Glenside*"
-| eval time=strftime(_time,"%Y-%m-%d %H:%M")
-| eval direction=if(like(train_line, "Glenside%Inbound%"), "Inbound", "Outbound")
-| eval id = trainno . "-" . dest . "-" . direction
-| stats max(late) AS "Minutes Late" by time direction id
-| chart sum("Minutes Late") AS "Average Minutes Late" by time direction</query>
+          <query>index="septa_analytics" late != 999 train_line="Glenside*" | eval time=strftime(_time,"%Y-%m-%d %H:%M") | eval direction=if(like(train_line, "Glenside%Inbound%"), "Inbound", "Outbound") | eval id = trainno . "-" . dest . "-" . direction | stats max(late) AS "Minutes Late" by time direction id | chart sum("Minutes Late") AS "Average Minutes Late" by time direction</query>
           <earliest>-60m@m</earliest>
           <latest>now</latest>
         </search>
@@ -239,6 +208,7 @@ train_line="Glenside*"
         <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
         <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
         <option name="charting.legend.placement">bottom</option>
+        <option name="charting.axisTitleY.text">Minutes Late</option>
       </chart>
     </panel>
   </row>
@@ -247,13 +217,7 @@ train_line="Glenside*"
       <title>Lansdale/Doylestown Line</title>
       <chart>
         <search>
-          <query>index="septa_analytics" late != 999
-          train_line="Lansdale/Doylestown*"
-| eval time=strftime(_time,"%Y-%m-%d %H:%M")
-| eval direction=if(like(train_line, "Lansdale/Doylestown%Inbound%"), "Inbound", "Outbound")
-| eval id = trainno . "-" . dest . "-" . direction
-| stats max(late) AS "Minutes Late" by time direction id
-| chart sum("Minutes Late") AS "Average Minutes Late" by time direction</query>
+          <query>index="septa_analytics" late != 999           train_line="Lansdale/Doylestown*" | eval time=strftime(_time,"%Y-%m-%d %H:%M") | eval direction=if(like(train_line, "Lansdale/Doylestown%Inbound%"), "Inbound", "Outbound") | eval id = trainno . "-" . dest . "-" . direction | stats max(late) AS "Minutes Late" by time direction id | chart sum("Minutes Late") AS "Average Minutes Late" by time direction</query>
           <earliest>-60m@m</earliest>
           <latest>now</latest>
         </search>
@@ -280,19 +244,14 @@ train_line="Glenside*"
         <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
         <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
         <option name="charting.legend.placement">bottom</option>
+        <option name="charting.axisTitleY.text">Minutes Late</option>
       </chart>
     </panel>
     <panel>
       <title>Manayunk/Norristown Line</title>
       <chart>
         <search>
-          <query>index="septa_analytics" late != 999
-train_line="Manayunk/Norristown*"
-| eval time=strftime(_time,"%Y-%m-%d %H:%M")
-          | eval direction=if(like(train_line, "Manayunk/Norristown%Inbound%"), "Inbound", "Outbound")
-| eval id = trainno . "-" . dest . "-" . direction
-| stats max(late) AS "Minutes Late" by time direction id
-| chart sum("Minutes Late") AS "Average Minutes Late" by time direction</query>
+          <query>index="septa_analytics" late != 999 train_line="Manayunk/Norristown*" | eval time=strftime(_time,"%Y-%m-%d %H:%M")           | eval direction=if(like(train_line, "Manayunk/Norristown%Inbound%"), "Inbound", "Outbound") | eval id = trainno . "-" . dest . "-" . direction | stats max(late) AS "Minutes Late" by time direction id | chart sum("Minutes Late") AS "Average Minutes Late" by time direction</query>
           <earliest>-60m@m</earliest>
           <latest>now</latest>
         </search>
@@ -319,19 +278,14 @@ train_line="Manayunk/Norristown*"
         <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
         <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
         <option name="charting.legend.placement">bottom</option>
+        <option name="charting.axisTitleY.text">Minutes Late</option>
       </chart>
     </panel>
     <panel>
       <title>Media/Elwyn Line</title>
       <chart>
         <search>
-          <query>index="septa_analytics" late != 999
-train_line="Media/Elwyn*"
-| eval time=strftime(_time,"%Y-%m-%d %H:%M")
-| eval direction=if(like(train_line, "Media/Elwyn%Inbound%"), "Inbound", "Outbound")
-| eval id = trainno . "-" . dest . "-" . direction
-| stats max(late) AS "Minutes Late" by time direction id
-| chart sum("Minutes Late") AS "Average Minutes Late" by time direction</query>
+          <query>index="septa_analytics" late != 999 train_line="Media/Elwyn*" | eval time=strftime(_time,"%Y-%m-%d %H:%M") | eval direction=if(like(train_line, "Media/Elwyn%Inbound%"), "Inbound", "Outbound") | eval id = trainno . "-" . dest . "-" . direction | stats max(late) AS "Minutes Late" by time direction id | chart sum("Minutes Late") AS "Average Minutes Late" by time direction</query>
           <earliest>-60m@m</earliest>
           <latest>now</latest>
         </search>
@@ -358,6 +312,7 @@ train_line="Media/Elwyn*"
         <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
         <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
         <option name="charting.legend.placement">bottom</option>
+        <option name="charting.axisTitleY.text">Minutes Late</option>
       </chart>
     </panel>
   </row>
@@ -366,13 +321,7 @@ train_line="Media/Elwyn*"
       <title>Paoli/Thorndale Line</title>
       <chart>
         <search>
-          <query>index="septa_analytics" late != 999
-train_line="Paoli/Thorndale*"
-| eval time=strftime(_time,"%Y-%m-%d %H:%M")
-| eval direction=if(like(train_line, "Paoli/Thorndale%Inbound%"), "Inbound", "Outbound")
-| eval id = trainno . "-" . dest . "-" . direction
-| stats max(late) AS "Minutes Late" by time direction id
-| chart sum("Minutes Late") AS "Average Minutes Late" by time direction</query>
+          <query>index="septa_analytics" late != 999 train_line="Paoli/Thorndale*" | eval time=strftime(_time,"%Y-%m-%d %H:%M") | eval direction=if(like(train_line, "Paoli/Thorndale%Inbound%"), "Inbound", "Outbound") | eval id = trainno . "-" . dest . "-" . direction | stats max(late) AS "Minutes Late" by time direction id | chart sum("Minutes Late") AS "Average Minutes Late" by time direction</query>
           <earliest>-60m@m</earliest>
           <latest>now</latest>
         </search>
@@ -399,19 +348,14 @@ train_line="Paoli/Thorndale*"
         <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
         <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
         <option name="charting.legend.placement">bottom</option>
+        <option name="charting.axisTitleY.text">Minutes Late</option>
       </chart>
     </panel>
     <panel>
       <title>Trenton Line</title>
       <chart>
         <search>
-          <query>index="septa_analytics" late != 999
-train_line="Trenton*"
-| eval time=strftime(_time,"%Y-%m-%d %H:%M")
-| eval direction=if(like(train_line, "Trenton%Inbound%"), "Inbound", "Outbound")
-| eval id = trainno . "-" . dest . "-" . direction
-| stats max(late) AS "Minutes Late" by time direction id
-| chart sum("Minutes Late") AS "Average Minutes Late" by time direction</query>
+          <query>index="septa_analytics" late != 999 train_line="Trenton*" | eval time=strftime(_time,"%Y-%m-%d %H:%M") | eval direction=if(like(train_line, "Trenton%Inbound%"), "Inbound", "Outbound") | eval id = trainno . "-" . dest . "-" . direction | stats max(late) AS "Minutes Late" by time direction id | chart sum("Minutes Late") AS "Average Minutes Late" by time direction</query>
           <earliest>-60m@m</earliest>
           <latest>now</latest>
         </search>
@@ -438,19 +382,14 @@ train_line="Trenton*"
         <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
         <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
         <option name="charting.legend.placement">bottom</option>
+        <option name="charting.axisTitleY.text">Minutes Late</option>
       </chart>
     </panel>
     <panel>
       <title>Warminster Line</title>
       <chart>
         <search>
-          <query>index="septa_analytics" late != 999
-train_line="Warminster*"
-| eval time=strftime(_time,"%Y-%m-%d %H:%M")
-| eval direction=if(like(train_line, "Warminster%Inbound%"), "Inbound", "Outbound")
-| eval id = trainno . "-" . dest . "-" . direction
-| stats max(late) AS "Minutes Late" by time direction id
-| chart sum("Minutes Late") AS "Average Minutes Late" by time direction</query>
+          <query>index="septa_analytics" late != 999 train_line="Warminster*" | eval time=strftime(_time,"%Y-%m-%d %H:%M") | eval direction=if(like(train_line, "Warminster%Inbound%"), "Inbound", "Outbound") | eval id = trainno . "-" . dest . "-" . direction | stats max(late) AS "Minutes Late" by time direction id | chart sum("Minutes Late") AS "Average Minutes Late" by time direction</query>
           <earliest>-60m@m</earliest>
           <latest>now</latest>
         </search>
@@ -477,6 +416,7 @@ train_line="Warminster*"
         <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
         <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
         <option name="charting.legend.placement">bottom</option>
+        <option name="charting.axisTitleY.text">Minutes Late</option>
       </chart>
     </panel>
   </row>
@@ -485,13 +425,7 @@ train_line="Warminster*"
       <title>West Trenton Line</title>
       <chart>
         <search>
-          <query>index="septa_analytics" late != 999
-train_line="West Trenton*"
-| eval time=strftime(_time,"%Y-%m-%d %H:%M")
-| eval direction=if(like(train_line, "West Trenton%Inbound%"), "Inbound", "Outbound")
-| eval id = trainno . "-" . dest . "-" . direction
-| stats max(late) AS "Minutes Late" by time direction id
-| chart sum("Minutes Late") AS "Average Minutes Late" by time direction</query>
+          <query>index="septa_analytics" late != 999 train_line="West Trenton*" | eval time=strftime(_time,"%Y-%m-%d %H:%M") | eval direction=if(like(train_line, "West Trenton%Inbound%"), "Inbound", "Outbound") | eval id = trainno . "-" . dest . "-" . direction | stats max(late) AS "Minutes Late" by time direction id | chart sum("Minutes Late") AS "Average Minutes Late" by time direction</query>
           <earliest>-60m@m</earliest>
           <latest>now</latest>
         </search>
@@ -518,19 +452,14 @@ train_line="West Trenton*"
         <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
         <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
         <option name="charting.legend.placement">bottom</option>
+        <option name="charting.axisTitleY.text">Minutes Late</option>
       </chart>
     </panel>
     <panel>
       <title>Wilmington/Newark Line</title>
       <chart>
         <search>
-          <query>index="septa_analytics" late != 999
-          train_line="Wilmington/Newark*"
-| eval time=strftime(_time,"%Y-%m-%d %H:%M")
-          | eval direction=if(like(train_line, "Wilmington/Newark%Inbound%"), "Inbound", "Outbound")
-| eval id = trainno . "-" . dest . "-" . direction
-| stats max(late) AS "Minutes Late" by time direction id
-| chart sum("Minutes Late") AS "Average Minutes Late" by time direction</query>
+          <query>index="septa_analytics" late != 999           train_line="Wilmington/Newark*" | eval time=strftime(_time,"%Y-%m-%d %H:%M")           | eval direction=if(like(train_line, "Wilmington/Newark%Inbound%"), "Inbound", "Outbound") | eval id = trainno . "-" . dest . "-" . direction | stats max(late) AS "Minutes Late" by time direction id | chart sum("Minutes Late") AS "Average Minutes Late" by time direction</query>
           <earliest>-60m@m</earliest>
           <latest>now</latest>
         </search>
@@ -557,6 +486,7 @@ train_line="West Trenton*"
         <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
         <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
         <option name="charting.legend.placement">bottom</option>
+        <option name="charting.axisTitleY.text">Minutes Late</option>
       </chart>
     </panel>
   </row>

@@ -22,10 +22,7 @@
       <title>10 Most Late Trains (&gt;=10 m)</title>
       <chart>
         <search>
-          <query>index="septa_analytics" 
-late != 0 late != 999 late &gt;=10
-|eval id = trainno . "-" . dest 
-|timechart span=$span$ max(late) by id</query>
+          <query>index="septa_analytics"  late != 0 late != 999 late &gt;=10 |eval id = trainno . "-" . dest  |timechart span=$span$ max(late) by id</query>
           <earliest>$field1.earliest$</earliest>
           <latest>$field1.latest$</latest>
         </search>
@@ -52,6 +49,7 @@ late != 0 late != 999 late &gt;=10
         <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
         <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
         <option name="charting.legend.placement">right</option>
+        <option name="charting.axisTitleY.text">Minutes Late</option>
       </chart>
     </panel>
   </row>
