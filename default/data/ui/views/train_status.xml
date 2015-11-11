@@ -16,7 +16,7 @@
       <title>Train Status</title>
       <chart>
         <search>
-          <query>index="septa_analytics" trainno=$trainno$  | eval time=strftime(_time,"%Y-%m-%d %H:%M:%S")    | chart latest(late) AS "Minutes Late", latest(time) by nextstop   | sort latest(time) | fields nextstop "Minutes Late"</query>
+          <query>index="septa_analytics" trainno=$trainno$  | eval time=strftime(_time,"%Y-%m-%d %H:%M:%S")    | chart latest(late) AS  "Minutes Late", latest(time) by nextstop   | sort latest(time) | fields nextstop "Minutes Late"</query>
           <earliest>-20h@h</earliest>
           <latest>now</latest>
         </search>

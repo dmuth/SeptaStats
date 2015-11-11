@@ -1,5 +1,5 @@
 <form>
-  <label>3 Systemwide Train Status</label>
+  <label>1 Systemwide Train Status</label>
   <fieldset submitButton="false">
     <input type="time" token="field1">
       <label></label>
@@ -20,7 +20,7 @@
   </fieldset>
   <row>
     <panel>
-      <title>Latest Trains</title>
+      <title>Top 10 Latest Trains</title>
       <chart>
         <search>
           <query>index="septa_analytics"  late != 0 late != 999 |eval id = trainno . "-" . dest  |timechart span=$span$ max(late) by id</query>
@@ -50,12 +50,13 @@
         <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
         <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
         <option name="charting.legend.placement">right</option>
+        <option name="charting.axisTitleY.text">Minutes Late</option>
       </chart>
     </panel>
   </row>
   <row>
     <panel>
-      <title>Latest trains today</title>
+      <title>Top 10 Latest Trains Today</title>
       <chart>
         <search>
           <query>index="septa_analytics"  late != 0 late != 999 |eval id = trainno . "-" . dest  |timechart span=30m  max(late) by id</query>
@@ -85,6 +86,7 @@
         <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
         <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
         <option name="charting.legend.placement">right</option>
+        <option name="charting.axisTitleY.text">Minutes Late</option>
       </chart>
     </panel>
   </row>
@@ -93,10 +95,8 @@
       <title>Total Minutes Late per hour (averaged by minute), across today and the previous 7 days.</title>
       <chart>
         <search>
-          <query>index="septa_analytics" late != 0 late != 999 earliest=-7d@d  | eval id = trainno . "-" . dest | eval time=strftime(_time,"%Y-%m-%d %H:%M:%S") | timechart      span=1h      eval(sum(late)/60) AS "Minutes Late" 
-| timewrap d</query>
+          <query>index="septa_analytics" late != 0 late != 999 earliest=-7d@d  | eval id = trainno . "-" . dest | eval time=strftime(_time,"%Y-%m-%d %H:%M:%S") | timechart      span=1h      eval(sum(late)/60) AS "Minutes Late"  | timewrap d</query>
           <earliest>0</earliest>
-          <latest></latest>
         </search>
         <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
         <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
@@ -121,6 +121,7 @@
         <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
         <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
         <option name="charting.legend.placement">right</option>
+        <option name="charting.axisTitleY.text">Minutes Late</option>
       </chart>
     </panel>
   </row>
