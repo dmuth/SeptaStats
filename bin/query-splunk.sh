@@ -11,16 +11,23 @@ set -e
 UN="admin"
 PW="adminpw"
 
-# xmllint is part of the libxml2-utils package
-
 URL="https://localhost:8089/services/search/jobs"
+#
+# Default query, this can be overridden
+#
 QUERY="search index=septa_analytics earliest=-5m | head limit=10"
+
+if test "$1"
+then
+	QUERY=$1
+fi
 
 
 echo "# "
 echo "# Executing query: ${QUERY}"
 echo "# "
 
+# xmllint is part of the libxml2-utils package
 JOBID=$(curl -4 -s -u ${UN}:${PW} -k ${URL} -d search="${QUERY}"  | xmllint --xpath "/response/sid/text()" -)
 
 echo "# "
