@@ -7,6 +7,8 @@
 # Errors are fatal
 # 
 set -e
+#set -x # Debugging
+
 
 UN="admin"
 PW="adminpw"
@@ -28,7 +30,22 @@ echo "# Executing query: ${QUERY}"
 echo "# "
 
 # xmllint is part of the libxml2-utils package
-JOBID=$(curl -4 -s -u ${UN}:${PW} -k ${URL} -d search="${QUERY}"  | xmllint --xpath "/response/sid/text()" -)
+RESULT=$(curl -4 -s -u ${UN}:${PW} -k ${URL} -d search="${QUERY}" )
+JOBID=$(echo $RESULT | xmllint --xpath "/response/sid/text()" - || true)
+
+if test ! "${JOBID}"
+then
+	echo "! "
+	echo "! No Job ID found! "
+	echo "! "
+	echo "! Things to look for:"
+	echo "! - Are percent signs encoded as '%25'?"
+	echo "! - Does the query start with 'search'?"
+	echo "! "
+
+	exit 1
+fi
+
 
 echo "# "
 echo "# Got Job ID: ${JOBID}"
