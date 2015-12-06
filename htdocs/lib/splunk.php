@@ -17,6 +17,11 @@ class Splunk {
 	//
 	var $service;
 
+	//
+	// Our metadata from the most recent search.
+	//
+	var $metadata;
+
 
 	function __constructor() {
 	}
@@ -62,6 +67,7 @@ class Splunk {
 	function query($query) {
 
 		$retval = array();
+		$this->metadata = array();
 
 		//
 		// Connect to Splunk
@@ -70,14 +76,16 @@ class Splunk {
 
 		$job = $this->service->getJobs()->create($query);
 
-		$start_time = time();
+		$start_time = microtime(true);
 		while (!$job->isDone()) {
     		printf("Progress: %03.1f%%\r\n", $job->getProgress() * 100);
     		usleep(0.5 * 1000000);
     		$job->refresh();
 		}
 
-		$end_time = time();
+		$end_time = microtime(true);
+		$diff = $end_time - $start_time;
+		$this->metadata["elapsed"] = $diff;
 
 		$results = $job->getResults();
 
@@ -85,15 +93,7 @@ class Splunk {
 
 			$row = array();
     
-			if ($result instanceof Splunk_ResultsFieldOrder) {
-				// Process the field order
-				print "FIELDS: " . implode(',', $result->getFieldNames()) . "\r\n";
-
-			} else if ($result instanceof Splunk_ResultsMessage) {
-				// Process a message
-				print "[{$result->getType()}] {$result->getText()}\r\n";
-
-			} else if (is_array($result)) {
+			if (is_array($result)) {
 				foreach ($result as $key => $value) {
 					//
 					// We don't need meta data for each row.
@@ -110,6 +110,8 @@ class Splunk {
 
 			} else {
 				// Unknown result type
+				// print_r($result); // Debugging
+
 			}
 
 		}
@@ -118,6 +120,17 @@ class Splunk {
 
 	} // End of query()
 
+
+	/**
+	* This function returns the metadata from a search.
+	*
+	* @return array
+	*/
+	function getResultsMeta() {
+
+		return($this->metadata);
+
+	} // End of getResultsMeta()
 
 
 } // End of Splunk class
