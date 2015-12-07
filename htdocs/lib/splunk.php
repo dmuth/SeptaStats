@@ -110,7 +110,7 @@ class Splunk {
 
 			} else {
 				// Unknown result type
-				// print_r($result); // Debugging
+				//print_r($result); // Debugging
 
 			}
 
