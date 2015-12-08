@@ -76,11 +76,20 @@ class Splunk {
 
 		$job = $this->service->getJobs()->create($query);
 
+		$max = 5;
+		//$max = 0; // Debugging
 		$start_time = microtime(true);
 		while (!$job->isDone()) {
-    		printf("Progress: %03.1f%%\r\n", $job->getProgress() * 100);
+
+			$elapsed = time() - $start_time;
+			if ($elapsed >= $max) {
+				throw new \Exception("Query '$query' is taking too long!");
+			}
+
+    		//printf("Progress: %03.1f%%\r\n", $job->getProgress() * 100);
     		usleep(0.5 * 1000000);
     		$job->refresh();
+
 		}
 
 		$end_time = microtime(true);
