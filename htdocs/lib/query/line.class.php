@@ -10,22 +10,28 @@ require_once("base.class.php");
 */
 class Line extends Base {
 
-
+	//
+	// The names of all lines.
+	// The key is something we can safely have in a URL which can 
+	// then be searched on.  The value is the human-readable name of the line.
+	//
+	// Note that these do not include the "(Inbound)" or " (Outbound)" suffix.
+	//
 	private $lines = array(
-		"Airport" => 1,
-		"Chestnut Hill East" => 1,
-		"Chestnut Hill West" => 1,
-		"Cynwyd" => 1,
-		"Fox Chase" => 1,
-		"Glenside" => 1,
-		"Lansdale/Doylestown" => 1,
-		"Manayunk/Norristown" => 1,
-		"Media/Elwyn" => 1,
-		"Paoli/Thorndale" => 1,
-		"Trenton" => 1,
-		"Warminster" => 1,
-		"West Trenton" => 1,
-		"Wilmington/Newark" => 1,
+		"airport" => "Airport",
+		"chestnut-hill-east" => "Chestnut Hill East",
+		"chestnut-hill-west" => "Chestnut Hill West",
+		"cynwyd" => "Cynwyd",
+		"fox-chase" => "Fox Chase",
+		"glenside" => "Glenside",
+		"lansdale-doylestown" => "Lansdale/Doylestown",
+		"manayunk-norristown" => "Manayunk/Norristown",
+		"media-elwyn" => "Media/Elwyn",
+		"paoli-thorndale" => "Paoli/Thorndale",
+		"trenton" => "Trenton",
+		"warminster" => "Warminster",
+		"west-trenton" => "West Trenton",
+		"wilmington-newark" => "Wilmington/Newark",
 		);
 
 
@@ -65,26 +71,46 @@ class Line extends Base {
 	* These are the basenames, excluding the " (Inbound)" and " (Outbound)" suffixes.
 	*/
 	function getLines() {
+		return($this->lines);
+	} // End of getLines()
 
-		$retval = array();
 
-		//
-		// Go through our list of lines and create keys which are lowercased 
-		// and have non-alphas replaced with dashes
-		//
-		foreach ($this->lines as $key => $value) {
+	/**
+	* Checks the key of a line (which comes from the URL) and returns the 
+	* name of the line if there is a match or null if it does not.
+	*/
+	function checkLineKey($key) {
 
-			$key2 = strtolower($key);
-			$key2 = preg_replace("|[^a-zA-Z]|", "-", $key2);
+		$retval = null;
 
-			$retval[$key2] = $key;
-
+		if (isset($this->lines[$key])) {
+			$retval = $this->lines[$key];
 		}
-
 
 		return($retval);
 
-	} // End of getLines()
+	} // End of checkLineKey()
+
+
+	/**
+	* Checks the key of the direction (which comes from the URL) and returns
+	* the human-readable name of the direction if there is a match or null if there is not.
+	*/
+	function checkDirection($key) {
+
+		$retval = null;
+
+		if ($key == "inbound") {
+			$retval = "Inbound";
+
+		} else if ($key == "outbound") {
+			$retval = "Outbound";
+
+		}
+
+		return($retval);
+
+	} // End of checkDirection()
 
 
 } // End of class Line
