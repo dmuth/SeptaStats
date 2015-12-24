@@ -10,6 +10,7 @@ require 'vendor/autoload.php';
 
 require("./lib/splunk.php");
 require("./lib/query/train.class.php");
+require("./lib/query/line.class.php");
 require("./lib/query/system.class.php");
 
 
@@ -32,6 +33,11 @@ $app->get("/", function (Request $request, Response $response) {
 		"/train/521/history/average",
 		"/system",
 		"/system/totals",
+		"/lines",
+		"/line/paoli-thorndale/outbound",
+		"/line/paoli-thorndale/inbound",
+		"/line/paoli-thorndale/foobar",
+		"/line/foobar/foobar",
 		);
 
 	$output = "";
@@ -120,15 +126,52 @@ $app->group("/system", function() {
 });
 
 
+$app->get("/lines", function(Request $request, Response $response, $args) {
+
+	$splunk = new \Septa\Splunk();
+	$line = new Septa\Query\Line($splunk);
+
+	$output = "<pre>" . print_r($line->getLines(), true) . "</pre>";
+	$response->getBody()->write($output);
+
+});
+
+
+$app->get("/line/{line}/{direction}", function(Request $request, Response $response, $args) {
+
+	$splunk = new \Septa\Splunk();
+	$line = new Septa\Query\Line($splunk);
+
+	$line_name = $line->checkLineKey($args["line"]);
+	$direction = $line->checkDirection($args["direction"]);
+
+	if ($line_name && $direction) {
+		$output = "$line_name, $direction<br/>\n";
+		$response->getBody()->write($output);
+
+	} else {
+		$output = sprintf("Line %s and/or direction %s not found!\n", $args["line"], $args["direction"]);
+		$response->getBody()->write($output);
+
+	}
+
+});
+
+
 /**
 * This endpoint is used for testing and development.
 */
 $app->get("/test", function(Request $request, Response $response, $args) {
 
 	$splunk = new \Septa\Splunk();
-	$system = new Septa\Query\System($splunk);
+	$line = new Septa\Query\Line($splunk);
 
-	$output = "<pre>" . print_r($system->getTotalMinutesLateByDay($num_days), true) . "</pre>";
+	$num_hours = 2;
+	$span_min = 10;
+	$output = "";
+	$output .= "<pre>" . print_r($line->getLateTrains("Paoli/Thorndale (Inbound)", $num_hours, $span_min), true) . "</pre>";
+	$output .= "<pre>" . print_r($line->getLateTrains("Paoli/Thorndale (Outbound)", $num_hours, $span_min), true) . "</pre>";
+	$output .= "<pre>" . print_r($line->getLateTrains("Trenton (Outbound)", $num_hours, $span_min), true) . "</pre>";
 
 	$response->getBody()->write($output);
 
