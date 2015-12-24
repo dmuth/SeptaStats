@@ -39,9 +39,6 @@ class System extends Base {
 
 		$retval = $this->query($query);
 
-		$len = count($retval["data"]);
-		$time_t = time();
-
 		return($retval);
 
 	} // End of getTopLatestTrains()
