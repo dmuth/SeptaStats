@@ -48,22 +48,38 @@ class Line extends Base {
 	*/
 	function getLines() {
 
-		$retval = array(
-			"Airport Line" => 1,
+		$retval = array();
+
+		$lines = array(
+			"Airport" => 1,
 			"Chestnut Hill East" => 1,
 			"Chestnut Hill West" => 1,
-			"Cynwyd Line" => 1,
-			"Fox Chase Line" => 1,
-			"Glenside Line" => 1,
-			"Lansdale/Doylestown Line" => 1,
-			"Manayunk/Norristown Line" => 1,
-			"Media/Elwyn Line" => 1,
-			"Paoli/Thorndale Line" => 1,
-			"Trenton Line" => 1,
-			"Warminster Line" => 1,
-			"West Trenton Line" => 1,
-			"Wilmington/Newark Line" => 1,
+			"Cynwyd" => 1,
+			"Fox Chase" => 1,
+			"Glenside" => 1,
+			"Lansdale/Doylestown" => 1,
+			"Manayunk/Norristown" => 1,
+			"Media/Elwyn" => 1,
+			"Paoli/Thorndale" => 1,
+			"Trenton" => 1,
+			"Warminster" => 1,
+			"West Trenton" => 1,
+			"Wilmington/Newark" => 1,
 			);
+
+		//
+		// Go through our list of lines and create keys which are lowercased 
+		// and have non-alphas replaced with dashes
+		//
+		foreach ($lines as $key => $value) {
+
+			$key2 = strtolower($key);
+			$key2 = preg_replace("|[^a-zA-Z]|", "-", $key2);
+
+			$retval[$key2] = $key;
+
+		}
+
 
 		return($retval);
 
