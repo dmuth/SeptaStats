@@ -11,6 +11,24 @@ require_once("base.class.php");
 class Line extends Base {
 
 
+	private $lines = array(
+		"Airport" => 1,
+		"Chestnut Hill East" => 1,
+		"Chestnut Hill West" => 1,
+		"Cynwyd" => 1,
+		"Fox Chase" => 1,
+		"Glenside" => 1,
+		"Lansdale/Doylestown" => 1,
+		"Manayunk/Norristown" => 1,
+		"Media/Elwyn" => 1,
+		"Paoli/Thorndale" => 1,
+		"Trenton" => 1,
+		"Warminster" => 1,
+		"West Trenton" => 1,
+		"Wilmington/Newark" => 1,
+		);
+
+
 	function __construct($splunk) {
 		parent::__construct($splunk);
 	} // End of __construcr()
@@ -50,28 +68,11 @@ class Line extends Base {
 
 		$retval = array();
 
-		$lines = array(
-			"Airport" => 1,
-			"Chestnut Hill East" => 1,
-			"Chestnut Hill West" => 1,
-			"Cynwyd" => 1,
-			"Fox Chase" => 1,
-			"Glenside" => 1,
-			"Lansdale/Doylestown" => 1,
-			"Manayunk/Norristown" => 1,
-			"Media/Elwyn" => 1,
-			"Paoli/Thorndale" => 1,
-			"Trenton" => 1,
-			"Warminster" => 1,
-			"West Trenton" => 1,
-			"Wilmington/Newark" => 1,
-			);
-
 		//
 		// Go through our list of lines and create keys which are lowercased 
 		// and have non-alphas replaced with dashes
 		//
-		foreach ($lines as $key => $value) {
+		foreach ($this->lines as $key => $value) {
 
 			$key2 = strtolower($key);
 			$key2 = preg_replace("|[^a-zA-Z]|", "-", $key2);
