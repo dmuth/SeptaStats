@@ -107,7 +107,7 @@ class Splunk {
 					//
 					// We don't need meta data for each row.
 					//
-					if ($key[0] == "_" && $key != "_raw") {
+					if ($key[0] == "_" && $key != "_raw" && $key != "_time") {
 						continue;
 					}
 
