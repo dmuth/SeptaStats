@@ -2,28 +2,18 @@
 
 namespace Septa\Query;
 
+require_once("base.class.php");
+
+
 /**
 * This class is used to bring up data on the entire train system.
 */
-class System  {
+class System extends Base {
 
 
-	/**
-	* Our Splunk object.
-	*/
-	private $splunk;
-
-
-	/**
-	* Our constructor.
-	*
-	* @param object $splunk Our Splunk search object.
-	*/
 	function __construct($splunk) {
-
-		$this->splunk = $splunk;
-
-	} // End of __constructor()
+		parent::__construct($splunk);
+	} // End of __construcr()
 
 
 	/**
@@ -78,29 +68,6 @@ class System  {
 		return($retval);
 
 	} // End of getTotalMinutesLateByDay()
-
-
-	/**
-	* Wrapper to run our query then get metadata.
-	*
-	* @param string $query Our Splunk query.
-	*
-	* @return array An array of metadata about the search then our regular data.
-	*/
-	private function query($query) {
-
-		$retval = array();
-
-		//
-		// We want metadata to be first, as it makes debugging a little bit easier.
-		//
-		$data = $this->splunk->query($query);
-		$retval["metadata"] = $this->splunk->getResultsMeta();
-		$retval["data"] = $data;
-
-		return($retval);
-
-	} // End of query()
 
 
 } // End of class Train
