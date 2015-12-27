@@ -29,20 +29,20 @@ $app->get("/", function (Request $request, Response $response) {
 
 	// Testing/debugging
 	$urls = array(
-		"/train/521",
-		"/train/521/history",
-		"/train/521/history/average",
-		"/system",
-		"/system/totals",
-		"/lines",
-		"/line/paoli-thorndale/outbound",
-		"/line/paoli-thorndale/inbound",
-		"/line/paoli-thorndale/foobar",
-		"/line/foobar/foobar",
-		"/station/ardmore/trains",
-		"/station/ardmore/trains/latest",
-		"/station/ardmore/stats",
-		"/stations",
+		"/api/train/521",
+		"/api/train/521/history",
+		"/api/train/521/history/average",
+		"/api/system",
+		"/api/system/totals",
+		"/api/lines",
+		"/api/line/paoli-thorndale/outbound",
+		"/api/line/paoli-thorndale/inbound",
+		"/api/line/paoli-thorndale/foobar",
+		"/api/line/foobar/foobar",
+		"/api/station/ardmore/trains",
+		"/api/station/ardmore/trains/latest",
+		"/api/station/ardmore/stats",
+		"/api/stations",
 		);
 
 	$output = "";
@@ -55,7 +55,7 @@ $app->get("/", function (Request $request, Response $response) {
 });
 
 
-$app->group("/train/{trainno}", function() {
+$app->group("/api/train/{trainno}", function() {
 
 	$this->get("", function(Request $request, Response $response, $args) {
 
@@ -98,7 +98,7 @@ $app->group("/train/{trainno}", function() {
 });
 
 
-$app->group("/system", function() {
+$app->group("/api/system", function() {
 
 	$this->get("", function(Request $request, Response $response, $args) {
 	
@@ -131,7 +131,7 @@ $app->group("/system", function() {
 });
 
 
-$app->get("/lines", function(Request $request, Response $response, $args) {
+$app->get("/api/lines", function(Request $request, Response $response, $args) {
 
 	$splunk = new \Septa\Splunk();
 	$line = new Septa\Query\Line($splunk);
@@ -142,7 +142,7 @@ $app->get("/lines", function(Request $request, Response $response, $args) {
 });
 
 
-$app->get("/line/{line}/{direction}", function(Request $request, Response $response, $args) {
+$app->get("/api/line/{line}/{direction}", function(Request $request, Response $response, $args) {
 
 	$splunk = new \Septa\Splunk();
 	$line = new Septa\Query\Line($splunk);
@@ -165,7 +165,7 @@ $app->get("/line/{line}/{direction}", function(Request $request, Response $respo
 });
 
 
-$app->group("/station", function() {
+$app->group("/api/station", function() {
 
 	$this->get("/{station}/trains", function(Request $request, Response $response, $args) {
 	
@@ -213,7 +213,7 @@ $app->group("/station", function() {
 });
 
 
-$app->get("/stations", function(Request $request, Response $response, $args) {
+$app->get("/api/stations", function(Request $request, Response $response, $args) {
 
 	$splunk = new \Septa\Splunk();
 	$line = new Septa\Query\Stations($splunk);
