@@ -63,7 +63,7 @@ $app->group("/api/train/{trainno}", function() {
 		$train = new Septa\Query\Train($splunk);
     	$trainno = $request->getAttribute("trainno");
 
-		$output = "<pre>" . print_r($train->get($args["trainno"]), true) . "</pre>";
+		$output = json_encode($train->get($args["trainno"]), JSON_PRETTY_PRINT);
 
 	    $response->getBody()->write($output);
 
@@ -76,7 +76,7 @@ $app->group("/api/train/{trainno}", function() {
 		$train = new Septa\Query\Train($splunk);
     	$trainno = $request->getAttribute("trainno");
 
-		$output = "<pre>" . print_r($train->getHistoryByDay($args["trainno"]), true) . "</pre>";
+		$output = json_encode($train->getHistoryByDay($args["trainno"]), JSON_PRETTY_PRINT);
 
 	    $response->getBody()->write($output);
 
@@ -89,7 +89,7 @@ $app->group("/api/train/{trainno}", function() {
 		$train = new Septa\Query\Train($splunk);
     	$trainno = $request->getAttribute("trainno");
 
-		$output = "<pre>" . print_r($train->getHistoryHistoricalAvg($args["trainno"]), true) . "</pre>";
+		$output = json_encode($train->getHistoryHistoricalAvg($args["trainno"]), JSON_PRETTY_PRINT);
 
 	    $response->getBody()->write($output);
 
@@ -109,8 +109,7 @@ $app->group("/api/system", function() {
 		$num_hours = 1;
 		$span_min = 10;
 
-		$output = "<pre>" . print_r($system->getTopLatestTrains($num_trains, $num_hours, $span_min), true) 
-			. "</pre>";
+		$output = json_encode($system->getTopLatestTrains($num_trains, $num_hours, $span_min), JSON_PRETTY_PRINT);
 
 	    $response->getBody()->write($output);
 
@@ -122,7 +121,7 @@ $app->group("/api/system", function() {
 		$system = new Septa\Query\System($splunk);
 
 		$num_days = 7;
-		$output = "<pre>" . print_r($system->getTotalMinutesLateByDay($num_days), true) . "</pre>";
+		$output = json_encode($system->getTotalMinutesLateByDay($num_days), JSON_PRETTY_PRINT);
 
 	    $response->getBody()->write($output);
 
@@ -136,7 +135,7 @@ $app->get("/api/lines", function(Request $request, Response $response, $args) {
 	$splunk = new \Septa\Splunk();
 	$line = new Septa\Query\Line($splunk);
 
-	$output = "<pre>" . print_r($line->getLines(), true) . "</pre>";
+	$output = json_encode($line->getLines(), JSON_PRETTY_PRINT);
 	$response->getBody()->write($output);
 
 });
@@ -174,8 +173,7 @@ $app->group("/api/station", function() {
 
 		$station = $args["station"];
 
-		$output = "<pre>" . print_r($system->getTrains($station), true) 
-			. "</pre>";
+		$output = json_encode($system->getTrains($station), JSON_PRETTY_PRINT);
 
 	    $response->getBody()->write($output);
 
@@ -188,8 +186,7 @@ $app->group("/api/station", function() {
 
 		$station = $args["station"];
 
-		$output = "<pre>" . print_r($system->getTrainsLatest($station), true) 
-			. "</pre>";
+		$output = json_encode($system->getTrainsLatest($station), JSON_PRETTY_PRINT);
 
 	    $response->getBody()->write($output);
 
@@ -202,8 +199,7 @@ $app->group("/api/station", function() {
 
 		$station = $args["station"];
 
-		$output = "<pre>" . print_r($system->getStats($station), true) 
-			. "</pre>";
+		$output = json_encode($system->getStats($station), JSON_PRETTY_PRINT);
 
 	    $response->getBody()->write($output);
 
@@ -218,7 +214,14 @@ $app->get("/api/stations", function(Request $request, Response $response, $args)
 	$splunk = new \Septa\Splunk();
 	$line = new Septa\Query\Stations($splunk);
 
-	$output = "<pre>" . print_r($line->getStations(), true) . "</pre>";
+	$data = $line->getStations();
+	foreach ($data["data"] as $key => $value) {
+		unset($data["data"][$key]["_raw"]);
+		unset($data["data"][$key]["_time"]);
+	}
+
+	$output = json_encode($data, JSON_PRETTY_PRINT);
+
 	$response->getBody()->write($output);
 
 });
