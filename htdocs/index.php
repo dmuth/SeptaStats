@@ -150,8 +150,10 @@ $app->get("/line/{line}/{direction}", function(Request $request, Response $respo
 		$response->getBody()->write($output);
 
 	} else {
-		$output = sprintf("Line %s and/or direction %s not found!\n", $args["line"], $args["direction"]);
-		$response->getBody()->write($output);
+		$output = sprintf("Line '%s' and/or direction '%s' not found!\n", $args["line"], $args["direction"]);
+		$new_response = $response->withStatus(404, $output);
+		$new_response->getBody()->write($output);
+		return($new_response);
 
 	}
 
@@ -163,17 +165,10 @@ $app->get("/line/{line}/{direction}", function(Request $request, Response $respo
 */
 $app->get("/test", function(Request $request, Response $response, $args) {
 
-	$splunk = new \Septa\Splunk();
-	$line = new Septa\Query\Line($splunk);
-
-	$num_hours = 2;
-	$span_min = 10;
-	$output = "";
-	$output .= "<pre>" . print_r($line->getLateTrains("Paoli/Thorndale (Inbound)", $num_hours, $span_min), true) . "</pre>";
-	$output .= "<pre>" . print_r($line->getLateTrains("Paoli/Thorndale (Outbound)", $num_hours, $span_min), true) . "</pre>";
-	$output .= "<pre>" . print_r($line->getLateTrains("Trenton (Outbound)", $num_hours, $span_min), true) . "</pre>";
-
-	$response->getBody()->write($output);
+	$output = "testing";
+	$newResponse = $response->withStatus(404, $output);
+	$newResponse->getBody()->write($output);
+	return($newResponse);
 
 });
 
