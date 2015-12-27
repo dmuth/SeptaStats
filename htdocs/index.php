@@ -150,13 +150,19 @@ $app->get("/api/line/{line}/{direction}", function(Request $request, Response $r
 	$direction = $line->checkDirection($args["direction"]);
 
 	if ($line_name && $direction) {
-		$output = "$line_name, $direction<br/>\n";
-		$response->getBody()->write($output);
+		$data= array(
+			"data" => array("$line_name, $direction"),
+			);
+		$response->getBody()->write(json_encode($data, JSON_PRETTY_PRINT));
 
 	} else {
-		$output = sprintf("Line '%s' and/or direction '%s' not found!\n", $args["line"], $args["direction"]);
-		$new_response = $response->withStatus(404, $output);
-		$new_response->getBody()->write($output);
+		$error = sprintf("Line '%s' and/or direction '%s' not found!\n", $args["line"], $args["direction"]);
+		$output = array(
+			"error" => $error,
+			);
+		$output_json = json_encode($output, JSON_PRETTY_PRINT);
+		$new_response = $response->withStatus(404, "Line or direction not found");
+		$new_response->getBody()->write($output_json);
 		return($new_response);
 
 	}
