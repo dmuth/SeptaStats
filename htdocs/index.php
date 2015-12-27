@@ -12,7 +12,7 @@ require("./lib/splunk.php");
 require("./lib/query/train.class.php");
 require("./lib/query/line.class.php");
 require("./lib/query/system.class.php");
-
+require("./lib/query/station.class.php");
 
 
 $configuration = [
@@ -38,6 +38,9 @@ $app->get("/", function (Request $request, Response $response) {
 		"/line/paoli-thorndale/inbound",
 		"/line/paoli-thorndale/foobar",
 		"/line/foobar/foobar",
+		"/station/ardmore/trains",
+		"/station/ardmore/trains/latest",
+		"/station/ardmore/stats",
 		);
 
 	$output = "";
@@ -159,6 +162,53 @@ $app->get("/line/{line}/{direction}", function(Request $request, Response $respo
 
 });
 
+
+$app->group("/station", function() {
+
+	$this->get("/{station}/trains", function(Request $request, Response $response, $args) {
+	
+		$splunk = new \Septa\Splunk();
+		$system = new Septa\Query\Station($splunk);
+
+		$station = $args["station"];
+
+		$output = "<pre>" . print_r($system->getTrains($station), true) 
+			. "</pre>";
+
+	    $response->getBody()->write($output);
+
+	});
+
+	$this->get("/{station}/trains/latest", function(Request $request, Response $response, $args) {
+	
+		$splunk = new \Septa\Splunk();
+		$system = new Septa\Query\Station($splunk);
+
+		$station = $args["station"];
+
+		$output = "<pre>" . print_r($system->getTrainsLatest($station), true) 
+			. "</pre>";
+
+	    $response->getBody()->write($output);
+
+	});
+
+	$this->get("/{station}/stats", function(Request $request, Response $response, $args) {
+	
+		$splunk = new \Septa\Splunk();
+		$system = new Septa\Query\Station($splunk);
+
+		$station = $args["station"];
+
+		$output = "<pre>" . print_r($system->getStats($station), true) 
+			. "</pre>";
+
+	    $response->getBody()->write($output);
+
+	});
+
+
+});
 
 /**
 * This endpoint is used for testing and development.
