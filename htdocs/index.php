@@ -13,6 +13,7 @@ require("./lib/query/train.class.php");
 require("./lib/query/line.class.php");
 require("./lib/query/system.class.php");
 require("./lib/query/station.class.php");
+require("./lib/query/stations.class.php");
 
 
 $configuration = [
@@ -41,6 +42,7 @@ $app->get("/", function (Request $request, Response $response) {
 		"/station/ardmore/trains",
 		"/station/ardmore/trains/latest",
 		"/station/ardmore/stats",
+		"/stations",
 		);
 
 	$output = "";
@@ -209,6 +211,18 @@ $app->group("/station", function() {
 
 
 });
+
+
+$app->get("/stations", function(Request $request, Response $response, $args) {
+
+	$splunk = new \Septa\Splunk();
+	$line = new Septa\Query\Stations($splunk);
+
+	$output = "<pre>" . print_r($line->getStations(), true) . "</pre>";
+	$response->getBody()->write($output);
+
+});
+
 
 /**
 * This endpoint is used for testing and development.
