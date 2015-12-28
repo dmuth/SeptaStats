@@ -35,6 +35,7 @@ class Station extends Base {
 			. '| sort time desc';
 
 		$retval = $this->query($query);
+		$retval["metadata"]["_comment"] = "Most recent trains that have arrived at the station named '$station'";
 
 		return($retval);
 
@@ -64,6 +65,7 @@ class Station extends Base {
 				. '| sort "Minutes Late" desc';
 
 		$retval = $this->query($query);
+		$retval["metadata"]["_comment"] = "Latest trains that have arrived at the station named '$station'";
 
 		return($retval);
 
@@ -98,6 +100,7 @@ class Station extends Base {
 
 
 		$retval = $this->query($query);
+		$retval["metadata"]["_comment"] = "Stats for station '$station'. How many trains per hour versus total minutes late that hour.";
 
 		return($retval);
 

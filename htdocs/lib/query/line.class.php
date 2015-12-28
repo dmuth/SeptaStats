@@ -71,7 +71,16 @@ class Line extends Base {
 	* These are the basenames, excluding the " (Inbound)" and " (Outbound)" suffixes.
 	*/
 	function getLines() {
-		return($this->lines);
+
+		$retval = array(
+			"metadata" => array(
+				"_comment" => "All train lines",
+				),
+			"data" => $this->lines,
+			);
+
+		return($retval);
+
 	} // End of getLines()
 
 

@@ -36,6 +36,7 @@ class Train extends Base {
 			;
 
 		$retval = $this->query($query);
+		$retval["metadata"]["_comment"] = "What stops did train '$trainno' make, and how late was it each stop?";
 		
 		return($retval);
 
@@ -69,6 +70,7 @@ class Train extends Base {
 			;
 
 		$retval = $this->query($query);
+		$retval["metadata"]["_comment"] = "Multiple days worth of stops and lateness for train '$trainno'";
 
 		return($retval);
 
@@ -101,6 +103,7 @@ class Train extends Base {
 			;
 
 		$retval = $this->query($query);
+		$retval["metadata"]["_comment"] = "Average lateness compared to current lateness for train '$trainno'";
 
 		return($retval);
 

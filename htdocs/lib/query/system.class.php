@@ -38,6 +38,7 @@ class System extends Base {
 			;
 
 		$retval = $this->query($query);
+		$retval["metadata"]["_comment"] = "The overall status of the train system";
 
 		return($retval);
 
@@ -61,6 +62,7 @@ class System extends Base {
 			. '| timewrap d';
 
 		$retval = $this->query($query);
+		$retval["metadata"]["_comment"] = "Day over day list of total minutes late for the system";
 
 		return($retval);
 

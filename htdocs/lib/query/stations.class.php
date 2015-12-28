@@ -32,6 +32,7 @@ class Stations extends Base {
 			;
 
 		$retval = $this->query($query);
+		$retval["metadata"]["_comment"] = "A list of all stations";
 
 		return($retval);
 
