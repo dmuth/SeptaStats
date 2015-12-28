@@ -62,6 +62,25 @@ function json_pretty($data) {
 	return(json_encode($data, JSON_PRETTY_PRINT));
 }
 
+/**
+* Wrap all of our calls to Splunk, so that if it fails, we can return a nice error in JSON format.
+*/
+function splunkWrapper($cb) {
+
+	try {
+		return($cb());
+
+	} catch (Exception $e) {
+		syslog(LOG_ERR, "splunkWrapper(): " . $e->getMessage());
+		$data = array(
+			"error" => "Unable to connect to our data store. (is it running?)",
+			);
+		return(json_pretty($data));
+
+	}
+
+} // End of splunkWrapper()
+
 
 $app->group("/api/train/{trainno}", function() {
 
@@ -71,7 +90,9 @@ $app->group("/api/train/{trainno}", function() {
 		$train = new Septa\Query\Train($splunk);
     	$trainno = $request->getAttribute("trainno");
 
-		$output = json_pretty($train->get($args["trainno"]));
+		$output = splunkWrapper(function() use ($args, $train) {
+			return(json_pretty($train->get($args["trainno"])));
+			});
 
 	    $response->getBody()->write($output);
 
@@ -84,7 +105,9 @@ $app->group("/api/train/{trainno}", function() {
 		$train = new Septa\Query\Train($splunk);
     	$trainno = $request->getAttribute("trainno");
 
-		$output = json_pretty($train->getHistoryByDay($args["trainno"]));
+		$output = splunkWrapper(function() use ($args, $train) {
+			return(json_pretty($train->getHistoryByDay($args["trainno"])));
+			});
 
 	    $response->getBody()->write($output);
 
@@ -97,7 +120,9 @@ $app->group("/api/train/{trainno}", function() {
 		$train = new Septa\Query\Train($splunk);
     	$trainno = $request->getAttribute("trainno");
 
-		$output = json_pretty($train->getHistoryHistoricalAvg($args["trainno"]));
+		$output = splunkWrapper(function() use($args, $train) {
+			return(json_pretty($train->getHistoryHistoricalAvg($args["trainno"])));
+			});
 
 	    $response->getBody()->write($output);
 
@@ -117,7 +142,9 @@ $app->group("/api/system", function() {
 		$num_hours = 1;
 		$span_min = 10;
 
-		$output = json_pretty($system->getTopLatestTrains($num_trains, $num_hours, $span_min));
+		$output = splunkWrapper(function() use ($system, $num_trains, $num_hours, $span_min) {
+			return(json_pretty($system->getTopLatestTrains($num_trains, $num_hours, $span_min)));
+			});
 
 	    $response->getBody()->write($output);
 
@@ -129,7 +156,9 @@ $app->group("/api/system", function() {
 		$system = new Septa\Query\System($splunk);
 
 		$num_days = 7;
-		$output = json_pretty($system->getTotalMinutesLateByDay($num_days));
+		$output = splunkWrapper(function() use ($args, $system, $num_days) {
+			return(json_pretty($system->getTotalMinutesLateByDay($num_days)));
+			});
 
 	    $response->getBody()->write($output);
 
@@ -189,7 +218,9 @@ $app->group("/api/station", function() {
 
 		$station = $args["station"];
 
-		$output = json_pretty($system->getTrains($station));
+		$output = splunkWrapper(function() use ($system, $station) {
+			return(json_pretty($system->getTrains($station)));
+			});
 
 	    $response->getBody()->write($output);
 
@@ -202,7 +233,9 @@ $app->group("/api/station", function() {
 
 		$station = $args["station"];
 
-		$output = json_pretty($system->getTrainsLatest($station));
+		$output = splunkWrapper(function() use ($system, $station) {
+			return(json_pretty($system->getTrainsLatest($station)));
+			});
 
 	    $response->getBody()->write($output);
 
@@ -215,7 +248,9 @@ $app->group("/api/station", function() {
 
 		$station = $args["station"];
 
-		$output = json_pretty($system->getStats($station));
+		$output = splunkWrapper(function() use ($system, $station) {
+			return(json_pretty($system->getStats($station)));
+			});
 
 	    $response->getBody()->write($output);
 
@@ -230,13 +265,19 @@ $app->get("/api/stations", function(Request $request, Response $response, $args)
 	$splunk = new \Septa\Splunk();
 	$line = new Septa\Query\Stations($splunk);
 
-	$data = $line->getStations();
-	foreach ($data["data"] as $key => $value) {
-		unset($data["data"][$key]["_raw"]);
-		unset($data["data"][$key]["_time"]);
-	}
+	$output = splunkWrapper(function() use ($line) {
 
-	$output = json_pretty($data);
+		$data = $line->getStations();
+		foreach ($data["data"] as $key => $value) {
+			unset($data["data"][$key]["_raw"]);
+			unset($data["data"][$key]["_time"]);
+		}
+
+		$output = json_pretty($data);
+
+		return($output);
+
+		});
 
 	$response->getBody()->write($output);
 
