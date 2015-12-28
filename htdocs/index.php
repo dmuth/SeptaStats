@@ -55,6 +55,14 @@ $app->get("/", function (Request $request, Response $response) {
 });
 
 
+/**
+* Helper function to return prettified JSON data.
+*/
+function json_pretty($data) {
+	return(json_encode($data, JSON_PRETTY_PRINT));
+}
+
+
 $app->group("/api/train/{trainno}", function() {
 
 	$this->get("", function(Request $request, Response $response, $args) {
@@ -63,7 +71,7 @@ $app->group("/api/train/{trainno}", function() {
 		$train = new Septa\Query\Train($splunk);
     	$trainno = $request->getAttribute("trainno");
 
-		$output = json_encode($train->get($args["trainno"]), JSON_PRETTY_PRINT);
+		$output = json_pretty($train->get($args["trainno"]));
 
 	    $response->getBody()->write($output);
 
@@ -76,7 +84,7 @@ $app->group("/api/train/{trainno}", function() {
 		$train = new Septa\Query\Train($splunk);
     	$trainno = $request->getAttribute("trainno");
 
-		$output = json_encode($train->getHistoryByDay($args["trainno"]), JSON_PRETTY_PRINT);
+		$output = json_pretty($train->getHistoryByDay($args["trainno"]));
 
 	    $response->getBody()->write($output);
 
@@ -89,7 +97,7 @@ $app->group("/api/train/{trainno}", function() {
 		$train = new Septa\Query\Train($splunk);
     	$trainno = $request->getAttribute("trainno");
 
-		$output = json_encode($train->getHistoryHistoricalAvg($args["trainno"]), JSON_PRETTY_PRINT);
+		$output = json_pretty($train->getHistoryHistoricalAvg($args["trainno"]));
 
 	    $response->getBody()->write($output);
 
@@ -109,7 +117,7 @@ $app->group("/api/system", function() {
 		$num_hours = 1;
 		$span_min = 10;
 
-		$output = json_encode($system->getTopLatestTrains($num_trains, $num_hours, $span_min), JSON_PRETTY_PRINT);
+		$output = json_pretty($system->getTopLatestTrains($num_trains, $num_hours, $span_min));
 
 	    $response->getBody()->write($output);
 
@@ -121,7 +129,7 @@ $app->group("/api/system", function() {
 		$system = new Septa\Query\System($splunk);
 
 		$num_days = 7;
-		$output = json_encode($system->getTotalMinutesLateByDay($num_days), JSON_PRETTY_PRINT);
+		$output = json_pretty($system->getTotalMinutesLateByDay($num_days));
 
 	    $response->getBody()->write($output);
 
@@ -135,7 +143,7 @@ $app->get("/api/lines", function(Request $request, Response $response, $args) {
 	$splunk = new \Septa\Splunk();
 	$line = new Septa\Query\Line($splunk);
 
-	$output = json_encode($line->getLines(), JSON_PRETTY_PRINT);
+	$output = json_pretty($line->getLines());
 	$response->getBody()->write($output);
 
 });
@@ -153,14 +161,14 @@ $app->get("/api/line/{line}/{direction}", function(Request $request, Response $r
 		$data= array(
 			"data" => array("$line_name, $direction"),
 			);
-		$response->getBody()->write(json_encode($data, JSON_PRETTY_PRINT));
+		$response->getBody()->write(json_pretty($data));
 
 	} else {
 		$error = sprintf("Line '%s' and/or direction '%s' not found!\n", $args["line"], $args["direction"]);
 		$output = array(
 			"error" => $error,
 			);
-		$output_json = json_encode($output, JSON_PRETTY_PRINT);
+		$output_json = json_pretty($output);
 		$new_response = $response->withStatus(404, "Line or direction not found");
 		$new_response->getBody()->write($output_json);
 		return($new_response);
@@ -179,7 +187,7 @@ $app->group("/api/station", function() {
 
 		$station = $args["station"];
 
-		$output = json_encode($system->getTrains($station), JSON_PRETTY_PRINT);
+		$output = json_pretty($system->getTrains($station));
 
 	    $response->getBody()->write($output);
 
@@ -192,7 +200,7 @@ $app->group("/api/station", function() {
 
 		$station = $args["station"];
 
-		$output = json_encode($system->getTrainsLatest($station), JSON_PRETTY_PRINT);
+		$output = json_pretty($system->getTrainsLatest($station));
 
 	    $response->getBody()->write($output);
 
@@ -205,7 +213,7 @@ $app->group("/api/station", function() {
 
 		$station = $args["station"];
 
-		$output = json_encode($system->getStats($station), JSON_PRETTY_PRINT);
+		$output = json_pretty($system->getStats($station));
 
 	    $response->getBody()->write($output);
 
@@ -226,7 +234,7 @@ $app->get("/api/stations", function(Request $request, Response $response, $args)
 		unset($data["data"][$key]["_time"]);
 	}
 
-	$output = json_encode($data, JSON_PRETTY_PRINT);
+	$output = json_pretty($data);
 
 	$response->getBody()->write($output);
 
