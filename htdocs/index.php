@@ -65,17 +65,26 @@ function json_pretty($data) {
 /**
 * Wrap all of our calls to Splunk, so that if it fails, we can return a nice error in JSON format.
 */
-function splunkWrapper($cb) {
+function splunkWrapper($cb, $response) {
 
 	try {
 		return($cb());
 
 	} catch (Exception $e) {
+		//
+		// Was there a problem querying Splunk?
+		// Log it, and then throw a 5XX error.
+		//
 		syslog(LOG_ERR, "splunkWrapper(): " . $e->getMessage());
+
 		$data = array(
 			"error" => "Unable to connect to our data store. (is it running?)",
 			);
-		return(json_pretty($data));
+
+		$output = json_pretty($data);
+		$newResponse = $response->withStatus(500, "Server Error");
+		$newResponse->getBody()->write($output);
+		return($newResponse);
 
 	}
 
@@ -90,11 +99,15 @@ $app->group("/api/train/{trainno}", function() {
 		$train = new Septa\Query\Train($splunk);
     	$trainno = $request->getAttribute("trainno");
 
-		$output = splunkWrapper(function() use ($args, $train) {
-			return(json_pretty($train->get($args["trainno"])));
-			});
+		$result = splunkWrapper(function() use ($args, $train, $response) {
 
-	    $response->getBody()->write($output);
+			$output = json_pretty($train->get($args["trainno"]));
+	    	$response->getBody()->write($output);
+
+			return($response);
+			}, $response);
+
+		return($result);
 
 	});
 
@@ -105,11 +118,14 @@ $app->group("/api/train/{trainno}", function() {
 		$train = new Septa\Query\Train($splunk);
     	$trainno = $request->getAttribute("trainno");
 
-		$output = splunkWrapper(function() use ($args, $train) {
-			return(json_pretty($train->getHistoryByDay($args["trainno"])));
-			});
+		$result = splunkWrapper(function() use ($args, $train, $response) {
 
-	    $response->getBody()->write($output);
+			$output = json_pretty($train->getHistoryByDay($args["trainno"]));
+	    	$response->getBody()->write($output);
+
+			}, $response);
+
+		return($result);
 
 	});
 
@@ -120,11 +136,14 @@ $app->group("/api/train/{trainno}", function() {
 		$train = new Septa\Query\Train($splunk);
     	$trainno = $request->getAttribute("trainno");
 
-		$output = splunkWrapper(function() use($args, $train) {
-			return(json_pretty($train->getHistoryHistoricalAvg($args["trainno"])));
-			});
+		$result = splunkWrapper(function() use($args, $train, $response) {
 
-	    $response->getBody()->write($output);
+			$output = json_pretty($train->getHistoryHistoricalAvg($args["trainno"]));
+	    	$response->getBody()->write($output);
+
+			}, $response);
+
+		return($result);
 
 	});
 
@@ -142,11 +161,14 @@ $app->group("/api/system", function() {
 		$num_hours = 1;
 		$span_min = 10;
 
-		$output = splunkWrapper(function() use ($system, $num_trains, $num_hours, $span_min) {
-			return(json_pretty($system->getTopLatestTrains($num_trains, $num_hours, $span_min)));
-			});
+		$result = splunkWrapper(function() use ($system, $response, $num_trains, $num_hours, $span_min) {
 
-	    $response->getBody()->write($output);
+			$output = json_pretty($system->getTopLatestTrains($num_trains, $num_hours, $span_min));
+	    	$response->getBody()->write($output);
+
+			}, $response);
+
+		return($result);
 
 	});
 
@@ -156,11 +178,15 @@ $app->group("/api/system", function() {
 		$system = new Septa\Query\System($splunk);
 
 		$num_days = 7;
-		$output = splunkWrapper(function() use ($args, $system, $num_days) {
-			return(json_pretty($system->getTotalMinutesLateByDay($num_days)));
-			});
 
-	    $response->getBody()->write($output);
+		$result = splunkWrapper(function() use ($response, $args, $system, $num_days) {
+
+			$output = json_pretty($system->getTotalMinutesLateByDay($num_days));
+	    	$response->getBody()->write($output);
+
+			}, $response);
+
+		return($result);
 
 	});
 
@@ -218,11 +244,14 @@ $app->group("/api/station", function() {
 
 		$station = $args["station"];
 
-		$output = splunkWrapper(function() use ($system, $station) {
-			return(json_pretty($system->getTrains($station)));
-			});
+		$result = splunkWrapper(function() use ($system, $response, $station) {
 
-	    $response->getBody()->write($output);
+			$output = json_pretty($system->getTrains($station));
+	    	$response->getBody()->write($output);
+
+			}, $response);
+
+		return($result);
 
 	});
 
@@ -233,11 +262,14 @@ $app->group("/api/station", function() {
 
 		$station = $args["station"];
 
-		$output = splunkWrapper(function() use ($system, $station) {
-			return(json_pretty($system->getTrainsLatest($station)));
-			});
+		$result = splunkWrapper(function() use ($system, $response, $station) {
 
-	    $response->getBody()->write($output);
+			$output = json_pretty($system->getTrainsLatest($station));
+	    	$response->getBody()->write($output);
+
+			}, $response);
+
+		return($result);
 
 	});
 
@@ -248,11 +280,14 @@ $app->group("/api/station", function() {
 
 		$station = $args["station"];
 
-		$output = splunkWrapper(function() use ($system, $station) {
-			return(json_pretty($system->getStats($station)));
-			});
+		$result = splunkWrapper(function() use ($system, $response, $station) {
 
-	    $response->getBody()->write($output);
+			$output = json_pretty($system->getStats($station));
+	    	$response->getBody()->write($output);
+
+			}, $response);
+
+		return($result);
 
 	});
 
@@ -277,7 +312,7 @@ $app->get("/api/stations", function(Request $request, Response $response, $args)
 
 		return($output);
 
-		});
+		}, $response);
 
 	$response->getBody()->write($output);
 
