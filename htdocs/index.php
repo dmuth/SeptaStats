@@ -143,10 +143,7 @@ $app->get("/api/lines", function(Request $request, Response $response, $args) {
 	$splunk = new \Septa\Splunk();
 	$line = new Septa\Query\Line($splunk);
 
-	$data = array(
-		"data" => $line->getLines(),
-		);
-	$output = json_pretty($data);
+	$output = json_pretty($line->getLines());
 	$response->getBody()->write($output);
 
 });
@@ -162,6 +159,8 @@ $app->get("/api/line/{line}/{direction}", function(Request $request, Response $r
 
 	if ($line_name && $direction) {
 		$data= array(
+			"metadata" => array(
+				),
 			"data" => array("$line_name, $direction"),
 			);
 		$response->getBody()->write(json_pretty($data));
