@@ -1,0 +1,63 @@
+#!/bin/bash
+#
+# This script removes all existing buckets
+#
+
+# Errors are fatal
+set -e 
+
+GO=""
+if test "$1" == "--go"
+then
+	GO=0
+fi
+
+SPLUNK_HOME="/var/splunk"
+BUCKET_DIR="${SPLUNK_HOME}/var/lib/splunk/septa_analytics/db"
+
+ls -l $BUCKET_DIR/warm
+
+if test "$GO"
+then
+	$SPLUNK_HOME/bin/splunk stop
+else
+	echo "# "
+	echo "# If I was run with --go on the command line, "
+	echo "# I would be stopping splunk now... "
+	echo "# "
+fi
+
+OLD_BUCKETS="${BUCKET_DIR}/old-buckets"
+mkdir -p $OLD_BUCKETS
+echo "# "
+echo "# About to move all buckets to '${OLD_BUCKETS}'..."
+echo "# "
+
+#
+# Find our buckets and move them
+#
+for FILE in $(find $BUCKET_DIR -type d -name db_\* -o -name hot_\* )
+do
+	echo "# "
+	echo "# Moving '${FILE}' to '${OLD_BUCKETS}'..."
+	echo "# (...if I was run with --go on the command line...)"
+	echo "# "
+	if test "$GO"
+	then
+		mv ${FILE} $OLD_BUCKETS
+	fi
+
+done
+
+
+if test "$GO"
+then
+	$SPLUNK_HOME/bin/splunk start
+else
+	echo "# "
+	echo "# If I was run with --go on the command line, "
+	echo "# I would be starting splunk now... "
+	echo "# "
+fi
+
+
