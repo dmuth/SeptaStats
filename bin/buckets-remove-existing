@@ -15,8 +15,6 @@ fi
 SPLUNK_HOME="/var/splunk"
 BUCKET_DIR="${SPLUNK_HOME}/var/lib/splunk/septa_analytics/db"
 
-ls -l $BUCKET_DIR/warm
-
 if test "$GO"
 then
 	$SPLUNK_HOME/bin/splunk stop
