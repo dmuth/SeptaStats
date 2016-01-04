@@ -81,11 +81,22 @@ do
 	echo "# New File: $NEW_DIR"
 	mv $EXTRACTED_DIR $NEW_DIR
 
+	NEW_BUCKET_DIR="${BUCKET_DIR}/${NEW_DIR}"
+	echo "# New final location: $NEW_BUCKET_DIR"
+
 	echo "# Moving '${NEW_DIR}' to '${BUCKET_DIR}'..."
 
 	if test "$GO"
 	then
-		mv ${NEW_DIR} ${BUCKET_DIR}
+		if test ! -d ${NEW_BUCKET_DIR}
+		then
+			mv ${NEW_DIR} ${BUCKET_DIR}
+		else
+			echo "# "
+			echo "# Oops!  Target '${NEW_BUCKET_DIR}' already exists, skpping this one!"
+			echo "# "
+		fi
+
 	fi
 
 	echo "# (...if I was run with --go on the command line...)"
