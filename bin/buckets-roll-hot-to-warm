@@ -5,5 +5,9 @@
 # roll buckets before doing a manual backup, for example.
 #
 
-/var/splunk/bin/splunk _internal call /data/indexes/septa-analytics/roll-hot-buckets -auth admin:adminpw
+# Errors are fatal
+set -e 
+
+/var/splunk/bin/splunk _internal call /data/indexes/septa_analytics/roll-hot-buckets -auth admin:adminpw
+
 

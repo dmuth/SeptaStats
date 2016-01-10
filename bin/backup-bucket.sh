@@ -64,20 +64,20 @@ do
 	# Make sure our target directory exists and set our target filename
 	#
 	mkdir -p "$TARGET"
-	TARGET_TGZ="${TARGET}/${DIR2}.tgz"
+	TARGET_TGZ="${TARGET}/${HOSTNAME}-${DIR2}.tgz"
 
 	#
 	# Go into the parent directory and then tar up the child directory
 	#
 	pushd $DIR/.. > /dev/null
 
-	TARGET_SANITIZED=$(echo $TARGET | sed -e "s/[^A-Za-z0-9]/_/g")
+	TARGET_SANITIZED=$(echo $TARGET_TGZ | sed -e "s/[^A-Za-z0-9]/_/g")
 	TOUCH_FILE="${DIR2}/.backedup-${TARGET_SANITIZED}"
 
 	if test -f $TOUCH_FILE
 	then
 		echo "# "
-		echo "# The directory $DIR2 has already been backed up! Skipping..."
+		echo "# The directory $DIR2 has already been backed up to '${TARGET_TGZ}'! Skipping..."
 		echo "# "
 
 	else 

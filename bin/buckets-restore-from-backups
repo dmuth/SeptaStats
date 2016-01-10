@@ -1,0 +1,124 @@
+#!/bin/bash
+#
+# This script removes all existing buckets
+#
+
+# Errors are fatal
+set -e 
+
+GO=""
+SRC=""
+
+if test ! "$1"
+then
+	echo "! "
+	echo "! Syntax: $0 /path/to/backup/directory [ --go ]"
+	echo "! "
+	exit 1
+fi
+SRC=$1
+
+if test "$2" == "--go"
+then
+	GO=1
+fi
+
+if test ! -d "$SRC"
+then
+	echo "! "
+	echo "! Backup directory '$SRC' does not exist or is not readable!"
+	echo "! "
+	exit 1
+fi
+
+SPLUNK_HOME="/var/splunk"
+BUCKET_DIR="${SPLUNK_HOME}/var/lib/splunk/septa_analytics/db/cold"
+
+if test "$GO"
+then
+	$SPLUNK_HOME/bin/splunk stop
+else
+	echo "# "
+	echo "# If I was run with --go on the command line, "
+	echo "# I would be stopping splunk now... "
+	echo "# "
+fi
+
+echo "# "
+echo "# About to restore buckets from '${SRC}' to '${BUCKET_DIR}'..."
+echo "# "
+
+echo "# "
+echo "# Doing temporary operations in ${TMP_DIR}..."
+echo "# "
+
+#
+# Find our buckets and move them
+#
+NEW_ID=10000
+for FILE in $(ls -1 $SRC/*.tgz |sort )
+do
+	TMP_DIR=$(mktemp -d)
+	pushd $TMP_DIR
+
+	echo "# "
+	echo "# Restoring '${FILE}' to '${BUCKET_DIR}'..."
+	echo "# temp dir: ${TMP_DIR}"
+
+	#
+	# Extract our file, get the ID number, and change it to a new ID number
+	#
+	tar xfz $FILE
+
+	EXTRACTED_DIR=$(ls -1)
+	echo "# Extracted into directory: $EXTRACTED_DIR"
+
+	EXTRACTED_ID=$(echo $EXTRACTED_DIR |cut -d_ -f4 | cut -d. -f1)
+	echo "# Extracted ID: $EXTRACTED_ID"
+	echo "# New ID: $NEW_ID"
+
+	NEW_DIR=$(echo $EXTRACTED_DIR | sed -e s/_${EXTRACTED_ID}$/_${NEW_ID}/)
+	echo "# New File: $NEW_DIR"
+	mv $EXTRACTED_DIR $NEW_DIR
+
+	NEW_BUCKET_DIR="${BUCKET_DIR}/${NEW_DIR}"
+	echo "# New final location: $NEW_BUCKET_DIR"
+
+	echo "# Moving '${NEW_DIR}' to '${BUCKET_DIR}'..."
+
+	if test "$GO"
+	then
+		if test ! -d ${NEW_BUCKET_DIR}
+		then
+			mv ${NEW_DIR} ${BUCKET_DIR}
+		else
+			echo "# "
+			echo "# Oops!  Target '${NEW_BUCKET_DIR}' already exists, skpping this one!"
+			echo "# "
+		fi
+
+	fi
+
+	echo "# (...if I was run with --go on the command line...)"
+
+	#
+	# Increment our New ID, get out of our old directory, and remove it
+	#
+	NEW_ID=$((NEW_ID + 1))
+	popd >/dev/null
+	rm -rf ${TMP_DIR}
+
+done
+
+
+if test "$GO"
+then
+	$SPLUNK_HOME/bin/splunk start
+else
+	echo "# "
+	echo "# If I was run with --go on the command line, "
+	echo "# I would be starting splunk now... "
+	echo "# "
+fi
+
+
