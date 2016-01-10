@@ -29,20 +29,20 @@ $app->get("/", function (Request $request, Response $response) {
 
 	// Testing/debugging
 	$urls = array(
-		"/api/train/521",
-		"/api/train/521/history",
-		"/api/train/521/history/average",
-		"/api/system",
-		"/api/system/totals",
-		"/api/lines",
-		"/api/line/paoli-thorndale/outbound",
-		"/api/line/paoli-thorndale/inbound",
-		"/api/line/paoli-thorndale/foobar",
-		"/api/line/foobar/foobar",
-		"/api/station/ardmore/trains",
-		"/api/station/ardmore/trains/latest",
-		"/api/station/ardmore/stats",
-		"/api/stations",
+		"/api/current/train/521",
+		"/api/current/train/521/history",
+		"/api/current/train/521/history/average",
+		"/api/current/system",
+		"/api/current/system/totals",
+		"/api/current/lines",
+		"/api/current/line/paoli-thorndale/outbound",
+		"/api/current/line/paoli-thorndale/inbound",
+		"/api/current/line/paoli-thorndale/foobar",
+		"/api/current/line/foobar/foobar",
+		"/api/current/station/ardmore/trains",
+		"/api/current/station/ardmore/trains/latest",
+		"/api/current/station/ardmore/stats",
+		"/api/current/stations",
 		);
 
 	$output = "";
@@ -59,7 +59,7 @@ $app->get("/", function (Request $request, Response $response) {
 * Helper function to return prettified JSON data.
 */
 function json_pretty($data) {
-	return(json_encode($data, JSON_PRETTY_PRINT));
+	return(json_encode($data));
 }
 
 /**
@@ -91,7 +91,7 @@ function splunkWrapper($cb, $response) {
 } // End of splunkWrapper()
 
 
-$app->group("/api/train/{trainno}", function() {
+$app->group("/api/current/train/{trainno}", function() {
 
 	$this->get("", function(Request $request, Response $response, $args) {
 
@@ -150,7 +150,7 @@ $app->group("/api/train/{trainno}", function() {
 });
 
 
-$app->group("/api/system", function() {
+$app->group("/api/current/system", function() {
 
 	$this->get("", function(Request $request, Response $response, $args) {
 	
@@ -193,7 +193,7 @@ $app->group("/api/system", function() {
 });
 
 
-$app->get("/api/lines", function(Request $request, Response $response, $args) {
+$app->get("/api/current/lines", function(Request $request, Response $response, $args) {
 
 	$splunk = new \Septa\Splunk();
 	$line = new Septa\Query\Line($splunk);
@@ -204,7 +204,7 @@ $app->get("/api/lines", function(Request $request, Response $response, $args) {
 });
 
 
-$app->get("/api/line/{line}/{direction}", function(Request $request, Response $response, $args) {
+$app->get("/api/current/line/{line}/{direction}", function(Request $request, Response $response, $args) {
 
 	$splunk = new \Septa\Splunk();
 	$line = new Septa\Query\Line($splunk);
@@ -235,7 +235,7 @@ $app->get("/api/line/{line}/{direction}", function(Request $request, Response $r
 });
 
 
-$app->group("/api/station", function() {
+$app->group("/api/current/station", function() {
 
 	$this->get("/{station}/trains", function(Request $request, Response $response, $args) {
 	
@@ -295,7 +295,7 @@ $app->group("/api/station", function() {
 });
 
 
-$app->get("/api/stations", function(Request $request, Response $response, $args) {
+$app->get("/api/current/stations", function(Request $request, Response $response, $args) {
 
 	$splunk = new \Septa\Splunk();
 	$line = new Septa\Query\Stations($splunk);
