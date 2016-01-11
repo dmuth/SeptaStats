@@ -24,35 +24,32 @@ $configuration = [
 $c = new \Slim\Container($configuration);
 $app = new \Slim\App($c);
 
+//
+// Add a "view" call back to the app container to load a Twig template.
+//
+$container = $app->getContainer();
 
-$app->get("/", function (Request $request, Response $response) {
+$container["view"] = function ($container) {
+    $view = new \Slim\Views\Twig("templates", [
+        //"cache" => "templates/cache",
+    ]);
+    $view->addExtension(new \Slim\Views\TwigExtension(
+        $container["router"],
+        $container["request"]->getUri()
+    ));
 
-	// Testing/debugging
-	$urls = array(
-		"/api/current/train/521",
-		"/api/current/train/521/history",
-		"/api/current/train/521/history/average",
-		"/api/current/system",
-		"/api/current/system/totals",
-		"/api/current/lines",
-		"/api/current/line/paoli-thorndale/outbound",
-		"/api/current/line/paoli-thorndale/inbound",
-		"/api/current/line/paoli-thorndale/foobar",
-		"/api/current/line/foobar/foobar",
-		"/api/current/station/ardmore/trains",
-		"/api/current/station/ardmore/trains/latest",
-		"/api/current/station/ardmore/stats",
-		"/api/current/stations",
-		);
+    return $view;
+};
 
-	$output = "";
-	foreach ($urls as $key) {
-		$output .= "<a href=\"$key\">$key</a><br/>\n";
-	}
 
-    $response->getBody()->write($output);
+$app->get("/", function (Request $request, Response $response, $args) {
+
+    return $this->view->render($response, "index.html", [
+        //'name' => $args['name']
+    ]);
 
 });
+
 
 
 /**
@@ -324,10 +321,29 @@ $app->get("/api/current/stations", function(Request $request, Response $response
 */
 $app->get("/test", function(Request $request, Response $response, $args) {
 
-	$output = "testing";
-	$newResponse = $response->withStatus(404, $output);
-	$newResponse->getBody()->write($output);
-	return($newResponse);
+	$urls = array(
+		"/api/current/train/521",
+		"/api/current/train/521/history",
+		"/api/current/train/521/history/average",
+		"/api/current/system",
+		"/api/current/system/totals",
+		"/api/current/lines",
+		"/api/current/line/paoli-thorndale/outbound",
+		"/api/current/line/paoli-thorndale/inbound",
+		"/api/current/line/paoli-thorndale/foobar",
+		"/api/current/line/foobar/foobar",
+		"/api/current/station/ardmore/trains",
+		"/api/current/station/ardmore/trains/latest",
+		"/api/current/station/ardmore/stats",
+		"/api/current/stations",
+		);
+
+	$output = "";
+	foreach ($urls as $key) {
+		$output .= "<a href=\"$key\">$key</a><br/>\n";
+	}
+
+    $response->getBody()->write($output);
 
 });
 
