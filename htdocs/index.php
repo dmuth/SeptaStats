@@ -56,7 +56,7 @@ $app->get("/", function (Request $request, Response $response, $args) {
 * Helper function to return prettified JSON data.
 */
 function json_pretty($data) {
-	return(json_encode($data));
+	return(json_encode($data, JSON_PRETTY_PRINT));
 }
 
 /**
