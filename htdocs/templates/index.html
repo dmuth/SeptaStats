@@ -4,7 +4,195 @@
 {% block title %}Septa Stats!{% endblock %}
 
 {% block content %}
-test
-{% endblock %}
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/canvasjs/1.7.0/canvasjs.min.js" ></script>
+
+<!--
+TODO: 
+X AJAX
+- Put into a graph
+- Handle errors: http://api.jquery.com/jquery.ajax/
+- "loading" gif? (something in jQueryUI maybe?)
+
+
+-->
+
+/api/current/system
+
+<script language="javascript">
+    
+//  window.onload = function () {
+$( document ).ready(function() {
+
+jQuery.ajax({
+	url: "/api/current/system", 
+	dataType: "json",
+	success: function(results) {
+
+	//console.log(results);
+	//console.log(JSON.stringify(results));
+
+	//
+	// Loop through our time values and put the data into an array by train.
+	//
+	var trains = {};
+	for (var k in results.data) {
+
+		var row = results.data[k];
+		var time = row["_time"];
+
+		for (var i in row) {
+
+			if (i == "_time") {
+				continue;
+			}
+
+			var train = i;
+			var late = row[i];
+
+			if (!trains[train]) {
+				trains[train] = [];
+			}
+
+			trains[train].push({time: time, late: late});
+
+		}
+
+	}
+
+
+//console.log("TRAINS", trains);
+//console.log(JSON.stringify(trains));
+
+	var train_data = [];
+
+	for (var k in trains) {
+		var train = trains[k];
+		var row = {
+			type: "stackedArea",  
+			showInLegend: true, 
+			name: k,
+			dataPoints: [],
+			};
+console.log(k, train);
+
+		for (var i in train) {
+			row.dataPoints.push({
+				//x: train[i].time, 
+				//x: 1,
+				x: new Date(train[i].time),
+				y: parseInt(train[i].late),
+				});
+//console.log(train[i].late);
+//console.log(train[i].time, new Date(train[i].time) );
+		}
+
+		train_data.push(row);
+
+	}
+
+console.log("TRAIN DATA", train_data);
+
+var test_data = [
+
+      {        
+
+        type: "stackedArea",  
+        showInLegend: true, 
+        name: "India",
+        dataPoints: [      
+        {x: new Date(2008,0,0), y: 17570},
+        {x: new Date(2009,0,0), y: 18141},
+        {x: new Date(2010,0,0), y: 21573}      
+        ]
+      },
+        {        
+
+        type: "stackedArea",  
+        showInLegend: true, 
+        name: "Nigeria",
+        dataPoints: [      
+          {x: new Date(2008,0,0), y: 19017},
+        {x: new Date(2009,0,0), y: 21002},
+        {x: new Date(2010,0,0), y: 14034}      
+        ]
+      },
+        {        
+
+        type: "stackedArea",  
+        showInLegend: true, 
+        name: "USA",
+        dataPoints: [      
+        {x: new Date(2008,0,0), y: 11200},
+          {x: new Date(2010,0,0), y: 13200}      
+        ]
+      },
+          {        
+
+        type: "stackedArea",  
+        showInLegend: true, 
+        name: "Malaysia",
+        dataPoints: [      
+        {x: new Date(2008,0,0), y: 12510},
+        {x: new Date(2010,0,0), y: 14106},      
+        {x: new Date(2011,0,0), y: 14106},
+        {x: new Date(2012,0,0), y: 14106},
+        ]
+      },
+         
+{        
+
+        type: "stackedArea",  
+        showInLegend: true, 
+        name: "China",
+        dataPoints: [      
+        {x: new Date(2008,0,0), y: 23100},
+        //{x: new Date(2009,0,0), y: 25236},
+        {x: new Date(2010,0,0), y: 27614}      
+        ]
+      }
+        
+      ];
+
+var chart = new CanvasJS.Chart("chartContainer",
+
+    {
+      title:{
+        text: "System Status (Minutes Late)",
+      },
+	animationDuration: 500,
+      animationEnabled: true,
+      axisX: {
+        //valueFormatString: "YYYY",
+        //interval : 1,
+        //intervalType: "year"
+        intervalType: "minute",
+		labelAngle: 45,
+      },
+		axisY: {
+		},
+      legend: {
+        //verticalAlign: "bottom",
+        //horizontalAlign: "center"
+      },
+      toolTip: {
+        shared: true
+      },
+      //data: test_data,
+      data: train_data,
+    });
+
+chart.render();
+
+	}});
+
+
+});
+
+</script>
+
+<div id="chartContainer" style="height: 300px; width: 100%;"></div>
+
+
+{% endblock %}
 
