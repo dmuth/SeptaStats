@@ -10,27 +10,17 @@
 <!--
 TODO: 
 X AJAX
-- Put into a graph
+X Put into a graph
+- Extra graph http://septa.dmuth.org:8080/api/current/system/totals
 - Handle errors: http://api.jquery.com/jquery.ajax/
 - "loading" gif? (something in jQueryUI maybe?)
 
-
 -->
 
-/api/current/system
 
 <script language="javascript">
-    
-//  window.onload = function () {
-$( document ).ready(function() {
 
-jQuery.ajax({
-	url: "/api/current/system", 
-	dataType: "json",
-	success: function(results) {
-
-	//console.log(results);
-	//console.log(JSON.stringify(results));
+var graphStatus = function(results) {
 
 	//
 	// Loop through our time values and put the data into an array by train.
@@ -50,6 +40,10 @@ jQuery.ajax({
 			var train = i;
 			var late = row[i];
 
+			//
+			// The trains array gets one element per train,
+			// and each element has an array of time and lateness.
+			//
 			if (!trains[train]) {
 				trains[train] = [];
 			}
@@ -60,21 +54,19 @@ jQuery.ajax({
 
 	}
 
-
-//console.log("TRAINS", trains);
-//console.log(JSON.stringify(trains));
-
+	//
+	// Now turn that train data into datapoints for CanvasJS.
+	//
 	var train_data = [];
-
 	for (var k in trains) {
 		var train = trains[k];
+
 		var row = {
 			type: "stackedArea",  
 			showInLegend: true, 
 			name: k,
 			dataPoints: [],
 			};
-console.log(k, train);
 
 		for (var i in train) {
 			row.dataPoints.push({
@@ -83,115 +75,53 @@ console.log(k, train);
 				x: new Date(train[i].time),
 				y: parseInt(train[i].late),
 				});
-//console.log(train[i].late);
-//console.log(train[i].time, new Date(train[i].time) );
 		}
 
 		train_data.push(row);
 
 	}
 
-console.log("TRAIN DATA", train_data);
-
-var test_data = [
-
-      {        
-
-        type: "stackedArea",  
-        showInLegend: true, 
-        name: "India",
-        dataPoints: [      
-        {x: new Date(2008,0,0), y: 17570},
-        {x: new Date(2009,0,0), y: 18141},
-        {x: new Date(2010,0,0), y: 21573}      
-        ]
-      },
-        {        
-
-        type: "stackedArea",  
-        showInLegend: true, 
-        name: "Nigeria",
-        dataPoints: [      
-          {x: new Date(2008,0,0), y: 19017},
-        {x: new Date(2009,0,0), y: 21002},
-        {x: new Date(2010,0,0), y: 14034}      
-        ]
-      },
-        {        
-
-        type: "stackedArea",  
-        showInLegend: true, 
-        name: "USA",
-        dataPoints: [      
-        {x: new Date(2008,0,0), y: 11200},
-          {x: new Date(2010,0,0), y: 13200}      
-        ]
-      },
-          {        
-
-        type: "stackedArea",  
-        showInLegend: true, 
-        name: "Malaysia",
-        dataPoints: [      
-        {x: new Date(2008,0,0), y: 12510},
-        {x: new Date(2010,0,0), y: 14106},      
-        {x: new Date(2011,0,0), y: 14106},
-        {x: new Date(2012,0,0), y: 14106},
-        ]
-      },
-         
-{        
-
-        type: "stackedArea",  
-        showInLegend: true, 
-        name: "China",
-        dataPoints: [      
-        {x: new Date(2008,0,0), y: 23100},
-        //{x: new Date(2009,0,0), y: 25236},
-        {x: new Date(2010,0,0), y: 27614}      
-        ]
-      }
-        
-      ];
-
-var chart = new CanvasJS.Chart("chartContainer",
-
-    {
-      title:{
-        text: "System Status (Minutes Late)",
-      },
-	animationDuration: 500,
-      animationEnabled: true,
-      axisX: {
-        //valueFormatString: "YYYY",
-        //interval : 1,
-        //intervalType: "year"
-        intervalType: "minute",
-		labelAngle: 45,
-      },
+	//
+	// Finally, create the chart in CanvasJS
+	//
+	var chart = new CanvasJS.Chart("graphStatus", {
+		title: {
+			text: "Top 10 Latest Trains",
+			},
+		animationDuration: 500,
+		animationEnabled: true,
+		axisX: {
+			intervalType: "minute",
+			labelAngle: 45,
+			},
 		axisY: {
-		},
-      legend: {
-        //verticalAlign: "bottom",
-        //horizontalAlign: "center"
-      },
-      toolTip: {
-        shared: true
-      },
-      //data: test_data,
-      data: train_data,
-    });
+			suffix: " Min Late",
+			},
+		toolTip: {
+			shared: true
+			},
+		data: train_data,
+		});
 
-chart.render();
+	chart.render();
 
-	}});
+} // End of graphStatus()
 
+
+$( document ).ready(function() {
+
+	jQuery.ajax({
+		url: "/api/current/system", 
+		dataType: "json",
+		success: graphStatus,
+		});
 
 });
 
+
 </script>
 
-<div id="chartContainer" style="height: 300px; width: 100%;"></div>
+<div id="graphStatus" style="height: 300px; width: 100%;"></div>
 
 
 {% endblock %}
