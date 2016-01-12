@@ -1,0 +1,27 @@
+
+{% extends "base.html" %}
+
+{% block title %}FAQ - Septa Stats!{% endblock %}
+
+{% block content %}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/canvasjs/1.7.0/canvasjs.min.js" ></script>
+
+<h1>Frequently Asked Questions</h1>
+
+<h2>Why does the 7 Day System Lateness Graph Start At The Current Hour?</h2>
+
+Good question!  I had originally tried to "solve" the problem by doing custom 
+sorting by hour in Javascript, but a new problem emerged: how the graph looked
+for the rest of the day.  If the time was say, 6 PM, the current day's lateness
+would say the same for the next 5 hours.  I thought of reducing the lateness
+to zero for the rest of that, but that's also not an optimal solution as it
+make it looks like the trains will be at zero lateness for the rest of the evening.
+<br/>
+
+I'm open for other suggestions on how to make the grpah look better.
+
+
+
+{% endblock %}
+

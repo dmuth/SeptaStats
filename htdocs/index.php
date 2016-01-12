@@ -50,6 +50,13 @@ $app->get("/", function (Request $request, Response $response, $args) {
 
 });
 
+$app->get("/faq", function (Request $request, Response $response, $args) {
+
+    return $this->view->render($response, "faq.html", [
+    	]);
+
+});
+
 
 
 /**
