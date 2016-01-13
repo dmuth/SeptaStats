@@ -217,11 +217,8 @@ $app->get("/api/current/line/{line}/{direction}", function(Request $request, Res
 	$direction = $line->checkDirection($args["direction"]);
 
 	if ($line_name && $direction) {
-		$data= array(
-			"metadata" => array(
-				),
-			"data" => array("$line_name, $direction"),
-			);
+
+		$data = $line->getTrains($line_name, $direction, 1, 10);
 		$response->getBody()->write(json_pretty($data));
 
 	} else {
