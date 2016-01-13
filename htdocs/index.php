@@ -32,15 +32,17 @@ $container = $app->getContainer();
 $container["view"] = function ($container) {
     $view = new \Slim\Views\Twig("templates", [
         //"cache" => "templates/cache",
+		"debug" => true,
     ]);
     $view->addExtension(new \Slim\Views\TwigExtension(
         $container["router"],
         $container["request"]->getUri()
     ));
 
+	$view->addExtension(new Twig_Extension_Debug());
+
     return $view;
 };
-
 
 $app->get("/", function (Request $request, Response $response, $args) {
 
@@ -53,6 +55,20 @@ $app->get("/", function (Request $request, Response $response, $args) {
 $app->get("/faq", function (Request $request, Response $response, $args) {
 
     return $this->view->render($response, "faq.html", [
+    	]);
+
+});
+
+$app->get("/lines", function (Request $request, Response $response, $args) {
+
+	$splunk = new \Septa\Splunk();
+	$line = new Septa\Query\Line($splunk);
+
+	$output = json_pretty($line->getLines());
+	$lines = json_decode($output, true);
+
+    return $this->view->render($response, "lines.html", [
+		"lines" => $lines,
     	]);
 
 });
