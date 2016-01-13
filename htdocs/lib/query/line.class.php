@@ -43,6 +43,37 @@ class Line extends Base {
 	/**
 	* Get all late trains for a specific line.
 	*
+	* @param string $line What line are we searching?
+	*
+	* @param string $direction What direction are we going in?
+	*
+	* @param integer $span_min How many minutes does each point in the graph span?
+	*
+	* @return array An array of the latest trains over time.
+	*/
+	function getTrains($line, $direction, $num_hours = 1, $span_min = 10) {
+
+		$retval = array();
+
+		$query = 'search index="septa_analytics" earliest=-' . $num_hours . 'h '
+			. 'train_line="' . $line . ' (' . $direction .')" '
+			. 'late != 999 '
+			. '| eval id = trainno . "-" . dest  ' // Debugging
+			. '| timechart span=' . $span_min . 'm max(late) by id';
+		//print $query; // Debugging
+
+		$retval = $this->query($query);
+		$retval["metadata"]["line"] = $line;
+		$retval["metadata"]["direction"] = $direction;
+
+		return($retval);
+
+	} // End of getTrains()
+
+
+	/**
+	* Get all late trains for a specific line.
+	*
 	* @param integer $line What line are we searching?
 	*
 	* @param integer $span_min How many minutes does each point in the graph span?
