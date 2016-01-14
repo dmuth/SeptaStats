@@ -5,16 +5,32 @@
 
 {% block content %}
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/canvasjs/1.7.0/canvasjs.min.js" ></script>
 
-<h1>Frequently Asked Questions</h1>
-
-{% for key, value in lines.data %}
-Key: {{key}},
-Value: {{value}}
+<h1>Select A Train Line</h1>
 <br/>
 
+{% for key, value in lines.data %}
+
+<div class="row">
+
+	<div class="col-md-4">
+		<button type="button" class="btn btn-primary btn-lg btn-block">
+		<a href="line/{{key}}/inbound">{{value}} - Inbound</a>
+		</button>
+		<br/>
+	</div>
+
+	<div class="col-md-4">
+		<button type="button" class="btn btn-primary btn-lg btn-block">
+		<a href="/line/{{key}}/outbound">{{value}} - Outbound</a>
+		</button>
+		<br/>
+	</div>
+
+</div>
+
 {% endfor %}
+
 
 {% endblock %}
 
