@@ -74,6 +74,42 @@ $app->get("/lines", function (Request $request, Response $response, $args) {
 });
 
 
+$app->get("/line/{line}/{direction}", function (Request $request, Response $response, $args) {
+
+	$splunk = new \Septa\Splunk();
+	$line = new Septa\Query\Line($splunk);
+
+	//
+	// Sanity check our arguments
+	//
+	$line_name = $line->checkLineKey($args["line"]);
+	$direction = $line->checkDirection($args["direction"]);
+
+	if ($line_name && $direction) {
+
+    	return $this->view->render($response, "line.html", [
+			"line_api" => $args["line"],
+			"direction_api" => $args["direction"],
+			"line" => $line_name,
+			"direction" => $direction,
+    		]);
+
+	} else {
+		$error = sprintf("Line '%s' and/or direction '%s' not found!\n", $args["line"], $args["direction"]);
+		$output = array(
+			"error" => $error,
+			);
+		$output_json = json_pretty($output);
+		$new_response = $response->withStatus(404, "Line or direction not found");
+		$new_response->getBody()->write($output_json);
+		return($new_response);
+
+	}
+
+
+});
+
+
 
 /**
 * Helper function to return prettified JSON data.
