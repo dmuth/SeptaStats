@@ -1,0 +1,154 @@
+
+{% extends "base.html" %}
+
+{% block title %}Regional Rail Lines - Septa Stats!{% endblock %}
+
+{% block content %}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/canvasjs/1.7.0/canvasjs.min.js" ></script>
+
+<script language="javascript">
+
+/**
+* Extract our trains from the results of the API call.
+*
+* @return array An array where each element is a specific train,
+*	and the value is an array of times and minutes late.
+*/
+var getTrains = function(results) {
+
+	var retval = {};
+
+	//
+	// Loop through our time values and put the data into an array by train.
+	//
+	for (var k in results.data) {
+
+		var row = results.data[k];
+		var time = row["_time"];
+
+		for (var i in row) {
+
+			if (i == "_time") {
+				continue;
+			}
+
+			var train = i;
+			var late = row[i];
+
+			//
+			// The trains array gets one element per train,
+			// and each element has an array of time and lateness.
+			//
+			if (!retval[train]) {
+				retval[train] = [];
+			}
+
+			retval[train].push({time: time, late: late});
+
+		}
+
+	}
+
+	return(retval);
+
+} // End of getTrains()
+
+
+/**
+* Convert our train-based array into an array of data that Canvas can understand.
+*/
+var convertToCanvas = function(trains) {
+
+	var retval = [];
+
+	//
+	// Now turn that train data into datapoints for CanvasJS.
+	//
+	for (var k in trains) {
+		var train = trains[k];
+
+		var row = {
+			type: "stackedArea",  
+			showInLegend: true, 
+			name: k,
+			dataPoints: [],
+			};
+
+		for (var i in train) {
+			row.dataPoints.push({
+				x: new Date(train[i].time),
+				y: parseInt(train[i].late),
+				});
+		}
+
+		retval.push(row);
+
+	}
+
+	return(retval);
+
+} // End of convertToCanvas()
+
+
+var lineStatus = function(results) {
+
+	var trains = getTrains(results);
+	var train_data = convertToCanvas(trains);
+
+	//
+	// Finally, create the chart in CanvasJS
+	//
+	var chart = new CanvasJS.Chart("lineStatus", {
+		title: {
+			//text: "Top 10 Latest Trains Right Now",
+			},
+		animationDuration: 500,
+		animationEnabled: true,
+		axisX: {
+			intervalType: "minute",
+			labelAngle: 45,
+			},
+		axisY: {
+			suffix: " Min Late",
+			},
+		toolTip: {
+			shared: true
+			},
+		data: train_data,
+		});
+
+	chart.render();
+
+} // End of lineStatus()
+
+
+$( document ).ready(function() {
+
+	jQuery.ajax({
+		url: "/api/current/line/{{line_api}}/{{direction_api}}", 
+		dataType: "json",
+		success: lineStatus,
+		});
+
+});
+
+/*
+TODO:
+- Parse train IDs
+- Create a table of train numbers and their final destination
+- Make train numbers be clickable
+*/
+
+
+</script>
+
+
+<h1>Current Status of {{line}} Line ({{direction}})</h1>
+<br/>
+
+<div id="lineStatus" style="height: 300px; width: 100%;"></div>
+<br/>
+
+{% endblock %}
+
