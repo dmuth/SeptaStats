@@ -36,6 +36,7 @@ class Train extends Base {
 			;
 
 		$retval = $this->query($query);
+		$retval["metadata"]["trainno"] = $trainno;
 		$retval["metadata"]["_comment"] = "What stops did train '$trainno' make, and how late was it each stop?";
 		
 		return($retval);
