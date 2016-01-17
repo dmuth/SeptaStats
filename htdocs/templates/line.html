@@ -128,6 +128,8 @@ var setTrainTable = function(trains, id) {
 				})
 			);
 
+		//break; // Debugging - set to only have one train
+
 	}
 
 	$.when.apply($, cbs)
@@ -137,9 +139,17 @@ var setTrainTable = function(trains, id) {
 		html += "<tr><th>Train #</th><th>Next Stop</th><th>Minutes Late</th></tr>\n";
 
 		//
-		// If there's only one result, it's not an array, so turn it into one.
+		// If there's only one train, it's not an array, so we'll need to turn it into one.
+		// But it's not that simple.  I learned the hard way that when there are multiple
+		// results, despite the result looking like an array and walking like an array,
+		// it's not really an array--it's an object. What.
 		//
-		if (!Array.isArray(arguments)) {
+		// Looking at the two different sets of results, I think the path of least resistance
+		// here is to see if the second element is the strong "success".  If it is,
+		// then we know we only got one result and need to put the variable into an array.
+		//
+		//
+		if (arguments[1] == "success") {
 			arguments = [ arguments ];
 		}
 
