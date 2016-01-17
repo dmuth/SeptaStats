@@ -1,0 +1,132 @@
+
+{% extends "base.html" %}
+
+{% block title %}Regional Rail Lines - Septa Stats!{% endblock %}
+
+{% block content %}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/canvasjs/1.7.0/canvasjs.min.js" ></script>
+
+<script language="javascript">
+
+/**
+* Extract our stop history and minutes late from the data.
+*
+* @return array An array of stops and how many minutes late the train is at each stop.
+*
+*/
+var getStops = function(data) {
+
+	var retval = [];
+
+	for (var k in data) {
+		var stop = data[k];
+		var nextstop = stop["nextstop"];
+		var late = stop["Minutes Late"];
+
+		var row = {
+			nextstop: nextstop,
+			late: late,
+			};
+		retval.push(row);
+
+	}
+
+	return(retval);
+
+} // End of getTrains()
+
+
+/**
+* Convert our stop-based array into an array of data that Canvas can understand.
+*/
+var convertToCanvas = function(stops) {
+
+	var retval = [];
+
+	var row = {
+		type: "area",  
+		//showInLegend: true, 
+		dataPoints: [],
+		};
+
+	for (var k in stops) {
+		var stop = stops[k];
+
+		row.dataPoints.push({
+			y: parseInt(stop.late),
+			label: stop.nextstop,
+			});
+
+	}
+
+	retval.push(row);
+
+	return(retval);
+
+} // End of convertToCanvas()
+
+
+var trainStatus = function(results) {
+
+	var data = results["data"];
+	var last = data[ data.length - 1 ];
+	var next_stop = last["nextstop"];
+	var late = last["Minutes Late"];
+
+	var stops = getStops(data);
+	var stop_data = convertToCanvas(stops);
+
+	//
+	// Finally, create the chart in CanvasJS
+	//
+	var chart = new CanvasJS.Chart("trainStatus", {
+		title: {
+			//text: "Top 10 Latest Trains Right Now",
+			},
+		animationDuration: 500,
+		animationEnabled: true,
+		axisX: {
+			intervalType: "minute",
+			labelAngle: 45,
+			},
+		axisY: {
+			suffix: " Min Late",
+			},
+		toolTip: {
+			shared: true
+			},
+		data: stop_data,
+	}
+	);
+
+	chart.render();
+
+} // End of lineStatus()
+
+
+$( document ).ready(function() {
+
+	var url = "/api/current/train/" + {{trainno}};
+	jQuery.ajax({
+		url: url,
+		dataType: "json",
+		success: trainStatus,
+		});
+
+});
+
+
+</script>
+
+
+<h1>Current Status of Train {{trainno}}</h1>
+<br/>
+
+<div id="trainStatus" style="height: 300px; width: 100%;"></div>
+<br/>
+
+
+{% endblock %}
+
+
