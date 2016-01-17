@@ -106,9 +106,16 @@ $app->get("/line/{line}/{direction}", function (Request $request, Response $resp
 
 	}
 
-
 });
 
+
+$app->get("/train/{trainno}", function (Request $request, Response $response, $args) {
+
+    return $this->view->render($response, "train.html", [
+		"trainno" => $args["trainno"],
+    	]);
+
+});
 
 
 /**
