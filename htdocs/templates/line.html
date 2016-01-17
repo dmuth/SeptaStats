@@ -91,6 +91,78 @@ var convertToCanvas = function(trains) {
 } // End of convertToCanvas()
 
 
+/**
+* Turn our trains data structure into an array of train numbers.
+*/
+var getTrainNums = function(trains) {
+
+	retval = [];
+
+	for (var k in trains) {
+		var results = k.match(/^([0-9]+)/);
+		var train = results[1];
+		retval.push(train);
+	}
+
+	return(retval);
+
+} // End of getTrainNums()
+
+
+/**
+* Go through our trains and populate the train table.
+*/
+var setTrainTable = function(trains, id) {
+
+	var cbs = [];
+	for (var k in trains) {
+		var train = trains[k];
+
+		var url = "/api/current/train/" + train;
+		cbs.push(
+			jQuery.ajax({
+				url: url,
+				dataType: "json",
+				success: function() {
+					}
+				})
+			);
+
+	}
+
+	$.when.apply($, cbs)
+		.then(function() {
+
+		var html = '<table class=\"table table-striped\">\n';
+		html += "<tr><th>Train #</th><th>Next Stop</th><th>Minutes Late</th></tr>\n";
+
+		for (var k in arguments) {
+			var train = arguments[k][0];
+			var trainno = train["metadata"]["trainno"];
+			var data = train["data"];
+			var last = data[ data.length - 1 ];
+			var next_stop = last["nextstop"];
+			var late = last["Minutes Late"];
+
+			var row = "<tr>" 
+				+ "<td>" + "<a href=\"/train/" + trainno + "\">" + trainno + "</a>" + "</td>"
+				+ "<td>" + next_stop + "</td>"
+				+ "<td>" + late + "</td>"
+				+ "</tr>\n"
+				;
+
+			html += row;
+
+		}
+
+		html += "</table>\n";
+		$(id).html(html);
+
+	});
+
+} // End of setTrainTable()
+
+
 var lineStatus = function(results) {
 
 	var trains = getTrains(results);
@@ -120,6 +192,14 @@ var lineStatus = function(results) {
 
 	chart.render();
 
+	train_nums = getTrainNums(trains);
+
+	for (var k in train_nums) {
+		var train = train_nums[k];
+	}
+
+	setTrainTable(train_nums, "#trainTable");
+
 } // End of lineStatus()
 
 
@@ -133,13 +213,6 @@ $( document ).ready(function() {
 
 });
 
-/*
-TODO:
-- Parse train IDs
-- Create a table of train numbers and their final destination
-- Make train numbers be clickable
-*/
-
 
 </script>
 
@@ -150,5 +223,10 @@ TODO:
 <div id="lineStatus" style="height: 300px; width: 100%;"></div>
 <br/>
 
+<div id="trainTable" style="height: 300px; width: 100%; "></div>
+<br/>
+
+
 {% endblock %}
+
 
