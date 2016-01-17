@@ -136,6 +136,13 @@ var setTrainTable = function(trains, id) {
 		var html = '<table class=\"table table-striped\">\n';
 		html += "<tr><th>Train #</th><th>Next Stop</th><th>Minutes Late</th></tr>\n";
 
+		//
+		// If there's only one result, it's not an array, so turn it into one.
+		//
+		if (!Array.isArray(arguments)) {
+			arguments = [ arguments ];
+		}
+
 		for (var k in arguments) {
 			var train = arguments[k][0];
 			var trainno = train["metadata"]["trainno"];
