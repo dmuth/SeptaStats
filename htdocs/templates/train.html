@@ -105,6 +105,136 @@ var trainStatus = function(results) {
 } // End of lineStatus()
 
 
+/**
+* This function goes through the lateness data and returns an array of 
+*	data points by day for CanvasJS
+*/
+var getTrainHistory = function(data) {
+
+	//
+	// Our return value.  It holds arrays of stop and lateness info by day.
+	//
+	var retval = {
+		"Minutes Late - Yesterday": [],
+		"Minutes Late - 2 Days Ago": [],
+		"Minutes Late - 3 Days Ago": [],
+		"Minutes Late - 4 Days Ago": [],
+		"Minutes Late - 5 Days Ago": [],
+		"Minutes Late - 6 Days Ago": [],
+		"Minutes Late - 7 Days Ago": [],
+		};
+
+	for (var k in data) {
+
+		var current = data[k];
+		var nextstop = current.nextstop;
+
+		//
+		// For each row, if a particular day's worth of data is present, pull it out
+		// and store it in the appropriate array in retval.
+		//
+		for (var i in retval) {
+
+			if (current[i]) {
+				retval[i].push( {
+					nextstop: nextstop,
+					late: current[i],
+					} );
+			}
+			
+		}
+
+	}
+
+	return(retval);
+
+} // End of getTrainHistory()
+
+
+/**
+* Convert a day's worth of stops and lateness into a group of datapoints for Canvas.
+*/
+var convertTrainHistoryDay = function(in_data, key) {
+
+	var data = in_data[key];
+
+	var retval = {
+		type: "stackedArea",
+		showInLegend: true,
+		name: key,
+		dataPoints: [],
+		};
+
+	for (var k in data) {
+		var stop = data[k];
+		retval.dataPoints.push({
+			y: parseInt(stop.late),
+			label: stop.nextstop,
+			});
+
+	}
+
+	return(retval);
+
+} // End of convertTrainHistoryDay()
+
+
+/**
+* Convert the results of getTrainHistory() into something that Canvas can understand.
+*/
+var convertTrainHistoryToCanvas = function(data) {
+
+	var retval = [];
+
+	retval.push(convertTrainHistoryDay(data, "Minutes Late - Yesterday"));
+	retval.push(convertTrainHistoryDay(data, "Minutes Late - 2 Days Ago"));
+	retval.push(convertTrainHistoryDay(data, "Minutes Late - 3 Days Ago"));
+	retval.push(convertTrainHistoryDay(data, "Minutes Late - 4 Days Ago"));
+	retval.push(convertTrainHistoryDay(data, "Minutes Late - 5 Days Ago"));
+	retval.push(convertTrainHistoryDay(data, "Minutes Late - 6 Days Ago"));
+	retval.push(convertTrainHistoryDay(data, "Minutes Late - 7 Days Ago"));
+
+	return(retval);
+
+} // End of convertTrainHistoryToCanvas()
+
+
+/**
+* Callback for the history of a specific train.
+*/
+var trainHistory = function(results) {
+
+	var data = getTrainHistory(results["data"]);
+	var stop_data = convertTrainHistoryToCanvas(data);
+
+	//
+	// Finally, create the chart in CanvasJS
+	//
+	var chart = new CanvasJS.Chart("trainHistory", {
+		title: {
+			//text: "Top 10 Latest Trains Right Now",
+			},
+		animationDuration: 500,
+		animationEnabled: true,
+		axisX: {
+			interval: 1,
+			labelAngle: 45,
+			},
+		axisY: {
+			suffix: " Min Late",
+			},
+		toolTip: {
+			shared: true
+			},
+		data: stop_data,
+	}
+	);
+
+	chart.render();
+
+} // End of lineStatus()
+
+
 $( document ).ready(function() {
 
 	var url = "/api/current/train/" + {{trainno}};
@@ -112,6 +242,13 @@ $( document ).ready(function() {
 		url: url,
 		dataType: "json",
 		success: trainStatus,
+		});
+
+	var url = "/api/current/train/" + {{trainno}} + "/history";
+	jQuery.ajax({
+		url: url,
+		dataType: "json",
+		success: trainHistory,
 		});
 
 });
@@ -124,6 +261,15 @@ $( document ).ready(function() {
 <br/>
 
 <div id="trainStatus" style="height: 300px; width: 100%;"></div>
+
+<h2>Status Over The Last 7 Days</h2>
+Note that some trains take different routes on different <em>days</em>. 
+In those cases, this graph can look really weird.  There is little that
+can be done about that until a date selector widget is built in.
+<br/>
+<br/>
+
+<div id="trainHistory" style="height: 300px; width: 100%;"></div>
 <br/>
 
 
