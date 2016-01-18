@@ -18,8 +18,45 @@ would say the same for the next 5 hours.  I thought of reducing the lateness
 to zero for the rest of that, but that's also not an optimal solution as it
 make it looks like the trains will be at zero lateness for the rest of the evening.
 <br/>
+<br/>
 
 I'm open for other suggestions on how to make the grpah look better.
+
+
+<h2>Why do some of the train graphs show the wrong station order, or even fail to show a train?</h2>
+
+This is due partly due to some train lines overlapping.
+<br/>
+<br/>
+
+For example, train 553 is:
+<ul>
+<li>Glenside Inbound</li>
+<li>Lansdale/Doylestown Inbound</li>
+<li>and Paoli/Thorndale Outbound</li>
+</ul>
+
+Only by looking at an actual map can you tell that the Glenside Inbound is a subset
+of the Lansdale/Doyletown Inbound.  This situation (and many others) aren't clearly disclosed in the train data.
+<br/>
+<br/>
+
+Now I know what you're thinking, let's just ignore stations like Glenside that are in the "middle"
+of other lines.  Problem is, sometimes Glenside <em>is</em> the endpoint.  Train 3425
+is a good example of this: it starts as a West Trenton Inbound and ends at the airport.  But
+<em>some days</em> it starts as a Glenside inbound.  
+<br/>
+<br/>
+
+At least, that's what I got from
+parsing train numbers out of the schedules listed at <a href="http://www4.septa.org/schedules/rail/index.html"
+	>http://www4.septa.org/schedules/rail/index.html</a>.  Is it possible that the schedules contain
+outdated info?  Yes, absolutely.
+<br/>
+<br/>
+
+While I can continue to try to deal with weird edge cases, what we ultimately need is
+better/more explicit data coming from SEPTA's API so that better graphs can be made. :-)
 
 
 
