@@ -162,8 +162,8 @@ var setTrainTable = function(trains, id) {
 			var late = last["Minutes Late"];
 
 			var row = "<tr>" 
-				+ "<td>" + "<a href=\"/train/" + trainno + "\">" + trainno + "</a>" + "</td>"
-				+ "<td>" + next_stop + "</td>"
+				+ "<td>" + "<a href=\"/train/" + encodeURIComponent(trainno) + "\">" + trainno + "</a>" + "</td>"
+				+ "<td>" + "<a href=\"/station/" + encodeURIComponent(next_stop) + "\">" + next_stop + "</a>" + "</td>"
 				+ "<td>" + late + "</td>"
 				+ "</tr>\n"
 				;
