@@ -1,0 +1,120 @@
+
+{% extends "base.html" %}
+
+{% block title %}Regional Rail Lines - Septa Stats!{% endblock %}
+
+{% block content %}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/canvasjs/1.7.0/canvasjs.min.js" ></script>
+
+<script language="javascript">
+
+
+/**
+* Create 2 series of datapoints for ConvasJS, one for trains and the other for latness.
+*/
+var convertToCanvas = function(data) {
+
+	var retval = [];
+	var trains = {
+			type: "column",
+			showInLegend: true, 
+			name: "# Trains",
+			dataPoints: [],
+		};
+	var late = {
+			type: "line",
+			showInLegend: true, 
+			name: "Avg Total Minutes Late",
+			dataPoints: [],
+		};
+
+	for (var k in data["data"]) {
+		var point = data["data"][k];
+
+		var point_time = point["_time"];		
+		var point_train = point["# Trains"];
+		var point_late = 0;
+		if (point["Total Minutes Late"]) {
+			point_late = point["Total Minutes Late"];
+		}
+
+		trains.dataPoints.push({
+			x: new Date(point_time),
+			y: parseInt(point_train),
+			});
+
+		late.dataPoints.push({
+			x: new Date(point_time),
+			y: parseInt(point_late),
+			});
+
+	}
+
+	retval.push(trains);
+	retval.push(late);
+
+	return(retval);
+
+} // End of convertToCanvas()
+
+
+var stationStatus = function(results) {
+
+	var train_data = convertToCanvas(results);
+
+	//
+	// Finally, create the chart in CanvasJS
+	//
+	var chart = new CanvasJS.Chart("stationStatus", {
+		title: {
+			//text: "Top 10 Latest Trains Right Now",
+			},
+		animationDuration: 500,
+		animationEnabled: true,
+		axisX: {
+			intervalType: "hour",
+			valueFormatString: "MMM D h TT",
+			labelAngle: 45,
+			},
+		axisY: {
+			suffix: " Min Late",
+			},
+		axisY2: {
+			title: "# Trains",
+			},
+		toolTip: {
+			shared: true
+			},
+		data: train_data,
+		});
+
+	chart.render();
+
+} // End of stationStatus()
+
+
+$( document ).ready(function() {
+
+	jQuery.ajax({
+		url: "/api/current/station/{{station}}/stats",
+		dataType: "json",
+		success: stationStatus,
+		});
+
+});
+
+
+</script>
+
+
+<h1>Station Report For {{station}} Station</h1>
+<br/>
+
+<div id="stationStatus" style="height: 300px; width: 100%;"></div>
+<br/>
+
+
+{% endblock %}
+
+
