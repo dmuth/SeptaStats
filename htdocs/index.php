@@ -118,6 +118,15 @@ $app->get("/train/{trainno}", function (Request $request, Response $response, $a
 });
 
 
+$app->get("/station/{station}", function (Request $request, Response $response, $args) {
+
+    return $this->view->render($response, "station.html", [
+		"station" => $args["station"],
+    	]);
+
+});
+
+
 /**
 * Helper function to return prettified JSON data.
 */
