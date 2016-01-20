@@ -59,6 +59,42 @@ var convertToCanvas = function(data) {
 } // End of convertToCanvas()
 
 
+/**
+* Turn our station data into a table.
+*/
+var setStationTable = function(data, id) {
+
+	var html = '<table class=\"table table-striped\">\n';
+	html += "<tr><th>Hour</th><th>Avg Total Minutes Late</th><th># Trains</th></tr>\n";
+
+	for (var k in data) {
+		var hour = data[k];
+
+		var time = new Date(hour["_time"]);
+		var late = hour["Total Minutes Late"] || 0;
+		var num_trains = hour["# Trains"];
+
+		if (num_trains == 0) {
+			late = "N/A";
+		}
+
+		var row = "<tr>" 
+			+ "<td>" + time.toLocaleString() + " " +  "</td>"
+			+ "<td>" + late + "</td>"
+			+ "<td>" + num_trains + "</td>"
+			+ "</tr>\n"
+			;
+
+		html += row;
+
+	}
+
+	html += "</table>\n";
+	$(id).html(html);
+
+} // End of setStationTable()
+
+
 var stationStatus = function(results) {
 
 	var train_data = convertToCanvas(results);
@@ -92,6 +128,8 @@ var stationStatus = function(results) {
 
 	chart.render();
 
+	setStationTable(results["data"], "#stationTable");
+
 } // End of stationStatus()
 
 
@@ -113,6 +151,9 @@ $( document ).ready(function() {
 <br/>
 
 <div id="stationStatus" style="height: 300px; width: 100%;"></div>
+<br/>
+
+<div id="stationTable" style="height: 300px; width: 100%;"></div>
 <br/>
 
 
