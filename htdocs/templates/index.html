@@ -185,10 +185,14 @@ $( document ).ready(function() {
 
 </script>
 
-<div id="graphStatus" style="height: 300px; width: 100%;"></div>
+<div id="graphStatus" style="height: 300px; width: 100%;">
+{%include "lib/progress.html" %}
+</div>
 <br/>
 
-<div id="graphStatusTotals" style="height: 300px; width: 100%;"></div>
+<div id="graphStatusTotals" style="height: 300px; width: 100%;">
+{%include "lib/progress.html" %}
+</div>
 
 
 {% endblock %}

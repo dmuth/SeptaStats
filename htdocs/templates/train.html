@@ -260,7 +260,9 @@ $( document ).ready(function() {
 <h1>Current Status of Train {{trainno}}</h1>
 <br/>
 
-<div id="trainStatus" style="height: 300px; width: 100%;"></div>
+<div id="trainStatus" style="height: 300px; width: 100%;">
+{%include "lib/progress.html" %}
+</div>
 
 <h2>Status Over The Last 7 Days</h2>
 Note that some trains take different routes on different <em>days</em>. 
@@ -270,7 +272,9 @@ more information, please <a href="/faq">check the faq</a>.
 <br/>
 <br/>
 
-<div id="trainHistory" style="height: 300px; width: 100%;"></div>
+<div id="trainHistory" style="height: 300px; width: 100%;">
+{%include "lib/progress.html" %}
+</div>
 <br/>
 
 

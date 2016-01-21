@@ -237,10 +237,14 @@ $( document ).ready(function() {
 <h1>Current Status of {{line}} Line ({{direction}})</h1>
 <br/>
 
-<div id="lineStatus" style="height: 300px; width: 100%;"></div>
+<div id="lineStatus" style="height: 300px; width: 100%;">
+{%include "lib/progress.html" %}
+</div>
 <br/>
 
-<div id="trainTable" style="height: 300px; width: 100%; "></div>
+<div id="trainTable" style="height: 300px; width: 100%; ">
+{%include "lib/progress.html" %}
+</div>
 <br/>
 
 
