@@ -1,0 +1,116 @@
+
+{% extends "base.html" %}
+
+{% block title %}API Endpoints - Septa Stats!{% endblock %}
+
+{% block content %}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/canvasjs/1.7.0/canvasjs.min.js" ></script>
+
+<h1>API Endpoints</h1>
+
+
+What follows are a list of API endpoints that are provided here.  These endpoints
+are the same ones used in the public facing graphs on this site.
+<br/>
+
+All data is returned in JSON format, with a field called "metadata" which holds data
+related to the query, and "data" which holds the results of the query itself.
+<br/>
+
+Please be considerate and try to hit each endpoint no more than once per minute.
+If I have to go and implement a quota policy, that's no fun.
+
+
+<h2>
+/api/current/train/{trainno}
+</h2>
+
+Get the current status of a train if it is running today.  Data includes
+a list of stops made in chronological order and the lateness for each stop.
+
+
+<h2>
+/api/current/train/{trainno}/history
+</h2>
+
+Get the lateness "history" of a specific train for the last 7 days, by stop.
+<br/>
+
+Note that not all trains run on all days.  Some trains are weekday only while others are weekend only.
+
+
+<h2>
+/api/current/train/{trainno}/history/average
+</h2>
+
+Get the average lateness per stop of a given train.
+
+
+<h2>
+/api/current/system
+</h2>
+
+Return a chronological list of which currently running trains are the latest.
+<br/>
+
+This is useful to get an overall picture of the Regional Rail train system.
+
+<h2>
+/api/current/system/totals
+</h2>
+
+Get a list of the total lateness of all running trains, by hour over the last 7 days.
+<br/>
+
+This is useful for comparing the current day to previous days in the event of bad weather, etc.
+
+
+<h2>
+/api/current/lines
+</h2>
+
+Get a list of all train lines.
+
+<h2>
+/api/current/line/{train line}/outbound
+</h2>
+
+Get a list of all outbound trains for this line, and their lateness.
+
+<h2>
+/api/current/line/{train line}/inbound
+</h2>
+
+Get a list of all inbound trains for this line, and their lateness.
+
+
+<h2>
+/api/current/stations
+</h2>
+
+Get a list of all train stations.
+
+<h2>
+/api/current/station/{station}/trains
+</h2>
+
+Get a list of all trains which have arrived at this station in the last 24 hours, and their lateness.
+
+<h2>
+/api/current/station/{station}/trains/latest
+</h2>
+
+Get a list of the most recent trains which have arrived at this station, and their lateness.
+
+
+<h2>
+/api/current/station/{station}/stats
+</h2>
+
+Get a list by hour of how many trains passed through that station, and the average lateness of each train.
+
+
+
+{% endblock %}
+

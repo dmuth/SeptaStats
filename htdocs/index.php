@@ -66,6 +66,13 @@ $app->get("/about", function (Request $request, Response $response, $args) {
 
 });
 
+$app->get("/api", function(Request $request, Response $response, $args) {
+
+    return $this->view->render($response, "api.html", [
+    	]);
+
+});
+
 $app->get("/lines", function (Request $request, Response $response, $args) {
 
 	$splunk = new \Septa\Splunk();
