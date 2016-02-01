@@ -129,6 +129,15 @@ var graphStatusTotals = function(results) {
 	var trains = getTrains(results);
 	var train_data = convertToCanvas(trains);
 
+	//
+	// Initialize each element, in case we have less than 7 days of data.
+	//
+	for (var i=0; i<=7; i++) {
+		if (!train_data[i]) {
+			train_data[i] = {};
+		}
+	}
+
 	train_data[0].name = "Today";
 	train_data[1].name = "Yesterday";
 	train_data[2].name = "2 Days Ago";
