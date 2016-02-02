@@ -34,6 +34,14 @@ class Stations extends Base {
 		$retval = $this->query($query);
 		$retval["metadata"]["_comment"] = "A list of all stations";
 
+		$stations = array();
+		foreach ($retval["data"] as $key => $value) {
+			$station = $value["nextstop"];
+			$stations[$station] = $station;
+		}
+
+		$retval["data"] = $stations;
+
 		return($retval);
 
 	} // End of getTrains()

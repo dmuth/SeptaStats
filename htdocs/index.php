@@ -386,10 +386,6 @@ $app->get("/api/current/stations", function(Request $request, Response $response
 	$output = splunkWrapper(function() use ($line) {
 
 		$data = $line->getStations();
-		foreach ($data["data"] as $key => $value) {
-			unset($data["data"][$key]["_raw"]);
-			unset($data["data"][$key]["_time"]);
-		}
 
 		$output = json_pretty($data);
 
