@@ -164,7 +164,7 @@ $app->group("/api/current/system", function() {
 });
 
 
-$app->get("/api/current/lines", function(Request $request, Response $response, $args) {
+$app->get("/api/current/lines", function(Request $request, Response $response, $args) use ($display) {
 
 	$splunk = new \Septa\Splunk();
 	$line = new Septa\Query\Line($splunk);
