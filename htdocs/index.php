@@ -8,6 +8,7 @@ use \Psr\Http\Message\ResponseInterface as Response;
 
 require 'vendor/autoload.php';
 
+require("./lib/display.class.php");
 require("./lib/splunk.php");
 require("./lib/query/train.class.php");
 require("./lib/query/line.class.php");
@@ -43,6 +44,7 @@ $container["view"] = function ($container) {
 
     return $view;
 };
+
 
 $app->get("/", function (Request $request, Response $response, $args) {
 
@@ -96,7 +98,7 @@ $app->get("/lines", function (Request $request, Response $response, $args) {
 	$splunk = new \Septa\Splunk();
 	$line = new Septa\Query\Line($splunk);
 
-	$output = json_pretty($line->getLines());
+	$output = $display->json_pretty($line->getLines());
 	$lines = json_decode($output, true);
 
     return $this->view->render($response, "lines.html", [
@@ -131,7 +133,7 @@ $app->get("/line/{line}/{direction}", function (Request $request, Response $resp
 		$output = array(
 			"error" => $error,
 			);
-		$output_json = json_pretty($output);
+		$output_json = $display->json_pretty($output);
 		$new_response = $response->withStatus(404, "Line or direction not found");
 		$new_response->getBody()->write($output_json);
 		return($new_response);
@@ -159,53 +161,19 @@ $app->get("/station/{station}", function (Request $request, Response $response, 
 });
 
 
-/**
-* Helper function to return prettified JSON data.
-*/
-function json_pretty($data) {
-	return(json_encode($data, JSON_PRETTY_PRINT));
-}
-
-/**
-* Wrap all of our calls to Splunk, so that if it fails, we can return a nice error in JSON format.
-*/
-function splunkWrapper($cb, $response) {
-
-	try {
-		return($cb());
-
-	} catch (Exception $e) {
-		//
-		// Was there a problem querying Splunk?
-		// Log it, and then throw a 5XX error.
-		//
-		syslog(LOG_ERR, "splunkWrapper(): " . $e->getMessage());
-
-		$data = array(
-			"error" => "Unable to connect to our data store. (is it running?)",
-			);
-
-		$output = json_pretty($data);
-		$newResponse = $response->withStatus(500, "Server Error");
-		$newResponse->getBody()->write($output);
-		return($newResponse);
-
-	}
-
-} // End of splunkWrapper()
-
 
 $app->group("/api/current/train/{trainno}", function() {
 
 	$this->get("", function(Request $request, Response $response, $args) {
 
+		$display = new Septa\Display();
 		$splunk = new \Septa\Splunk();
 		$train = new Septa\Query\Train($splunk);
     	$trainno = $request->getAttribute("trainno");
 
-		$result = splunkWrapper(function() use ($args, $train, $response) {
+		$result = $display->splunkWrapper(function() use ($args, $train, $response, $display) {
 
-			$output = json_pretty($train->get($args["trainno"]));
+			$output = $display->json_pretty($train->get($args["trainno"]));
 	    	$response->getBody()->write($output);
 
 			return($response);
@@ -218,13 +186,14 @@ $app->group("/api/current/train/{trainno}", function() {
 
 	$this->get("/history", function(Request $request, Response $response, $args) {
 
+		$display = new Septa\Display();
 		$splunk = new \Septa\Splunk();
 		$train = new Septa\Query\Train($splunk);
     	$trainno = $request->getAttribute("trainno");
 
-		$result = splunkWrapper(function() use ($args, $train, $response) {
+		$result = $display->splunkWrapper(function() use ($args, $train, $response, $display) {
 
-			$output = json_pretty($train->getHistoryByDay($args["trainno"]));
+			$output = $display->json_pretty($train->getHistoryByDay($args["trainno"]));
 	    	$response->getBody()->write($output);
 
 			}, $response);
@@ -236,13 +205,14 @@ $app->group("/api/current/train/{trainno}", function() {
 
 	$this->get("/history/average", function(Request $request, Response $response, $args) {
 
+		$display = new Septa\Display();
 		$splunk = new \Septa\Splunk();
 		$train = new Septa\Query\Train($splunk);
     	$trainno = $request->getAttribute("trainno");
 
-		$result = splunkWrapper(function() use($args, $train, $response) {
+		$result = $display->splunkWrapper(function() use($args, $train, $response, $display) {
 
-			$output = json_pretty($train->getHistoryHistoricalAvg($args["trainno"]));
+			$output = $display->json_pretty($train->getHistoryHistoricalAvg($args["trainno"]));
 	    	$response->getBody()->write($output);
 
 			}, $response);
@@ -258,6 +228,7 @@ $app->group("/api/current/system", function() {
 
 	$this->get("", function(Request $request, Response $response, $args) {
 	
+		$display = new Septa\Display();
 		$splunk = new \Septa\Splunk();
 		$system = new Septa\Query\System($splunk);
 
@@ -265,9 +236,9 @@ $app->group("/api/current/system", function() {
 		$num_hours = 1;
 		$span_min = 10;
 
-		$result = splunkWrapper(function() use ($system, $response, $num_trains, $num_hours, $span_min) {
+		$result = $display->splunkWrapper(function() use ($system, $response, $num_trains, $num_hours, $span_min, $display) {
 
-			$output = json_pretty($system->getTopLatestTrains($num_trains, $num_hours, $span_min));
+			$output = $display->json_pretty($system->getTopLatestTrains($num_trains, $num_hours, $span_min));
 	    	$response->getBody()->write($output);
 
 			}, $response);
@@ -278,14 +249,15 @@ $app->group("/api/current/system", function() {
 
 	$this->get("/totals", function(Request $request, Response $response, $args) {
 
+		$display = new Septa\Display();
 		$splunk = new \Septa\Splunk();
 		$system = new Septa\Query\System($splunk);
 
 		$num_days = 7;
 
-		$result = splunkWrapper(function() use ($response, $args, $system, $num_days) {
+		$result = $display->splunkWrapper(function() use ($response, $args, $system, $num_days, $display) {
 
-			$output = json_pretty($system->getTotalMinutesLateByDay($num_days));
+			$output = $display->json_pretty($system->getTotalMinutesLateByDay($num_days));
 	    	$response->getBody()->write($output);
 
 			}, $response);
@@ -302,7 +274,7 @@ $app->get("/api/current/lines", function(Request $request, Response $response, $
 	$splunk = new \Septa\Splunk();
 	$line = new Septa\Query\Line($splunk);
 
-	$output = json_pretty($line->getLines());
+	$output = $display->json_pretty($line->getLines());
 	$response->getBody()->write($output);
 
 });
@@ -310,6 +282,7 @@ $app->get("/api/current/lines", function(Request $request, Response $response, $
 
 $app->get("/api/current/line/{line}/{direction}", function(Request $request, Response $response, $args) {
 
+	$display = new Septa\Display();
 	$splunk = new \Septa\Splunk();
 	$line = new Septa\Query\Line($splunk);
 
@@ -319,14 +292,14 @@ $app->get("/api/current/line/{line}/{direction}", function(Request $request, Res
 	if ($line_name && $direction) {
 
 		$data = $line->getTrains($line_name, $direction, 1, 10);
-		$response->getBody()->write(json_pretty($data));
+		$response->getBody()->write($display->json_pretty($data));
 
 	} else {
 		$error = sprintf("Line '%s' and/or direction '%s' not found!\n", $args["line"], $args["direction"]);
 		$output = array(
 			"error" => $error,
 			);
-		$output_json = json_pretty($output);
+		$output_json = $display->json_pretty($output);
 		$new_response = $response->withStatus(404, "Line or direction not found");
 		$new_response->getBody()->write($output_json);
 		return($new_response);
@@ -340,14 +313,15 @@ $app->group("/api/current/station", function() {
 
 	$this->get("/{station}/trains", function(Request $request, Response $response, $args) {
 	
+		$display = new Septa\Display();
 		$splunk = new \Septa\Splunk();
 		$system = new Septa\Query\Station($splunk);
 
 		$station = $args["station"];
 
-		$result = splunkWrapper(function() use ($system, $response, $station) {
+		$result = $display->splunkWrapper(function() use ($system, $response, $station, $display) {
 
-			$output = json_pretty($system->getTrains($station));
+			$output = $display->json_pretty($system->getTrains($station));
 	    	$response->getBody()->write($output);
 
 			}, $response);
@@ -358,14 +332,15 @@ $app->group("/api/current/station", function() {
 
 	$this->get("/{station}/trains/latest", function(Request $request, Response $response, $args) {
 	
+		$display = new Septa\Display();
 		$splunk = new \Septa\Splunk();
 		$system = new Septa\Query\Station($splunk);
 
 		$station = $args["station"];
 
-		$result = splunkWrapper(function() use ($system, $response, $station) {
+		$result = $display->splunkWrapper(function() use ($system, $response, $station, $display) {
 
-			$output = json_pretty($system->getTrainsLatest($station));
+			$output = $display->json_pretty($system->getTrainsLatest($station));
 	    	$response->getBody()->write($output);
 
 			}, $response);
@@ -376,14 +351,15 @@ $app->group("/api/current/station", function() {
 
 	$this->get("/{station}/stats", function(Request $request, Response $response, $args) {
 	
+		$display = new Septa\Display();
 		$splunk = new \Septa\Splunk();
 		$system = new Septa\Query\Station($splunk);
 
 		$station = $args["station"];
 
-		$result = splunkWrapper(function() use ($system, $response, $station) {
+		$result = $display->splunkWrapper(function() use ($system, $response, $station, $display) {
 
-			$output = json_pretty($system->getStats($station));
+			$output = $display->json_pretty($system->getStats($station));
 	    	$response->getBody()->write($output);
 
 			}, $response);
@@ -398,14 +374,15 @@ $app->group("/api/current/station", function() {
 
 $app->get("/api/current/stations", function(Request $request, Response $response, $args) {
 
+	$display = new Septa\Display();
 	$splunk = new \Septa\Splunk();
 	$line = new Septa\Query\Stations($splunk);
 
-	$output = splunkWrapper(function() use ($line) {
+	$output = $display->splunkWrapper(function() use ($line, $display) {
 
 		$data = $line->getStations();
 
-		$output = json_pretty($data);
+		$output = $display->json_pretty($data);
 
 		return($output);
 
