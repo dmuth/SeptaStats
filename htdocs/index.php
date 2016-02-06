@@ -73,6 +73,24 @@ $app->get("/api", function(Request $request, Response $response, $args) {
 
 });
 
+
+//
+// Why am I returning a TEXT FILE through the Slim PHP framework?
+// Well, it turns out that for some reason why I just had robots.txt
+// in htdocs/ that it triggered a file download, even through the Content-Type:
+// header was not binary.  In the interest of time, I just put the robots.txt
+// file into the templates directory.  I'll sort this out later if it becomes
+// a serious performance issue.
+//
+$app->get("/robots.txt", function (Request $request, Response $response, $args) {
+
+	$response = $response->withHeader("Content-Type", "text/plain");
+
+    return $this->view->render($response, "robots.txt", [
+    	]);
+
+});
+
 $app->get("/lines", function (Request $request, Response $response, $args) {
 
 	$splunk = new \Septa\Splunk();
