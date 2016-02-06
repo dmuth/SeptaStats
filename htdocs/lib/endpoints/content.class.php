@@ -12,21 +12,29 @@ use \Psr\Http\Message\ResponseInterface as Response;
 class Content {
 
 
-	function __construct($app, $display) {
+	/**
+	* Our constructor
+	*
+	* @param object $app Our Slim PHP app.
+	* @param object $display Our class for displaying content
+	* @param object $line Class to bring up data on specific lines.
+	*
+	*/
+	function __construct($app, $display, $line) {
 		$this->app = $app;
 		$this->display = $display;
+		$this->line = $line;
 	}
 
 
 	/**
 	* Our main entry point.
 	*
-	* @param object $app Our Slim PHP app.
-	*
 	*/
 	function go() {
 
 		$display = $this->display;
+		$line = $this->line;
 
 		$this->app->get("/", function (Request $request, Response $response, $args) {
 
@@ -61,10 +69,7 @@ class Content {
 		});
 
 
-		$this->app->get("/lines", function (Request $request, Response $response, $args) use ($display) {
-
-			$splunk = new \Septa\Splunk();
-			$line = new \Septa\Query\Line($splunk);
+		$this->app->get("/lines", function (Request $request, Response $response, $args) use ($display, $line) {
 
 			$output = $display->json_pretty($line->getLines());
 			$lines = json_decode($output, true);
@@ -76,10 +81,7 @@ class Content {
 		});
 
 
-		$this->app->get("/line/{line}/{direction}", function (Request $request, Response $response, $args) use ($display) {
-
-			$splunk = new \Septa\Splunk();
-			$line = new \Septa\Query\Line($splunk);
+		$this->app->get("/line/{line}/{direction}", function (Request $request, Response $response, $args) use ($display, $line) {
 
 			//
 			// Sanity check our arguments

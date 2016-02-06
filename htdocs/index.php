@@ -48,8 +48,10 @@ $container["view"] = function ($container) {
 
 
 $display = new Septa\Display();
+$splunk = new \Septa\Splunk();
+$line = new \Septa\Query\Line($splunk);
 
-$endpoints_content = new Septa\Endpoints\content($app, $display);
+$endpoints_content = new Septa\Endpoints\content($app, $display, $line);
 $endpoints_content->go();
 
 
