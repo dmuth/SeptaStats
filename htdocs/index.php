@@ -10,6 +10,7 @@ require 'vendor/autoload.php';
 
 require("./lib/display.class.php");
 require("./lib/splunk.php");
+require("./lib/endpoints/content.class.php");
 require("./lib/query/train.class.php");
 require("./lib/query/line.class.php");
 require("./lib/query/system.class.php");
@@ -46,119 +47,11 @@ $container["view"] = function ($container) {
 };
 
 
-$app->get("/", function (Request $request, Response $response, $args) {
+$display = new Septa\Display();
 
-    return $this->view->render($response, "index.html", [
-        //'name' => $args['name']
-    ]);
+$endpoints_content = new Septa\Endpoints\content($app, $display);
+$endpoints_content->go();
 
-});
-
-$app->get("/faq", function (Request $request, Response $response, $args) {
-
-    return $this->view->render($response, "faq.html", [
-    	]);
-
-});
-
-$app->get("/about", function (Request $request, Response $response, $args) {
-
-    return $this->view->render($response, "about.html", [
-    	]);
-
-});
-
-$app->get("/api", function(Request $request, Response $response, $args) {
-
-    return $this->view->render($response, "api.html", [
-    	]);
-
-});
-
-
-//
-// Why am I returning a TEXT FILE through the Slim PHP framework?
-// Well, it turns out that for some reason why I just had robots.txt
-// in htdocs/ that it triggered a file download, even through the Content-Type:
-// header was not binary.  In the interest of time, I just put the robots.txt
-// file into the templates directory.  I'll sort this out later if it becomes
-// a serious performance issue.
-//
-$app->get("/robots.txt", function (Request $request, Response $response, $args) {
-
-	$response = $response->withHeader("Content-Type", "text/plain");
-
-    return $this->view->render($response, "robots.txt", [
-    	]);
-
-});
-
-$app->get("/lines", function (Request $request, Response $response, $args) {
-
-	$splunk = new \Septa\Splunk();
-	$line = new Septa\Query\Line($splunk);
-
-	$output = $display->json_pretty($line->getLines());
-	$lines = json_decode($output, true);
-
-    return $this->view->render($response, "lines.html", [
-		"lines" => $lines,
-    	]);
-
-});
-
-
-$app->get("/line/{line}/{direction}", function (Request $request, Response $response, $args) {
-
-	$splunk = new \Septa\Splunk();
-	$line = new Septa\Query\Line($splunk);
-
-	//
-	// Sanity check our arguments
-	//
-	$line_name = $line->checkLineKey($args["line"]);
-	$direction = $line->checkDirection($args["direction"]);
-
-	if ($line_name && $direction) {
-
-    	return $this->view->render($response, "line.html", [
-			"line_api" => $args["line"],
-			"direction_api" => $args["direction"],
-			"line" => $line_name,
-			"direction" => $direction,
-    		]);
-
-	} else {
-		$error = sprintf("Line '%s' and/or direction '%s' not found!\n", $args["line"], $args["direction"]);
-		$output = array(
-			"error" => $error,
-			);
-		$output_json = $display->json_pretty($output);
-		$new_response = $response->withStatus(404, "Line or direction not found");
-		$new_response->getBody()->write($output_json);
-		return($new_response);
-
-	}
-
-});
-
-
-$app->get("/train/{trainno}", function (Request $request, Response $response, $args) {
-
-    return $this->view->render($response, "train.html", [
-		"trainno" => $args["trainno"],
-    	]);
-
-});
-
-
-$app->get("/station/{station}", function (Request $request, Response $response, $args) {
-
-    return $this->view->render($response, "station.html", [
-		"station" => $args["station"],
-    	]);
-
-});
 
 
 
