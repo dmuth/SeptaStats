@@ -52,12 +52,15 @@ $display = new Septa\Display();
 $splunk = new \Septa\Splunk();
 $line = new \Septa\Query\Line($splunk);
 $train = new \Septa\Query\Train($splunk);
-$system = new \Septa\Query\Station($splunk);
+//$system = new \Septa\Query\Station($splunk);
+$system = new \Septa\Query\System($splunk);
+$station = new \Septa\Query\Station($splunk);
+$stations = new Septa\Query\Stations($splunk);
 
 $endpoints_content = new \Septa\Endpoints\Content($app, $display, $line);
 $endpoints_content->go();
 
-$endpoints_api = new \Septa\Endpoints\Api($app, $display, $line, $train, $system);
+$endpoints_api = new \Septa\Endpoints\Api($app, $display, $line, $train, $system, $station, $stations);
 $endpoints_api->go();
 
 
