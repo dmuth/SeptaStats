@@ -69,7 +69,9 @@ $endpoints_api->go();
 */
 $app->get("/test", function(Request $request, Response $response, $args) {
 
-	$urls = array(
+	$output = "";
+
+	$urls = [
 		"/api/current/train/521",
 		"/api/current/train/521/history",
 		"/api/current/train/521/history/average",
@@ -84,10 +86,25 @@ $app->get("/test", function(Request $request, Response $response, $args) {
 		"/api/current/station/ardmore/trains/latest",
 		"/api/current/station/ardmore/stats",
 		"/api/current/stations",
-		);
+		];
 
-	$output = "";
+	$output .= "<h2>Production URLs</h2>";
 	foreach ($urls as $key) {
+		$output .= "<a href=\"$key\">$key</a><br/>\n";
+	}
+
+	$urls_test = [
+		"/train/4324%3Cscript%3Ealert('test')%3C%2fscript%3E",
+		"/station/West%20Trenton%3Cscript%3Ealert('test');%3C%2fscript%3E",
+		"/api/current/train/%3Cscript%3Ealert('test');%3C%2fscript%3E",
+		"/api/current/station/%3Cscript%3Ealert('test');%3C%2fscript%3E/trains",
+		"/api/current/station/%3Cscript%3Ealert('test');%3C%2fscript%3E/trains/latest",
+		"/api/current/station/%3Cscript%3Ealert('test');%3C%2fscript%3E/stats",
+		"/api/current/station/test%22/stats",
+		];
+
+	$output .= "<h2>Test URLs</h2>";
+	foreach ($urls_test as $key) {
 		$output .= "<a href=\"$key\">$key</a><br/>\n";
 	}
 
