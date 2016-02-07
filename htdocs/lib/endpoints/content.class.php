@@ -69,7 +69,8 @@ class Content {
 		});
 
 
-		$this->app->get("/lines", function (Request $request, Response $response, $args) use ($display, $line) {
+		$this->app->get("/lines", function (Request $request, Response $response, $args) 
+			use ($display, $line) {
 
 			$output = $display->json_pretty($line->getLines());
 			$lines = json_decode($output, true);
@@ -81,7 +82,8 @@ class Content {
 		});
 
 
-		$this->app->get("/line/{line}/{direction}", function (Request $request, Response $response, $args) use ($display, $line) {
+		$this->app->get("/line/{line}/{direction}", function (Request $request, Response $response, $args) 
+			use ($display, $line) {
 
 			//
 			// Sanity check our arguments

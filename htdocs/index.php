@@ -52,7 +52,6 @@ $display = new Septa\Display();
 $splunk = new \Septa\Splunk();
 $line = new \Septa\Query\Line($splunk);
 $train = new \Septa\Query\Train($splunk);
-//$system = new \Septa\Query\Station($splunk);
 $system = new \Septa\Query\System($splunk);
 $station = new \Septa\Query\Station($splunk);
 $stations = new Septa\Query\Stations($splunk);
