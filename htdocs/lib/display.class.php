@@ -14,7 +14,7 @@ class Display {
 	/**
 	* Helper function to return prettified JSON data.
 	*/
-	function json_pretty($data) {
+	function jsonPretty($data) {
 		return(json_encode($data, JSON_PRETTY_PRINT));
 	}
 
@@ -38,7 +38,7 @@ class Display {
 				"error" => "Unable to connect to our data store. (is it running?)",
 				);
 	
-			$output = json_pretty($data);
+			$output = jsonPretty($data);
 			$newResponse = $response->withStatus(500, "Server Error");
 			$newResponse->getBody()->write($output);
 			return($newResponse);

@@ -72,7 +72,7 @@ class Content {
 		$this->app->get("/lines", function (Request $request, Response $response, $args) 
 			use ($display, $line) {
 
-			$output = $display->json_pretty($line->getLines());
+			$output = $display->jsonPretty($line->getLines());
 			$lines = json_decode($output, true);
 
 		    return $this->view->render($response, "lines.html", [
@@ -105,7 +105,7 @@ class Content {
 				$output = array(
 					"error" => $error,
 					);
-				$output_json = $display->json_pretty($output);
+				$output_json = $display->jsonPretty($output);
 				$new_response = $response->withStatus(404, "Line or direction not found");
 				$new_response->getBody()->write($output_json);
 				return($new_response);

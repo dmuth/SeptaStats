@@ -59,7 +59,7 @@ class Api {
 				$result = $display->splunkWrapper(function() 
 					use ($args, $train, $response, $display, $trainno) {
 
-					$output = $display->json_pretty($train->get($trainno));
+					$output = $display->jsonPretty($train->get($trainno));
 			    	$response->getBody()->write($output);
 
 					return($response);
@@ -79,7 +79,7 @@ class Api {
 				$result = $display->splunkWrapper(function() 
 					use ($args, $train, $response, $display) {
 
-					$output = $display->json_pretty($train->getHistoryByDay($args["trainno"]));
+					$output = $display->jsonPretty($train->getHistoryByDay($args["trainno"]));
 			    	$response->getBody()->write($output);
 
 					}, $response);
@@ -96,7 +96,7 @@ class Api {
 
 				$result = $display->splunkWrapper(function() use($args, $train, $response, $display) {
 
-					$output = $display->json_pretty($train->getHistoryHistoricalAvg($args["trainno"]));
+					$output = $display->jsonPretty($train->getHistoryHistoricalAvg($args["trainno"]));
 	    			$response->getBody()->write($output);
 
 					}, $response);
@@ -121,7 +121,7 @@ class Api {
 				$result = $display->splunkWrapper(function() 
 					use ($system, $response, $num_trains, $num_hours, $span_min, $display) {
 
-					$output = $display->json_pretty($system->getTopLatestTrains($num_trains, $num_hours, $span_min));
+					$output = $display->jsonPretty($system->getTopLatestTrains($num_trains, $num_hours, $span_min));
 			    	$response->getBody()->write($output);
 
 					}, $response);
@@ -138,7 +138,7 @@ class Api {
 				$result = $display->splunkWrapper(function() 
 					use ($response, $args, $system, $num_days, $display) {
 
-					$output = $display->json_pretty($system->getTotalMinutesLateByDay($num_days));
+					$output = $display->jsonPretty($system->getTotalMinutesLateByDay($num_days));
 			    	$response->getBody()->write($output);
 
 					}, $response);
@@ -153,7 +153,7 @@ class Api {
 		$app->get("/api/current/lines", function(Request $request, Response $response, $args) 
 			use ($display, $line) {
 
-			$output = $display->json_pretty($line->getLines());
+			$output = $display->jsonPretty($line->getLines());
 			$response->getBody()->write($output);
 
 		});
@@ -168,14 +168,14 @@ class Api {
 			if ($line_name && $direction) {
 
 				$data = $line->getTrains($line_name, $direction, 1, 10);
-				$response->getBody()->write($display->json_pretty($data));
+				$response->getBody()->write($display->jsonPretty($data));
 
 			} else {
 				$error = sprintf("Line '%s' and/or direction '%s' not found!\n", $args["line"], $args["direction"]);
 				$output = array(
 					"error" => $error,
 					);
-				$output_json = $display->json_pretty($output);
+				$output_json = $display->jsonPretty($output);
 				$new_response = $response->withStatus(404, "Line or direction not found");
 				$new_response->getBody()->write($output_json);
 
@@ -196,7 +196,7 @@ class Api {
 				$result = $display->splunkWrapper(function() 
 					use ($response, $station, $station_name, $display) {
 
-					$output = $display->json_pretty($station->getTrains($station_name));
+					$output = $display->jsonPretty($station->getTrains($station_name));
 			    	$response->getBody()->write($output);
 
 					}, $response);
@@ -213,7 +213,7 @@ class Api {
 				$result = $display->splunkWrapper(function() 
 					use ($response, $station, $station_name, $display) {
 
-					$output = $display->json_pretty($station->getTrainsLatest($station_name));
+					$output = $display->jsonPretty($station->getTrainsLatest($station_name));
 			    	$response->getBody()->write($output);
 
 					}, $response);
@@ -230,7 +230,7 @@ class Api {
 				$result = $display->splunkWrapper(function() 
 					use ($response, $station, $station_name, $display) {
 
-					$output = $display->json_pretty($station->getStats($station_name));
+					$output = $display->jsonPretty($station->getStats($station_name));
 	    			$response->getBody()->write($output);
 
 					}, $response);
@@ -249,7 +249,7 @@ class Api {
 
 				$data = $stations->getStations();
 
-				$output = $display->json_pretty($data);
+				$output = $display->jsonPretty($data);
 
 				return($output);
 
