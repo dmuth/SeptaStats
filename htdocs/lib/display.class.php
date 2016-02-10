@@ -49,6 +49,19 @@ class Display {
 	} // End of splunkWrapper()
 
 
+	/**
+	* Sanitize anything the user sent us.  This means we'll be removing
+	* everything but pre-defined values such as letters, numbers, and
+	* some punctuation.
+	*/
+	function sanitizeInput($s) {
+
+		$retval = preg_replace("/[^a-z0-9- \.]/i", "", $s);
+
+		return($retval);
+
+	} // End of sanitize()
+
 
 } // End of Display class
 

@@ -115,19 +115,19 @@ class Content {
 		});
 
 
-		$this->app->get("/train/{trainno}", function (Request $request, Response $response, $args) {
+		$this->app->get("/train/{trainno}", function (Request $request, Response $response, $args) use ($display) {
 
 		    return $this->view->render($response, "train.html", [
-				"trainno" => $args["trainno"],
+				"trainno" => $display->sanitizeInput($args["trainno"]),
 		    	]);
 
 		});
 
 
-		$this->app->get("/station/{station}", function (Request $request, Response $response, $args) {
+		$this->app->get("/station/{station}", function (Request $request, Response $response, $args) use ($display) {
 
 		    return $this->view->render($response, "station.html", [
-				"station" => $args["station"],
+				"station" => $display->sanitizeInput($args["station"]),
 		    	]);
 
 		});

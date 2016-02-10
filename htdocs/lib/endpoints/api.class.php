@@ -54,12 +54,12 @@ class Api {
 			$this->get("", function(Request $request, Response $response, $args) 
 				use ($display, $train) {
 
-		    	$trainno = $request->getAttribute("trainno");
+		    	$trainno = $display->sanitizeInput($request->getAttribute("trainno"));
 
 				$result = $display->splunkWrapper(function() 
-					use ($args, $train, $response, $display) {
+					use ($args, $train, $response, $display, $trainno) {
 
-					$output = $display->json_pretty($train->get($args["trainno"]));
+					$output = $display->json_pretty($train->get($trainno));
 			    	$response->getBody()->write($output);
 
 					return($response);
@@ -191,7 +191,7 @@ class Api {
 			$this->get("/{station}/trains", function(Request $request, Response $response, $args) 
 				use ($display, $station) {
 	
-				$station_name = $args["station"];
+				$station_name = $display->sanitizeInput($args["station"]);
 
 				$result = $display->splunkWrapper(function() 
 					use ($response, $station, $station_name, $display) {
@@ -208,7 +208,7 @@ class Api {
 			$this->get("/{station}/trains/latest", function(Request $request, Response $response, $args) 
 				use ($display, $station) {
 	
-				$station_name = $args["station"];
+				$station_name = $display->sanitizeInput($args["station"]);
 
 				$result = $display->splunkWrapper(function() 
 					use ($response, $station, $station_name, $display) {
@@ -225,7 +225,7 @@ class Api {
 			$this->get("/{station}/stats", function(Request $request, Response $response, $args) 
 				use ($display, $station) {
 	
-				$station_name = $args["station"];
+				$station_name = $display->sanitizeInput($args["station"]);
 
 				$result = $display->splunkWrapper(function() 
 					use ($response, $station, $station_name, $display) {
