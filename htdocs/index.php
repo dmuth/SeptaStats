@@ -96,10 +96,10 @@ $app->get("/test", function(Request $request, Response $response, $args) {
 	$urls_test = [
 		"/train/4324%3Cscript%3Ealert('test')%3C%2fscript%3E",
 		"/station/West%20Trenton%3Cscript%3Ealert('test');%3C%2fscript%3E",
-		"/api/current/train/%3Cscript%3Ealert('test');%3C%2fscript%3E",
-		"/api/current/station/%3Cscript%3Ealert('test');%3C%2fscript%3E/trains",
-		"/api/current/station/%3Cscript%3Ealert('test');%3C%2fscript%3E/trains/latest",
-		"/api/current/station/%3Cscript%3Ealert('test');%3C%2fscript%3E/stats",
+		"/api/current/train/%3Cscript%3Ealert('test');%3C%2fscript%3Etest",
+		"/api/current/station/%3Cscript%3Ealert('test');%3C%2fscript%3Etest/trains",
+		"/api/current/station/%3Cscript%3Ealert('test');%3C%2fscript%3Etest/trains/latest",
+		"/api/current/station/%3Cscript%3Ealert('test');%3C%2fscript%3Etest/stats",
 		"/api/current/station/test%22/stats",
 		];
 
