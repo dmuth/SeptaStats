@@ -70,9 +70,6 @@ var convertToCanvas = function(stops) {
 var trainStatus = function(results) {
 
 	var data = results["data"];
-	var last = data[ data.length - 1 ];
-	var next_stop = last["nextstop"];
-	var late = last["Minutes Late"];
 
 	var stops = getStops(data);
 	var stop_data = convertToCanvas(stops);
