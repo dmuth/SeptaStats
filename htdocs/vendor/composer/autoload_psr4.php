@@ -9,6 +9,7 @@ return array(
     'Slim\\Views\\' => array($vendorDir . '/slim/twig-view/src'),
     'Slim\\' => array($vendorDir . '/slim/slim/Slim'),
     'Psr\\Http\\Message\\' => array($vendorDir . '/psr/http-message/src'),
+    'Predis\\' => array($vendorDir . '/predis/predis/src'),
     'Interop\\Container\\' => array($vendorDir . '/container-interop/container-interop/src/Interop/Container'),
     'FastRoute\\' => array($vendorDir . '/nikic/fast-route/src'),
 );
