@@ -11,9 +11,9 @@ require_once("base.class.php");
 class Station extends Base {
 
 
-	function __construct($splunk) {
-		parent::__construct($splunk);
-	} // End of __construcr()
+	function __construct($splunk, $redis) {
+		parent::__construct($splunk, $redis);
+	} // End of __construct()
 
 
 	/**

@@ -8,10 +8,25 @@ namespace Septa\Query;
 */
 class Base {
 
-	/**
-	* Our Splunk object.
-	*/
+
+	//
+	// Our Splunk object.
+	//
 	protected $splunk;
+
+
+	//
+	// Our Redis client
+	//
+	protected $redis;
+
+
+	//
+	// Set our Redis TTL to 60 seconds to start with
+	//
+	//protected $redis_ttl = 60;
+// TEST
+	protected $redis_ttl = 10;
 
 
 	/**
@@ -19,9 +34,10 @@ class Base {
 	*
 	* @param object $splunk Our Splunk search object.
 	*/
-	function __construct($splunk) {
+	function __construct($splunk, $redis) {
 
 		$this->splunk = $splunk;
+		$this->redis = $redis;
 
 	} // End of __constructor()
 
@@ -47,6 +63,33 @@ class Base {
 		return($retval);
 
 	} // End of query()
+
+
+	/**
+	* Wrapper to get keys from Redis
+	*/
+	protected function redisGet($key) {
+		$retval = $this->redis->get($key);
+		$retval = json_decode($retval, true);
+		return($retval);
+	}
+
+	/**
+	* Wrapper to set keys in Redis with a default TTL.
+	*/
+	protected function redisSet($key, $value) {
+		$value = json_encode($value);
+		$this->redis->setEx($key, $this->redis_ttl, $value);
+	}
+
+
+	/**
+	* Wrapper to set keys in Redis with specified TTL.
+	*/
+	protected function redisSetEx($key, $value, $ttl) {
+		$value = json_encode($value);
+		$this->redis->setEx($key, $ttl, $value);
+	}
 
 
 } // End of Base class

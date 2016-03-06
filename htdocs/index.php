@@ -47,14 +47,18 @@ $container["view"] = function ($container) {
     return $view;
 };
 
+//
+// Create our Redis client
+//
+$redis = new Predis\Client();
 
 $display = new Septa\Display();
 $splunk = new \Septa\Splunk();
-$line = new \Septa\Query\Line($splunk);
-$train = new \Septa\Query\Train($splunk);
-$system = new \Septa\Query\System($splunk);
-$station = new \Septa\Query\Station($splunk);
-$stations = new Septa\Query\Stations($splunk);
+$line = new \Septa\Query\Line($splunk, $redis);
+$train = new \Septa\Query\Train($splunk, $redis);
+$system = new \Septa\Query\System($splunk, $redis);
+$station = new \Septa\Query\Station($splunk, $redis);
+$stations = new Septa\Query\Stations($splunk, $redis);
 
 $endpoints_content = new \Septa\Endpoints\Content($app, $display, $line);
 $endpoints_content->go();
@@ -111,6 +115,7 @@ $app->get("/test", function(Request $request, Response $response, $args) {
     $response->getBody()->write($output);
 
 });
+
 
 $app->run();
 

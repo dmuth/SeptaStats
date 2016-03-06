@@ -11,9 +11,9 @@ require_once("base.class.php");
 class System extends Base {
 
 
-	function __construct($splunk) {
-		parent::__construct($splunk);
-	} // End of __construcr()
+	function __construct($splunk, $redis) {
+		parent::__construct($splunk, $redis);
+	} // End of __construct()
 
 
 	/**
@@ -30,18 +30,27 @@ class System extends Base {
 	function getTopLatestTrains($num_trains, $num_hours, $span_min = 10) {
 
 		$retval = array();
+		$redis_key = "system/getTopLatestTrains";
 
-		$query = 'search index="septa_analytics" earliest=-' . $num_hours . 'h '
-			. 'late != 0 late != 999 '
-			. '| eval id = trainno . "-" . dest '
-			. '| timechart span=' . $span_min . 'm max(late) by id'
-			;
+		if ($retval = $this->redisGet($redis_key)) {
+			return($retval);
 
-		$retval = $this->query($query);
-		$retval["metadata"]["_comment"] = "The overall status of the train system";
+		} else {
 
-		return($retval);
+			$query = 'search index="septa_analytics" earliest=-' . $num_hours . 'h '
+				. 'late != 0 late != 999 '
+				. '| eval id = trainno . "-" . dest '
+				. '| timechart span=' . $span_min . 'm max(late) by id'
+				;
 
+			$retval = $this->query($query);
+			$retval["metadata"]["_comment"] = "The overall status of the train system";
+			$this->redisSet($redis_key, $retval);
+
+			return($retval);
+
+		}
+		
 	} // End of getTopLatestTrains()
 
 
@@ -54,7 +63,13 @@ class System extends Base {
 	function getTotalMinutesLateByDay($num_days) { 
 
 		$retval = array();
+		$redis_key = "system/getTotalMinutesLateByDay";
+		$redis_ttl = 1800;
 
+		if ($retval = $this->redisGet($redis_key)) {
+			return($retval);
+
+		} else {
 		$query = 'search index="septa_analytics" late != 0 late != 999 '
 			. 'earliest=-' . $num_days . 'd@d '
 			. '| eval id = trainno . "-" . dest '
@@ -64,7 +79,10 @@ class System extends Base {
 		$retval = $this->query($query);
 		$retval["metadata"]["_comment"] = "Day over day list of total minutes late for the system";
 
+			$this->redisSetEx($redis_key, $retval, $redis_ttl);
 		return($retval);
+
+		}
 
 	} // End of getTotalMinutesLateByDay()
 
