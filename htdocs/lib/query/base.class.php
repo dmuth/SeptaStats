@@ -37,7 +37,23 @@ class Base {
 		$this->splunk = $splunk;
 		$this->redis = $redis;
 
+		//
+		// Connect to syslog in case we're debugging
+		//
+		openlog("septa-stats", LOG_PID, LOG_LOCAL0);
+
 	} // End of __constructor()
+
+
+	/**
+	* A wrapper to log things to syslog.
+	* 
+	* Initially, I'm going to use this only in developement, but might
+	* have production use.
+	*/
+	function log($str) {
+		//syslog(LOG_INFO, $str);
+	}
 
 
 	/**
@@ -69,6 +85,13 @@ class Base {
 	protected function redisGet($key) {
 		$retval = $this->redis->get($key);
 		$retval = json_decode($retval, true);
+
+		if ($retval) {
+			$this->log("Redis GET: $key");
+		} else {
+			$this->log("Redis GET MISS: $key");
+		}
+
 		return($retval);
 	}
 
@@ -78,6 +101,7 @@ class Base {
 	protected function redisSet($key, $value) {
 		$value = json_encode($value);
 		$this->redis->setEx($key, $this->redis_ttl, $value);
+		$this->log("Redis SET: $key");
 	}
 
 
@@ -87,6 +111,7 @@ class Base {
 	protected function redisSetEx($key, $value, $ttl) {
 		$value = json_encode($value);
 		$this->redis->setEx($key, $ttl, $value);
+		$this->log("Redis SETEX: $key, $ttl");
 	}
 
 
