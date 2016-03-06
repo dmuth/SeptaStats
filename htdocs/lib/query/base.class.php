@@ -24,9 +24,7 @@ class Base {
 	//
 	// Set our Redis TTL to 60 seconds to start with
 	//
-	//protected $redis_ttl = 60;
-// TEST
-	protected $redis_ttl = 10;
+	protected $redis_ttl = 60;
 
 
 	/**
