@@ -54,6 +54,12 @@ class Line extends Base {
 	function getTrains($line, $direction, $num_hours = 1, $span_min = 10) {
 
 		$retval = array();
+		$redis_key = "line/getTrains-" . $line . "-" . $direction;
+
+		if ($retval = $this->redisGet($redis_key)) {
+			return($retval);
+
+		} else {
 
 		$query = 'search index="septa_analytics" earliest=-' . $num_hours . 'h '
 			. 'train_line="' . $line . ' (' . $direction .')" '
@@ -66,7 +72,11 @@ class Line extends Base {
 		$retval["metadata"]["line"] = $line;
 		$retval["metadata"]["direction"] = $direction;
 
+			$this->redisSet($redis_key, $retval);
+
 		return($retval);
+
+		}
 
 	} // End of getTrains()
 
