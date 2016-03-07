@@ -261,6 +261,10 @@ $( document ).ready(function() {
 {%include "lib/progress.html" %}
 </div>
 
+<div class="download-link">
+<a href="/api/current/train/{{trainno}}" >Download this graph as JSON data</a>
+</div>
+
 <h2>Status Over The Last 7 Days</h2>
 Note that some trains take different routes on different <em>days</em>. 
 In those cases, this graph can look really weird.  There is little that
@@ -273,6 +277,10 @@ more information, please <a href="/faq">check the faq</a>.
 {%include "lib/progress.html" %}
 </div>
 <br/>
+
+<div class="download-link">
+<a href="/api/current/train/{{trainno}}/history" >Download this graph as JSON data</a>
+</div>
 
 
 {% endblock %}

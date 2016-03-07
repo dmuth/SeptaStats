@@ -200,12 +200,20 @@ $( document ).ready(function() {
 </div>
 <br/>
 
+<div class="download-link">
+<a href="/api/current/system" >Download this graph as JSON data</a>
+</div>
+<br/>
 
 <h2>Regional Rail System Lateness Over 7 Days</h2>
 <div id="graphStatusTotals" style="height: 300px; width: 100%;">
 {%include "lib/progress.html" %}
 </div>
 
+<div class="download-link">
+<a href="/api/current/system/totals" >Download this graph as JSON data</a>
+</div>
+<br/>
 
 {% endblock %}
 
