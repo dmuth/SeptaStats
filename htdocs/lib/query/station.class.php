@@ -26,18 +26,28 @@ class Station extends Base {
 	function getTrains($station) {
 
 		$retval = array();
+		$redis_key = "station/getTrains-${station}";
 
-		$query = 'search index="septa_analytics" '
-			. 'earliest=-24h late != 999 '
-			. 'nextstop="' . $station . '" '
-			. '| eval time=strftime(_time,"%Y-%m-%d %H:%M:%S") '
-			. '| stats max(late) AS "Minutes Late", max(time) AS "time", max(train_line) AS "Train Line" by trainno '
-			. '| sort time desc';
+		if ($retval = $this->redisGet($redis_key)) {
+			return($retval);
 
-		$retval = $this->query($query);
-		$retval["metadata"]["_comment"] = "Most recent trains that have arrived at the station named '$station'";
+		} else {
 
-		return($retval);
+			$query = 'search index="septa_analytics" '
+				. 'earliest=-24h late != 999 '
+				. 'nextstop="' . $station . '" '
+				. '| eval time=strftime(_time,"%Y-%m-%d %H:%M:%S") '
+				. '| stats max(late) AS "Minutes Late", max(time) AS "time", max(train_line) AS "Train Line" by trainno '
+				. '| sort time desc';
+
+			$retval = $this->query($query);
+			$retval["metadata"]["_comment"] = "Most recent trains that have arrived at the station named '$station'";
+
+			$this->redisSet($redis_key, $retval);
+			return($retval);
+
+		}
+
 
 	} // End of getTrains()
 
@@ -52,22 +62,30 @@ class Station extends Base {
 	function getTrainsLatest($station) {
 
 		$retval = array();
+		$redis_key = "station/getTrainsLatest-${station}";
 
-		$query = 'search index="septa_analytics" '
-				. 'earliest=-24h late != 999 '
-				. 'nextstop="' . $station . '" '
-				. '| eval time=strftime(_time,"%Y-%m-%d %H:%M:%S") '
-				. '| eval id = trainno . "-" . dest '
-				. '| stats max(late) AS "Minutes Late", max(time) AS "time", max(train_line) AS "Train Line" by id '
-				. '| sort "Minutes Late" desc '
-				. '| head '
-				. '| chart max("Minutes Late") AS "Minutes Late" by id '
-				. '| sort "Minutes Late" desc';
+		if ($retval = $this->redisGet($redis_key)) {
+			return($retval);
 
-		$retval = $this->query($query);
-		$retval["metadata"]["_comment"] = "Latest trains that have arrived at the station named '$station'";
+		} else {
+			$query = 'search index="septa_analytics" '
+					. 'earliest=-24h late != 999 '
+					. 'nextstop="' . $station . '" '
+					. '| eval time=strftime(_time,"%Y-%m-%d %H:%M:%S") '
+					. '| eval id = trainno . "-" . dest '
+					. '| stats max(late) AS "Minutes Late", max(time) AS "time", max(train_line) AS "Train Line" by id '
+					. '| sort "Minutes Late" desc '
+					. '| head '
+					. '| chart max("Minutes Late") AS "Minutes Late" by id '
+					. '| sort "Minutes Late" desc';
 
-		return($retval);
+			$retval = $this->query($query);
+			$retval["metadata"]["_comment"] = "Latest trains that have arrived at the station named '$station'";
+
+			$this->redisSet($redis_key, $retval);
+			return($retval);
+
+		}
 
 	} // End of getTrainsLatest()
 
@@ -83,26 +101,34 @@ class Station extends Base {
 	function getStats($station) {
 
 		$retval = array();
+		$redis_key = "station/getStats-${station}";
 
-		$query = 'search index="septa_analytics" '
-			. 'earliest=-24h late != 999 '
-			. 'nextstop="' . $station . '" '
-			. '| eval time=strftime(_time,"%Y-%m-%d %H:%M:%S") '
-			. '| eval id = trainno . "-" . dest | '
-			. 'timechart span=1h latest(late) AS late by id '
-			. '| addtotals '
-			. '| timechart span=1h latest(Total) AS "Total Minutes Late" '
-			. '| join _time [search index="septa_analytics" late != 999 nextstop="Ardmore" '
-				. '| eval id = trainno . "-" . dest '
-				. '| timechart span=1h count(id) AS "# Trains"'
-				. ']'
-			;
+		if ($retval = $this->redisGet($redis_key)) {
+			return($retval);
 
+		} else {
 
-		$retval = $this->query($query);
-		$retval["metadata"]["_comment"] = "Stats for station '$station'. How many trains per hour versus total minutes late that hour.";
+			$query = 'search index="septa_analytics" '
+				. 'earliest=-24h late != 999 '
+				. 'nextstop="' . $station . '" '
+				. '| eval time=strftime(_time,"%Y-%m-%d %H:%M:%S") '
+				. '| eval id = trainno . "-" . dest | '
+				. 'timechart span=1h latest(late) AS late by id '
+				. '| addtotals '
+				. '| timechart span=1h latest(Total) AS "Total Minutes Late" '
+				. '| join _time [search index="septa_analytics" late != 999 nextstop="Ardmore" '
+					. '| eval id = trainno . "-" . dest '
+					. '| timechart span=1h count(id) AS "# Trains"'
+					. ']'
+				;
 
-		return($retval);
+			$retval = $this->query($query);
+			$retval["metadata"]["_comment"] = "Stats for station '$station'. How many trains per hour versus total minutes late that hour.";
+
+			$this->redisSet($redis_key, $retval);
+			return($retval);
+
+		}
 
 	} // End of getTrainsLatest()
 
