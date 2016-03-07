@@ -70,17 +70,17 @@ class System extends Base {
 			return($retval);
 
 		} else {
-		$query = 'search index="septa_analytics" late != 0 late != 999 '
-			. 'earliest=-' . $num_days . 'd@d '
-			. '| eval id = trainno . "-" . dest '
-			. '| timechart span=1h eval(sum(late)/60) AS "Minutes Late" '
-			. '| timewrap d';
+			$query = 'search index="septa_analytics" late != 0 late != 999 '
+				. 'earliest=-' . $num_days . 'd@d '
+				. '| eval id = trainno . "-" . dest '
+				. '| timechart span=1h eval(sum(late)/60) AS "Minutes Late" '
+				. '| timewrap d';
 
-		$retval = $this->query($query);
-		$retval["metadata"]["_comment"] = "Day over day list of total minutes late for the system";
+			$retval = $this->query($query);
+			$retval["metadata"]["_comment"] = "Day over day list of total minutes late for the system";
 
 			$this->redisSetEx($redis_key, $retval, $redis_ttl);
-		return($retval);
+			return($retval);
 
 		}
 
