@@ -93,13 +93,14 @@ class Base {
 		return($retval);
 	}
 
+
 	/**
 	* Wrapper to set keys in Redis with a default TTL.
 	*/
 	protected function redisSet($key, $value) {
 		$value = json_encode($value);
 		$this->redis->setEx($key, $this->redis_ttl, $value);
-		$this->log("Redis SET: $key");
+		$this->log("Redis SET: Key: $key, Ttl: " . $this->redis_ttl);
 	}
 
 
@@ -109,7 +110,7 @@ class Base {
 	protected function redisSetEx($key, $value, $ttl) {
 		$value = json_encode($value);
 		$this->redis->setEx($key, $ttl, $value);
-		$this->log("Redis SETEX: $key, $ttl");
+		$this->log("Redis SETEX: Key: $key, Ttl: $ttl");
 	}
 
 
