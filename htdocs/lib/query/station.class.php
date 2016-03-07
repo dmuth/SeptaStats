@@ -102,6 +102,7 @@ class Station extends Base {
 
 		$retval = array();
 		$redis_key = "station/getStats-${station}";
+		$redis_ttl = 300;
 
 		if ($retval = $this->redisGet($redis_key)) {
 			return($retval);
@@ -125,7 +126,7 @@ class Station extends Base {
 			$retval = $this->query($query);
 			$retval["metadata"]["_comment"] = "Stats for station '$station'. How many trains per hour versus total minutes late that hour.";
 
-			$this->redisSet($redis_key, $retval);
+			$this->redisSetEx($redis_key, $retval, $redis_ttl);
 			return($retval);
 
 		}
