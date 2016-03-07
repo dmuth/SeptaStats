@@ -48,11 +48,9 @@ class Base {
 	/**
 	* A wrapper to log things to syslog.
 	* 
-	* Initially, I'm going to use this only in developement, but might
-	* have production use.
 	*/
 	function log($str) {
-		//syslog(LOG_INFO, $str);
+		syslog(LOG_INFO, $str);
 	}
 
 
