@@ -87,7 +87,7 @@ class Base {
 
 		if ($retval) {
 			$ttl = $this->redis->ttl($key);
-			$this->log("Redis GET: Key: $key, TTL: $ttl");
+			$this->log("Redis GET HIT: Key: $key, TTL: $ttl");
 
 		} else {
 			$this->log("Redis GET MISS: Key: $key");
