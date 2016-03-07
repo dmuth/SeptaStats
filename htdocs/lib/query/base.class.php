@@ -81,13 +81,17 @@ class Base {
 	* Wrapper to get keys from Redis
 	*/
 	protected function redisGet($key) {
+
 		$retval = $this->redis->get($key);
 		$retval = json_decode($retval, true);
 
 		if ($retval) {
-			$this->log("Redis GET: $key");
+			$ttl = $this->redis->ttl($key);
+			$this->log("Redis GET: Key: $key, TTL: $ttl");
+
 		} else {
-			$this->log("Redis GET MISS: $key");
+			$this->log("Redis GET MISS: Key: $key");
+
 		}
 
 		return($retval);
@@ -100,7 +104,7 @@ class Base {
 	protected function redisSet($key, $value) {
 		$value = json_encode($value);
 		$this->redis->setEx($key, $this->redis_ttl, $value);
-		$this->log("Redis SET: Key: $key, Ttl: " . $this->redis_ttl);
+		$this->log("Redis SET: Key: $key, TTL: " . $this->redis_ttl);
 	}
 
 
@@ -110,7 +114,7 @@ class Base {
 	protected function redisSetEx($key, $value, $ttl) {
 		$value = json_encode($value);
 		$this->redis->setEx($key, $ttl, $value);
-		$this->log("Redis SETEX: Key: $key, Ttl: $ttl");
+		$this->log("Redis SETEX: Key: $key, TTL: $ttl");
 	}
 
 
