@@ -11,3 +11,9 @@ once per minute and contains dashboards and reports for visualizing that data.
     - `cd ..; tar xfvz septa-analytics/timewrap_24.tgz`
     - For more information about Timewrap, visit it's webpage: https://splunkbase.splunk.com/app/1645/
 - Restart Splunk
+
+
+### To enable the web front-end
+
+Do nothing. :-)  Nginx is pointed to the directory under Splunk. 
+
