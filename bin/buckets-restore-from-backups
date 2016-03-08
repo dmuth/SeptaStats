@@ -118,11 +118,9 @@ done
 
 if test "$GO"
 then
-	$SPLUNK_HOME/bin/splunk start
-else
 	echo "# "
-	echo "# If I was run with --go on the command line, "
-	echo "# I would be starting splunk now... "
+	echo "# Success! "
+	echo "# Be sure to start up Splunk now. :-)"
 	echo "# "
 fi
 
