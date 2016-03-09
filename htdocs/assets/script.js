@@ -24,24 +24,32 @@ var tryApi = {
 	* @param string url The URL we are trying to hit
 	* @param object callback Our callback to call when successful
 	* @param integer count How many tries have we made?
+	* @param integer start Our starting timestamp in ms
 	* @param integer totalMs How many ms have we delayed?
 	*/
-	try: function(url, cb, count, totalMs) {
+	try: function(url, cb, count, start, totalMs) {
 
 		// Keep me sane
 		var self = this;
 
 		//url = "http://httpbin.org/status/500"; // Debugging
+		console.log("Trying URL '" + url + "'..."); 
 
 		count = count || 1;
+		start = start || new Date().getTime();
 		totalMs = totalMs || 0;
 
+		var elapsed = new Date().getTime() - start;
 		var apiUrl = url + "?apiCount=" + count + "&apiTotalDelayMs=" + totalMs;
 
 		jQuery.ajax({
 			url: apiUrl,
 			dataType: "json",
-			success: cb,
+			success: function(data) {
+				var elapsed = new Date().getTime() - start;
+				console.log("Success on URL '" + url + "' in " + elapsed + " ms!");
+				cb(data);
+				},
 
 		}).fail(function() {
 
@@ -65,7 +73,7 @@ var tryApi = {
 			console.log("Got error reading '" + url + "', trying again in " + delay + " ms...");
 
 			setTimeout(function() {
-				self.try(url, cb, ++count, (totalMs + delay) );
+				self.try(url, cb, ++count, start, (totalMs + delay) );
 				}, delay);
 
 		});
