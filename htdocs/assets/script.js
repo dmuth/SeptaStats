@@ -14,6 +14,12 @@ var tryApi = {
 	//
 	maxCount: 5,
 
+	//
+	// Base unit of milliseconds which will be the basis for our exponential backoff
+	//
+	baseMs: 250,
+
+
 	/**
 	* @param string url The URL we are trying to hit
 	* @param object callback Our callback to call when successful
@@ -30,10 +36,6 @@ var tryApi = {
 		count = count || 1;
 		totalMs = totalMs || 0;
 
-		if (count > self.maxCount) {
-			return(null);
-		}
-
 		var apiUrl = url + "?apiCount=" + count + "&apiTotalDelayMs=" + totalMs;
 
 		jQuery.ajax({
@@ -43,14 +45,43 @@ var tryApi = {
 
 		}).fail(function() {
 
+			if (count >= self.maxCount) {
+				console.log("Hit our max of " + count + " tries on URL '" + url + "', stopping.");
+				return(null);
+			}
+			//
+			// Calculate our exponential backoff.
+			// What we're doing is calculating a random value between 1
+			// and the current attempt squared - 1, and then multiplaying
+			// that by our base interval.
+			//
+			// This should hopefully stagger requests from different
+			// web browsers in the event that there is high amounts
+			// of traffic coming in.
+			//
+			var delayMultMax = Math.pow(2, count);
+			var delayMult = self.getRandomInt(1, delayMultMax);
+			var delay = delayMult * self.baseMs;
+			console.log("Got error reading '" + url + "', trying again in " + delay + " ms...");
+
 			setTimeout(function() {
-				self.try(url, cb, ++count, (totalMs + 1000) );
-				}, 1000);
+				self.try(url, cb, ++count, (totalMs + delay) );
+				}, delay);
 
 		});
 
-	} // End of try()
+	}, // End of try()
+
+
+	/**
+	* Get a random integer between min (inclusive) and max (exclusive)
+	*/
+	getRandomInt: function(min, max) {
+		return Math.floor(Math.random() * (max - min)) + min;
+	}
 
 
 } // End of tryApi
+
+
 
