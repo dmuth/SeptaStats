@@ -6,7 +6,7 @@
 {% block content %}
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/canvasjs/1.7.0/canvasjs.min.js" ></script>
-
+<script src="/assets/script.js" ></script>
 <script language="javascript">
 
 /**
@@ -235,18 +235,10 @@ var trainHistory = function(results) {
 $( document ).ready(function() {
 
 	var url = "/api/current/train/" + {{trainno}};
-	jQuery.ajax({
-		url: url,
-		dataType: "json",
-		success: trainStatus,
-		});
+	tryApi.try(url, trainStatus);
 
 	var url = "/api/current/train/" + {{trainno}} + "/history";
-	jQuery.ajax({
-		url: url,
-		dataType: "json",
-		success: trainHistory,
-		});
+	tryApi.try(url, trainHistory);
 
 });
 

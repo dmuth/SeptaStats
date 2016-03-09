@@ -6,7 +6,7 @@
 {% block content %}
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/canvasjs/1.7.0/canvasjs.min.js" ></script>
-
+<script src="/assets/script.js" ></script>
 <script language="javascript">
 
 /**
@@ -222,11 +222,8 @@ var lineStatus = function(results) {
 
 $( document ).ready(function() {
 
-	jQuery.ajax({
-		url: "/api/current/line/{{line_api}}/{{direction_api}}", 
-		dataType: "json",
-		success: lineStatus,
-		});
+	var url = "/api/current/line/{{line_api}}/{{direction_api}}";
+	tryApi.try(url, lineStatus);
 
 });
 

@@ -6,8 +6,7 @@
 {% block content %}
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/canvasjs/1.7.0/canvasjs.min.js" ></script>
-
-
+<script src="/assets/script.js" ></script>
 <script language="javascript">
 
 /**
@@ -177,17 +176,8 @@ var graphStatusTotals = function(results) {
 
 $( document ).ready(function() {
 
-	jQuery.ajax({
-		url: "/api/current/system", 
-		dataType: "json",
-		success: graphStatus,
-		});
-
-	jQuery.ajax({
-		url: "/api/current/system/totals", 
-		dataType: "json",
-		success: graphStatusTotals,
-		});
+	tryApi.try("/api/current/system", graphStatus);
+	tryApi.try("/api/current/system/totals", graphStatusTotals);
 
 });
 
