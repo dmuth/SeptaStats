@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# This script removes all existing buckets
+# This script restores all existing buckets from a backup
 #
 
 # Errors are fatal
@@ -59,7 +59,7 @@ NEW_ID=10000
 for FILE in $(ls -1 $SRC/*.tgz |sort )
 do
 	TMP_DIR=$(mktemp -d)
-	pushd $TMP_DIR
+	pushd $TMP_DIR > /dev/null
 
 	echo "# "
 	echo "# Restoring '${FILE}' to '${BUCKET_DIR}'..."
@@ -97,9 +97,14 @@ do
 			echo "# "
 		fi
 
+	else
+		echo "#"
+		echo "# (...if I was run with --go on the command line...)"
+
 	fi
 
-	echo "# (...if I was run with --go on the command line...)"
+	echo "#"
+	echo "#"
 
 	#
 	# Increment our New ID, get out of our old directory, and remove it
@@ -113,11 +118,9 @@ done
 
 if test "$GO"
 then
-	$SPLUNK_HOME/bin/splunk start
-else
 	echo "# "
-	echo "# If I was run with --go on the command line, "
-	echo "# I would be starting splunk now... "
+	echo "# Success! "
+	echo "# Be sure to start up Splunk now. :-)"
 	echo "# "
 fi
 
