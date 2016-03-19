@@ -25,9 +25,9 @@ then
 fi
 
 
-echo "# "
-echo "# Executing query: ${QUERY}"
-echo "# "
+>&2 echo "# " 
+>&2 echo "# Executing query: ${QUERY}"
+>&2 echo "# "
 
 # xmllint is part of the libxml2-utils package
 RESULT=$(curl -4 -s -u ${UN}:${PW} -k ${URL} -d search="${QUERY}" )
@@ -35,24 +35,24 @@ JOBID=$(echo $RESULT | xmllint --xpath "/response/sid/text()" - || true)
 
 if test ! "${JOBID}"
 then
-	echo "! "
-	echo "! No Job ID found! "
-	echo "! "
-	echo "! Things to look for:"
-	echo "! - Are percent signs encoded as '%25'?"
-	echo "! - Does the query start with 'search'?"
-	echo "! "
+	>&2 echo "! "
+	>&2 echo "! No Job ID found! "
+	>&2 echo "! "
+	>&2 echo "! Things to look for:"
+	>&2 echo "! - Are percent signs encoded as '%25'?"
+	>&2 echo "! - Does the query start with 'search'?"
+	>&2 echo "! "
 
 	exit 1
 fi
 
 
-echo "# "
-echo "# Got Job ID: ${JOBID}"
-echo "# "
+>&2 echo "# "
+>&2 echo "# Got Job ID: ${JOBID}"
+>&2 echo "# "
 
-echo "# Fetching results... "
-echo "# "
+>&2 echo "# Fetching results... "
+>&2 echo "# "
 
 
 #
@@ -68,7 +68,7 @@ do
 		break
 	fi
 
-	echo "# State is ${STATE}. Sleeping and trying again..."
+	>&2 echo "# State is ${STATE}. Sleeping and trying again..."
 	STATE=$(curl -4 -s -u ${UN}:${PW} -k ${URL}/${JOBID} --get -d output_mode=json | jq ${KEY})
 	sleep 1
 
