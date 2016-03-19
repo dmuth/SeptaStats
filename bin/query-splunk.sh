@@ -74,6 +74,6 @@ do
 
 done
 
-curl -4 -s -u ${UN}:${PW} -k ${URL}/${JOBID}/results --get -d output_mode=json | jq .
+curl -4 -s -u ${UN}:${PW} -k ${URL}/${JOBID}/results --get -d output_mode=json
 
 
