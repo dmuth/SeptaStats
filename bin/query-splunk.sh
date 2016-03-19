@@ -109,13 +109,13 @@ done
 
 if test ! "$EXPORT"
 then
-	curl -4 -s -u ${UN}:${PW} -k ${URL}/${JOBID}/results --get -d output_mode=json
+	curl -4 -s -u ${UN}:${PW} -k ${URL}/${JOBID}/results --get -d "output_mode=json&count=0"
 
 else
 	#
 	# Run our query through some filters so we just get the raw rows
 	#
-	curl -4 -s -u ${UN}:${PW} -k ${URL}/${JOBID}/results --get -d output_mode=json \
+	curl -4 -s -u ${UN}:${PW} -k ${URL}/${JOBID}/results --get -d "output_mode=json&count=0" \
 		| jq .results[]._raw \
 		| sed -e "s/^\"//" -e "s/\"$//" -e 's/\\//g'
 
