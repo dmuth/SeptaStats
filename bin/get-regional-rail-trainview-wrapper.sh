@@ -36,7 +36,8 @@ unset LD_LIBRARY_PATH
 while true
 do
 
-	./get-regional-rail-trainview.php | tee -a $LOG
+	#./get-regional-rail-trainview.php | tee -a $LOG
+	./get-regional-rail-trainview.php 
 
 	sleep 50
 
