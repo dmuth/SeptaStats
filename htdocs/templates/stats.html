@@ -1,0 +1,209 @@
+
+{% extends "base.html" %}
+
+{% block title %}Septa Stats!{% endblock %}
+
+{% block content %}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/canvasjs/1.7.0/canvasjs.min.js" ></script>
+<script src="/assets/script.js" ></script>
+<script language="javascript">
+
+/**
+* Extract our trains from the results of the API call.
+*
+* @return array An array where each element is a specific train,
+*	and the value is an array of times and minutes late.
+*/
+var getTrains = function(results) {
+
+	var retval = {};
+
+	//
+	// Loop through our time values and put the data into an array by train.
+	//
+	for (var k in results.data) {
+
+		var row = results.data[k];
+		var time = row["_time"];
+
+		for (var i in row) {
+
+			if (i == "_time") {
+				continue;
+			}
+
+			var train = i;
+			var late = row[i];
+
+			//
+			// The trains array gets one element per train,
+			// and each element has an array of time and lateness.
+			//
+			if (!retval[train]) {
+				retval[train] = [];
+			}
+
+			retval[train].push({time: time, late: late});
+
+		}
+
+	}
+
+	return(retval);
+
+} // End of getTrains()
+
+
+/**
+* Convert our train-based array into an array of data that Canvas can understand.
+*/
+var convertToCanvas = function(trains) {
+
+	var retval = [];
+
+	//
+	// Now turn that train data into datapoints for CanvasJS.
+	//
+	for (var k in trains) {
+		var train = trains[k];
+
+		var row = {
+			type: "stackedArea",  
+			showInLegend: true, 
+			name: k,
+			dataPoints: [],
+			};
+
+		for (var i in train) {
+			row.dataPoints.push({
+				x: new Date(train[i].time),
+				y: parseInt(train[i].late),
+				});
+		}
+
+		retval.push(row);
+
+	}
+
+	return(retval);
+
+} // End of convertToCanvas()
+
+
+var graphStatus = function(results) {
+
+	var trains = getTrains(results);
+	var train_data = convertToCanvas(trains);
+
+	//
+	// Finally, create the chart in CanvasJS
+	//
+	var chart = new CanvasJS.Chart("graphStatus", {
+		title: {
+			//text: "Top 10 Latest Trains Right Now",
+			},
+		animationDuration: 500,
+		animationEnabled: true,
+		axisX: {
+			intervalType: "minute",
+			labelAngle: 45,
+			},
+		axisY: {
+			suffix: " Min Late",
+			},
+		toolTip: {
+			shared: true
+			},
+		data: train_data,
+		});
+
+	chart.render();
+
+} // End of graphStatus()
+
+
+var graphStatusTotals = function(results) {
+
+	var trains = getTrains(results);
+	var train_data = convertToCanvas(trains);
+
+	//
+	// Initialize each element, in case we have less than 7 days of data.
+	//
+	for (var i=0; i<=7; i++) {
+		if (!train_data[i]) {
+			train_data[i] = {};
+		}
+	}
+
+	train_data[0].name = "Today";
+	train_data[1].name = "Yesterday";
+	train_data[2].name = "2 Days Ago";
+	train_data[3].name = "3 Days Ago";
+	train_data[4].name = "4 Days Ago";
+	train_data[5].name = "5 Days Ago";
+	train_data[6].name = "6 Days Ago";
+	train_data[7].name = "7 Days Ago";
+
+	//
+	// Finally, create the chart in CanvasJS
+	//
+	var chart = new CanvasJS.Chart("graphStatusTotals", {
+		title: {
+			//text: "System Lateness over 7 days",
+			},
+		animationDuration: 500,
+		animationEnabled: true,
+		axisX: {
+			intervalType: "minute",
+			interval: 60,
+			labelAngle: 45,
+			},
+		axisY: {
+			suffix: " Min Late",
+			},
+		toolTip: {
+			shared: true
+			},
+		data: train_data,
+		});
+
+	chart.render();
+
+} // End of graphStatus()
+
+
+$( document ).ready(function() {
+
+	tryApi.try("/api/current/system", graphStatus);
+	tryApi.try("/api/current/system/totals", graphStatusTotals);
+
+});
+
+
+</script>
+
+<h1>Top 10 Latest Regional Rail Trains Right Now</h1>
+<div id="graphStatus" style="height: 300px; width: 100%;">
+{%include "lib/progress.html" %}
+</div>
+<br/>
+
+<div class="download-link">
+<a href="/api/current/system" >Download this graph as JSON data</a>
+</div>
+<br/>
+
+<h2>Regional Rail System Lateness Over 7 Days</h2>
+<div id="graphStatusTotals" style="height: 300px; width: 100%;">
+{%include "lib/progress.html" %}
+</div>
+
+<div class="download-link">
+<a href="/api/current/system/totals" >Download this graph as JSON data</a>
+</div>
+<br/>
+
+{% endblock %}
+

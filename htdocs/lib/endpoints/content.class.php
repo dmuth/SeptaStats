@@ -45,6 +45,14 @@ class Content {
 		});
 
 
+		$this->app->get("/stats", function (Request $request, Response $response, $args) {
+
+		    return $this->view->render($response, "stats.html", [
+		    	]);
+
+		});
+
+
 		$this->app->get("/faq", function (Request $request, Response $response, $args) {
 
 		    return $this->view->render($response, "faq.html", [
