@@ -6,11 +6,15 @@ once per minute and contains dashboards and reports for visualizing that data.
 ## Installation Instructions
 
 - Clone this repo into $SPLUNK_HOME/etc/apps/
-    - `cd /var/splunk/etc/apps && git clone git@bitbucket.org:dmuth/septa-analytics.git`
+    - If on a production instance:
+        - `cd /var/splunk/etc/apps && git clone git@bitbucket.org:dmuth/septa-analytics.git`
+    - If on a Vagrant instance
+        - `/var/splunk/bin/splunk restart`
 - Install timewrap
-    - `cd ..; tar xfvz septa-analytics/timewrap_24.tgz`
+    - `tar xfvz septa-analytics/timewrap_24.tgz`
     - For more information about Timewrap, visit it's webpage: https://splunkbase.splunk.com/app/1645/
 - Restart Splunk
+
 
 
 ### To enable the web front-end
