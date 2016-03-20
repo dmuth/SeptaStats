@@ -76,7 +76,7 @@ class Splunk {
 
 		$job = $this->service->getJobs()->create($query);
 
-		$max = 10;
+		$max = 30;
 		//$max = 0; // Debugging
 		$start_time = microtime(true);
 		while (!$job->isDone()) {
