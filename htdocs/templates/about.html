@@ -16,10 +16,17 @@ I hope the "<em>what</em>" part is pretty self-explanatory.  This website holds 
 the minute statistics on all Regional Rail trains that SEPTA is running.  This is
 accomplished through a <a href="http://www.splunk.com/">Splunk instance</a> downloading data
 <a href="http://www3.septa.org/hackathon/">from SEPTA's API</a>, 
-storing the data, and serving up the reports.  The front end consists
+storing the data, and serving up the reports.
+</br>
+</br>
+
+The front end consists
 of <a href="http://www.slimframework.com/">Slim PHP</a> for request routing, 
 <a href="http://www.getbootstrap.com/">Bootstrap</a> for the UI, 
 and <a href="http://www.canvasjs.com/">CanvasJS</a> for the graphing.
+The back end consists of <a href="http://www.splunk.com/">Splunk</a> for data storage
+and report generation and <a href="http://redis.io/">Redis</a> for caching
+the results of longer running queries.
 <br/>
 <br/>
 
@@ -40,7 +47,7 @@ as I would refresh <a href="http://app.septa.org/nta/txt/result.php?loc_a=Suburb
 	>the status page</a>, it kept getting later and later.  As someone who runs a Splunk cluster
 professionally, I thought it would be nice if I could get a graph that shows how late that train
 is over time, and perhaps see if there is a bottleneck somewhere in SEPTA's system.  That prompted
-me to build the MVP entirely in Splunk.  That leads us to...
+me to build a MVP entirely in Splunk.  That leads us to...
 
 
 <h2>What do you want to do with it?</h2>
@@ -49,7 +56,7 @@ First, I wanted to provide this as a public transit to the other riders of SEPTA
 I hope they find the train reports and station reports as useful as I did.
 <br/>
 <br/>
-Second, I was hoping to demo this website to SEPTA's Senior Leadership Team and show them some of the
+Second, I am hoping I can demo this website to SEPTA's Senior Leadership Team and show them some of the
 things that can be done with Splunk and data analytics.  It wouldn't be too difficult to 
 expand on what's here to search for trains that are chronically late (candidates for having their schedule changed?)
 or to find "ripple effects" where one train being late impacts multiple other trains.
@@ -66,7 +73,8 @@ I'll be blunt--I'm decent at back-end systems engineering, but when it comes to 
 I'm a little out of my league there.  If you're a designer, UX specialist, or have other front-end
 experience, please drop me a line.  I'd love some guidance on the front end and layout of this
 site from someone who knows these things better than I. :-)
-
+<br/>
+<br/>
 
 
 {% endblock %}
