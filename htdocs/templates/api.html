@@ -26,18 +26,18 @@ If I have to go and implement a quota policy, that's no fun for anyone.
 
 <h2>System API calls</h2>
 
-<h3>
+<h4>
 /api/current/system
-</h3>
+</h4>
 
 Return a chronological list of which currently running trains are the latest.
 <br/>
 
 This is useful to get an overall picture of the Regional Rail train system.
 
-<h3>
+<h4>
 /api/current/system/totals
-</h3>
+</h4>
 
 Get a list of the total lateness of all running trains, by hour over the last 7 days.
 <br/>
@@ -47,17 +47,17 @@ This is useful for comparing the current day to previous days in the event of ba
 
 <h2>Train API calls</h2>
 
-<h3>
-/api/current/train/{trainno}
-</h3>
+<h4>
+/api/current/train/{train no}
+</h4>
 
 Get the current status of a train if it is running today.  Data includes
 a list of stops made in chronological order and the lateness for each stop.
 
 
-<h3>
-/api/current/train/{trainno}/history
-</h3>
+<h4>
+/api/current/train/{train no}/history
+</h4>
 
 Get the lateness "history" of a specific train for the last 7 days, by stop.
 <br/>
@@ -65,58 +65,58 @@ Get the lateness "history" of a specific train for the last 7 days, by stop.
 Note that not all trains run on all days.  Some trains are weekday only while others are weekend only.
 
 
-<h3>
-/api/current/train/{trainno}/history/average
-</h3>
+<h4>
+/api/current/train/{train no}/history/average
+</h4>
 
 Get the average lateness per stop of a given train.
 
 
 <h2>Line API calls</h2>
 
-<h3>
+<h4>
 /api/current/lines
-</h3>
+</h4>
 
 Get a list of all train lines.
 
-<h3>
+<h4>
 /api/current/line/{train line}/outbound
-</h3>
+</h4>
 
 Get a list of all outbound trains for this line, and their lateness.
 
-<h3>
+<h4>
 /api/current/line/{train line}/inbound
-</h3>
+</h4>
 
 Get a list of all inbound trains for this line, and their lateness.
 
 
 <h2>Station API calls</h2>
 
-<h3>
+<h4>
 /api/current/stations
-</h3>
+</h4>
 
 Get a list of all train stations.
 
-<h3>
-/api/current/station/{station}/trains
-</h3>
+<h4>
+/api/current/station/{station name}/trains
+</h4>
 
 Get a list of all trains which have arrived at this station in the last 24 hours, and their lateness.
 
-<h3>
-/api/current/station/{station}/trains/latest
-</h3>
+<h4>
+/api/current/station/{station name}/trains/latest
+</h4>
 
 Get a list of the most recent trains which have arrived at this station, and their lateness.
 
 
-<h3>
-/api/current/station/{station}/stats
-</h3>
+<h4>
+/api/current/station/{station name}/stats
+</h4>
 
 Get a list by hour of how many trains passed through that station, and the average lateness of each train.
 <br/>
