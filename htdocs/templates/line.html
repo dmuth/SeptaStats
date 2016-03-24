@@ -99,9 +99,25 @@ var getTrainNums = function(trains) {
 	retval = [];
 
 	for (var k in trains) {
+
 		var results = k.match(/^([0-9]+)/);
+
+		//results=null; // Debugging
+
+		//
+		// Doing some checking here, because k.match() would occasionally choke in 
+		// production and throw errors.
+		//
+		if (!Array.isArray(results)
+			|| results.length < 2) {
+			console.log("WARN: Caught possible malformed result: " + results);
+			console.log("WARN: k: " + k);
+			continue;
+		}
+
 		var train = results[1];
 		retval.push(train);
+
 	}
 
 	return(retval);
