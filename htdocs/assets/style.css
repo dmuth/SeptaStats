@@ -14,3 +14,16 @@ body {
 }
 
 
+.alert {
+  position: relative;
+}
+
+
+/**
+* Don't display our width alert unless we're in a narrow window.
+*/
+.width-alert {
+	display: none;
+}
+
+

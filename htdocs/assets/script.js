@@ -92,4 +92,25 @@ var tryApi = {
 } // End of tryApi
 
 
+/**
+* Logic to check our window width and display an alert if the 
+* screen is too narrow.
+*/
+var checkWidth = {
+
+	go: function() {
+
+		if ( $(window).width() <= 600) {
+			$(".width-alert").slideDown(1000);
+
+		} else {
+			$(".width-alert").slideUp(1000);
+
+		}
+	}
+
+} // End of checkWidth
+
+
+
 
