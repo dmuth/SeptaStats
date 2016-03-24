@@ -225,10 +225,29 @@ $( document ).ready(function() {
 	var url = "/api/current/line/{{line_api}}/{{direction_api}}";
 	tryApi.try(url, lineStatus);
 
+	//
+	// Check our width and set a handler to do the same
+	//
+	checkWidth.go();
+
+	$( window ).resize(function() {
+		checkWidth.go();
+	});
+
 });
 
 
 </script>
+
+
+<div class="alert alert-block alert-danger width-alert" role="alert">
+Whoa there! Your screen is kinda narrow, and this may make some of the graphs look funny. 
+<br/>
+<br/>
+
+You may want to turn your phone on its side for the best possible experience.
+
+</div>
 
 
 <h1>Current Status of {{line}} Line ({{direction}})</h1>

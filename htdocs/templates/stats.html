@@ -179,10 +179,30 @@ $( document ).ready(function() {
 	tryApi.try("/api/current/system", graphStatus);
 	tryApi.try("/api/current/system/totals", graphStatusTotals);
 
+	//
+	// Check our width and set a handler to do the same
+	//
+	checkWidth.go();
+
+	$( window ).resize(function() {
+		checkWidth.go();
+	});
+
 });
 
 
 </script>
+
+
+<div class="alert alert-block alert-danger width-alert" role="alert">
+Whoa there! Your screen is kinda narrow, and this may make some of the graphs look funny. 
+<br/>
+<br/>
+
+You may want to turn your phone on its side for the best possible experience.
+
+</div>
+
 
 <h1>Top 10 Latest Regional Rail Trains Right Now</h1>
 <div id="graphStatus" style="height: 300px; width: 100%;">
