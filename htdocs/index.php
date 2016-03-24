@@ -76,6 +76,7 @@ $app->get("/test", function(Request $request, Response $response, $args) {
 	$output = "";
 
 	$urls = [
+		"/api/current/trains",
 		"/api/current/train/521",
 		"/api/current/train/521/history",
 		"/api/current/train/521/history/average",

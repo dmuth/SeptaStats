@@ -49,6 +49,16 @@ class Api {
 		$station = $this->station;
 		$stations = $this->stations;
 
+
+		$app->get("/api/current/trains", function(Request $request, Response $response, $args) 
+			use ($display, $train) {
+
+			$output = $display->jsonPretty($train->getTrains());
+			$response->getBody()->write($output);
+
+		});
+
+
 		$app->group("/api/current/train/{trainno}", function() use ($display, $train) {
 
 			$this->get("", function(Request $request, Response $response, $args) 

@@ -17,6 +17,62 @@ class Train extends Base {
 
 
 	/**
+	* Retreive a list of all trains seen in the last 24 hours
+	*
+	* @return array An array of trains
+	*/
+	function getTrains() {
+
+		$retval = array();
+		$redis_key = "trains";
+		$redis_ttl = 600;
+
+		if ($retval = $this->redisGet($redis_key)) {
+			return($retval);
+
+		} else {
+
+			$query = 'search index="septa_analytics" earliest=-24h '
+				. '| fields trainno SOURCE dest'
+				. '| sort trainno '
+				. '| dedup trainno '
+				;
+
+			$retval = $this->query($query);
+
+			//
+			// Go through our results and extract just the fields we want, as
+			// well as 
+			//
+			$data = array();
+
+			foreach ($retval["data"] as $key => $value) {
+
+				unset($value["_raw"]);
+				unset($value["_time"]);
+
+				if (!isset($value["SOURCE"])) {
+					continue;
+				}
+
+				$value["source"] = $value["SOURCE"];
+				unset($value["SOURCE"]);
+				$data[$key] = $value;
+
+			}
+
+			$retval["data"] = $data;
+
+			$this->redisSetEx($redis_key, $retval, $redis_ttl);
+			return($retval);
+
+		}
+
+
+	} // End of getTrains()
+
+
+	/**
 	* Retrieve details for a specific train.
 	*
 	* @param integer $trainno Our train number.
