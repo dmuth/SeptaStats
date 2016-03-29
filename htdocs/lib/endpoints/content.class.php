@@ -18,12 +18,14 @@ class Content {
 	* @param object $app Our Slim PHP app.
 	* @param object $display Our class for displaying content
 	* @param object $line Class to bring up data on specific lines.
+	* @param object $stations Our stations object
 	*
 	*/
-	function __construct($app, $display, $line) {
+	function __construct($app, $display, $line, $stations) {
 		$this->app = $app;
 		$this->display = $display;
 		$this->line = $line;
+		$this->stations = $stations;
 	}
 
 
@@ -35,6 +37,7 @@ class Content {
 
 		$display = $this->display;
 		$line = $this->line;
+		$stations = $this->stations;
 
 		$this->app->get("/", function (Request $request, Response $response, $args) {
 
@@ -85,6 +88,26 @@ class Content {
 
 		    return $this->view->render($response, "lines.html", [
 				"lines" => $lines,
+		    	]);
+
+		});
+
+
+		$this->app->get("/stations", function (Request $request, Response $response, $args) 
+			use ($display, $stations) {
+
+			$data = $display->splunkWrapper(function() use ($stations, $display) {
+
+				$data = $stations->getStations();
+
+				return($data);
+
+				}, $response);
+
+			$stations = $data["data"];
+
+		    return $this->view->render($response, "stations.html", [
+				"stations" => $stations,
 		    	]);
 
 		});

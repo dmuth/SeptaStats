@@ -1,0 +1,49 @@
+
+{% extends "base.html" %}
+
+{% block title %}Stations of SEPTA Regional Rail - Septa Stats!{% endblock %}
+
+{% block content %}
+
+<script src="/assets/bootstrap-list-filter.min.js"></script>
+<script language="javascript">
+
+$( document ).ready(function() {
+
+    $('#searchlist').btsListFilter('#searchinput', {itemChild: 'span', initial: false, resetOnBlur: false});
+
+});
+
+</script>
+
+
+<h1>Select A Station</h1>
+
+Select a station to view its stats, or type in part of the station
+name in the search box to narrow down the list.
+<br/>
+<br/>
+
+<div class="row">
+
+	<div class="col-md-4">
+
+	<form role="form">
+		<div class="form-group">
+			<input id="searchinput" class="form-control" type="text" placeholder="Start typing a station name..." />
+		</div>
+
+		<div id="searchlist" class="list-group">
+			{% for key, value in stations %}
+				<a class="list-group-item" href="/station/{{key}}"><span>{{value}}</span></a>
+			{% endfor %}
+		</div>
+
+	</form>
+
+	</div>
+
+</div>
+
+{% endblock %}
+

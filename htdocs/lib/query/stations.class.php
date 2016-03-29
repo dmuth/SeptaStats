@@ -25,6 +25,7 @@ class Stations extends Base {
 
 		$retval = array();
 		$redis_key = "stations";
+		$redis_ttl = 1800;
 
 		if ($retval = $this->redisGet($redis_key)) {
 			return($retval);
@@ -51,7 +52,7 @@ class Stations extends Base {
 			}
 
 			$retval["data"] = $stations;
-			$this->redisSet($redis_key, $retval);
+			$this->redisSetEx($redis_key, $retval, $redis_ttl);
 
 			return($retval);
 
