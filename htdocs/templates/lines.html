@@ -5,33 +5,59 @@
 
 {% block content %}
 
+<script src="/assets/bootstrap-list-filter.min.js"></script>
+<script language="javascript">
+
+$( document ).ready(function() {
+
+    $('#searchlist').btsListFilter('#searchinput', {itemChild: 'span', initial: false, resetOnBlur: false});
+
+	$('#searchinput').keypress(function (e) {
+
+		//
+		// Keep the Return key from submitting the form
+		//
+		if (e.which == 10 || e.which == 13) {
+			e.preventDefault();
+		}
+
+	});
+
+});
+
+</script>
 
 <h1>Select A Train Line</h1>
 <br/>
 
-{% for key, value in lines.data %}
-
 <div class="row">
 
 	<div class="col-md-4">
-		<a class="btn btn-primary btn-lg btn-block" 
-			href="line/{{key}}/inbound"
-			role="button"
-			>{{value}} - Inbound</a>
-		<br/>
-	</div>
 
-	<div class="col-md-4">
-		<a class="btn btn-primary btn-lg btn-block" 
-			href="line/{{key}}/outbound"
-			role="button"
-			>{{value}} - Outbound</a>
-		<br/>
-	</div>
+	<form role="form">
+		<div class="form-group">
+			<input id="searchinput" class="form-control" type="text"
+				placeholder="Start typing a line name..." />
+		</div>
 
-</div>
+		<div id="searchlist" class="list-group">
 
-{% endfor %}
+			{% for key, value in lines.data %}
+
+				<a class="list-group-item" href="/line/{{key}}/inbound"
+					><span>{{value}} - Inbound</span></a>
+
+				<a class="list-group-item" href="/line/{{key}}/outbound"
+					><span>{{value}} - Outbound</span></a>
+
+			{% endfor %}
+
+		</div>
+
+	</form>
+
+</div><!-- /col -->
+</div><!-- /row -->
 
 
 {% endblock %}
