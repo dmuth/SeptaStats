@@ -1,0 +1,57 @@
+
+{% extends "base.html" %}
+
+{% block title %}Trains of SEPTA Regional Rail - Septa Stats!{% endblock %}
+
+{% block content %}
+
+<script src="/assets/bootstrap-list-filter.min.js"></script>
+<script language="javascript">
+
+$( document ).ready(function() {
+
+    $('#searchlist').btsListFilter('#searchinput', {itemChild: 'span', initial: false, resetOnBlur: false});
+
+});
+
+</script>
+
+
+<h1>Select A Train</h1>
+
+Type in the name or number of a train.
+<br/>
+<br/>
+
+You can also use more advanced searches such as 
+<b>"to malvern"</b> or <b>"malvern to"</b> (withouth the quotes) to see all trains
+which end (or originate at) Malvern.
+
+
+<br/>
+<br/>
+
+<div class="row">
+
+	<div class="col-md-4">
+
+	<form role="form">
+		<div class="form-group">
+			<input id="searchinput" class="form-control" type="text" placeholder="Start typing a station name..." />
+		</div>
+
+		<div id="searchlist" class="list-group">
+			{% for key, value in trains %}
+				<a class="list-group-item" href="/train/{{value.trainno}}"
+					><span>{{value.trainno}} - {{value.source}} to {{value.dest}}</span></a>
+			{% endfor %}
+		</div>
+
+	</form>
+
+	</div>
+
+</div>
+
+{% endblock %}
+
