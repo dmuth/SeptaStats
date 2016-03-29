@@ -12,6 +12,17 @@ $( document ).ready(function() {
 
     $('#searchlist').btsListFilter('#searchinput', {itemChild: 'span', initial: false, resetOnBlur: false});
 
+	$('#searchinput').keypress(function (e) {
+
+		//
+		// Keep the Return key from submitting the form
+		//
+		if (e.which == 10 || e.which == 13) {
+			e.preventDefault();
+		}
+
+	});
+
 });
 
 </script>

@@ -12,6 +12,17 @@ $( document ).ready(function() {
 
     $('#searchlist').btsListFilter('#searchinput', {itemChild: 'span', initial: false, resetOnBlur: false});
 
+	$('#searchinput').keypress(function (e) {
+
+		//
+		// Keep the Return key from submitting the form
+		//
+		if (e.which == 10 || e.which == 13) {
+			e.preventDefault();
+		}
+
+	});
+
 });
 
 </script>
@@ -37,7 +48,8 @@ which end (or originate at) Malvern.
 
 	<form role="form">
 		<div class="form-group">
-			<input id="searchinput" class="form-control" type="text" placeholder="Start typing a station name..." />
+			<input id="searchinput" class="form-control" type="text"
+				placeholder="Start typing a train number or station name..." />
 		</div>
 
 		<div id="searchlist" class="list-group">
