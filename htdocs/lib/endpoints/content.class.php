@@ -19,13 +19,15 @@ class Content {
 	* @param object $display Our class for displaying content
 	* @param object $line Class to bring up data on specific lines.
 	* @param object $stations Our stations object
+	* @param object $train Our train object.
 	*
 	*/
-	function __construct($app, $display, $line, $stations) {
+	function __construct($app, $display, $line, $stations, $train) {
 		$this->app = $app;
 		$this->display = $display;
 		$this->line = $line;
 		$this->stations = $stations;
+		$this->train = $train;
 	}
 
 
@@ -38,6 +40,7 @@ class Content {
 		$display = $this->display;
 		$line = $this->line;
 		$stations = $this->stations;
+		$train = $this->train;
 
 		$this->app->get("/", function (Request $request, Response $response, $args) {
 
@@ -108,6 +111,26 @@ class Content {
 
 		    return $this->view->render($response, "stations.html", [
 				"stations" => $stations,
+		    	]);
+
+		});
+
+
+		$this->app->get("/trains", function (Request $request, Response $response, $args) 
+			use ($display, $train) {
+
+			$data = $display->splunkWrapper(function() use ($train, $display) {
+
+				$data = $train->getTrains();
+
+				return($data);
+
+				}, $response);
+
+			$trains = $data["data"];
+
+		    return $this->view->render($response, "trains.html", [
+				"trains" => $trains,
 		    	]);
 
 		});

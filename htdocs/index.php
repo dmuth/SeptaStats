@@ -60,7 +60,7 @@ $system = new \Septa\Query\System($splunk, $redis);
 $station = new \Septa\Query\Station($splunk, $redis);
 $stations = new Septa\Query\Stations($splunk, $redis);
 
-$endpoints_content = new \Septa\Endpoints\Content($app, $display, $line, $stations);
+$endpoints_content = new \Septa\Endpoints\Content($app, $display, $line, $stations, $train);
 $endpoints_content->go();
 
 $endpoints_api = new \Septa\Endpoints\Api($app, $display, $line, $train, $system, $station, $stations);
