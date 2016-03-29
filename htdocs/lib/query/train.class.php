@@ -34,7 +34,7 @@ class Train extends Base {
 
 			$query = 'search index="septa_analytics" earliest=-24h '
 				. '| fields trainno SOURCE dest'
-				. '| sort trainno '
+				. '| sort 0 trainno '
 				. '| dedup trainno '
 				;
 
