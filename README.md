@@ -26,7 +26,7 @@ Set up your webserver of choice and point the DocumentRoot to $SPLUNK_HOME/etc/a
 
 The main dependency here is PHP.  5.5 or higher should work.
 
-Questions?  Email me at *dmuth@dmuth.org* or open an issue here.
+Questions?  Email me at **dmuth@dmuth.org** or open an issue here.
 
 
 
