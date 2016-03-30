@@ -1,4 +1,6 @@
-# README #
+# Septa Stats
+
+Source code for http://www.SeptaStats.com/
 
 This is a Splunk app which downloads Regional Rail train stats from SEPTA's public API
 once per minute and contains dashboards and reports for visualizing that data.
@@ -16,8 +18,15 @@ once per minute and contains dashboards and reports for visualizing that data.
 - Restart Splunk
     - `/var/splunk/bin/splunk restart`
 
+At this point, the app will begin gathering statistics via SEPTA's Train API.
 
-### To enable the web front-end
+## To Serve This App Over the web
 
-Do nothing. :-)  Nginx is pointed to the directory under Splunk. 
+Set up your webserver of choice and point the DocumentRoot to $SPLUNK_HOME/etc/apps/septa-analytics/htdocs/.
+
+The main dependency here is PHP.  5.5 or higher should work.
+
+Questions?  Email me at **dmuth@dmuth.org** or open an issue here.
+
+
 
