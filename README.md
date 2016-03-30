@@ -20,7 +20,7 @@ once per minute and contains dashboards and reports for visualizing that data.
 
 At this point, the app will begin gathering statistics via SEPTA's Train API.
 
-## To Serve App This Over the web
+## To Serve This App Over the web
 
 Set up your webserver of choice and point the DocumentRoot to $SPLUNK_HOME/etc/apps/septa-analytics/htdocs/.
 
