@@ -62,16 +62,15 @@ class Line extends Base {
 
 		} else {
 
-		$query = 'search index="septa_analytics" earliest=-' . $num_hours . 'h '
-			. 'train_line="' . $line . ' (' . $direction .')" '
-			. 'late != 999 '
-			. '| eval id = trainno . "-" . dest  ' // Debugging
-			. '| timechart limit=100 span=' . $span_min . 'm max(late) by id';
-		//print $query; // Debugging
+			$query = 'search index="septa_analytics" earliest=-' . $num_hours . 'h '
+				. 'train_line="' . $line . ' (' . $direction .')" '
+				. 'late != 999 '
+				. '| eval id = trainno . "-" . dest  ' // Debugging
+				. '| timechart limit=100 span=' . $span_min . 'm max(late) by id';
 
-		$retval = $this->query($query);
-		$retval["metadata"]["line"] = $line;
-		$retval["metadata"]["direction"] = $direction;
+			$retval = $this->query($query);
+			$retval["metadata"]["line"] = $line;
+			$retval["metadata"]["direction"] = $direction;
 
 			$this->redisSet($redis_key, $retval);
 
