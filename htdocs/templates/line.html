@@ -9,6 +9,7 @@
 <script src="/assets/script.js" ></script>
 <script language="javascript">
 
+
 /**
 * Extract our trains from the results of the API call.
 *
@@ -130,57 +131,31 @@ var getTrainNums = function(trains) {
 */
 var setTrainTable = function(trains, id) {
 
-	var cbs = [];
-	for (var k in trains) {
-		var train = trains[k];
+	var train_list = trains.join(",");
+	var url = "/api/current/train/" + train_list + "/latest";
 
-		var url = "/api/current/train/" + train;
-		cbs.push(
-			jQuery.ajax({
-				url: url,
-				dataType: "json",
-				success: function() {
-					}
-				})
-			);
-
-		//break; // Debugging - set to only have one train
-
-	}
-
-	$.when.apply($, cbs)
-		.then(function() {
+	tryApi.try(url, function(data) {
 
 		var html = '<table class=\"table table-striped\">\n';
-		html += "<tr><th>Train #</th><th>Next Stop</th><th>Minutes Late</th></tr>\n";
+		html += "<tr>"
+			+ "<th>Train #</th>"
+			+ "<th>Next Stop</th>"
+			+ "<th>Minutes Late</th>"
+			+ "<th>Last Update</th>"
+			+ "</tr>\n";
 
-		//
-		// If there's only one train, it's not an array, so we'll need to turn it into one.
-		// But it's not that simple.  I learned the hard way that when there are multiple
-		// results, despite the result looking like an array and walking like an array,
-		// it's not really an array--it's an object. What.
-		//
-		// Looking at the two different sets of results, I think the path of least resistance
-		// here is to see if the second element is the strong "success".  If it is,
-		// then we know we only got one result and need to put the variable into an array.
-		//
-		//
-		if (arguments[1] == "success") {
-			arguments = [ arguments ];
-		}
-
-		for (var k in arguments) {
-			var train = arguments[k][0];
-			var trainno = train["metadata"]["trainno"];
-			var data = train["data"];
-			var last = data[ data.length - 1 ];
-			var next_stop = last["nextstop"];
-			var late = last["Minutes Late"];
+		for (var key in data["data"]) {
+			var value = data["data"][key]
+			var trainno = value.trainno;
+			var next_stop = value.nextstop;
+			var late = value.late;
+			var time = value.time;
 
 			var row = "<tr>" 
 				+ "<td>" + "<a href=\"/train/" + encodeURIComponent(trainno) + "\">" + trainno + "</a>" + "</td>"
 				+ "<td>" + "<a href=\"/station/" + encodeURIComponent(next_stop) + "\">" + next_stop + "</a>" + "</td>"
 				+ "<td>" + late + "</td>"
+				+ "<td>" + time + "</td>"
 				+ "</tr>\n"
 				;
 
@@ -193,16 +168,20 @@ var setTrainTable = function(trains, id) {
 
 	});
 
+
 } // End of setTrainTable()
 
 
 var lineStatus = function(results) {
 
+	//
+	// Get train data and convert it to Canvas
+	//
 	var trains = getTrains(results);
 	var train_data = convertToCanvas(trains);
 
 	//
-	// Finally, create the chart in CanvasJS
+	// Create the lateness chart in CanvasJS
 	//
 	var chart = new CanvasJS.Chart("lineStatus", {
 		title: {
@@ -231,6 +210,9 @@ var lineStatus = function(results) {
 		var train = train_nums[k];
 	}
 
+	//
+	// Now create the table full of trains
+	//
 	setTrainTable(train_nums, "#trainTable");
 
 } // End of lineStatus()
