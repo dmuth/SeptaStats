@@ -24,7 +24,10 @@ At this point, the app will begin gathering statistics via SEPTA's Train API.
 
 Set up your webserver of choice and point the DocumentRoot to $SPLUNK_HOME/etc/apps/septa-analytics/htdocs/.
 
-The main dependency here is PHP.  5.5 or higher should work.
+Dependences:
+- PHP.  5.5 or higher should work.
+- Redis. This is used for caching the results from queries made on the back end.
+- A running Splunk instance. :-)  A free/trial copy can be obtained at http://www.splunk.com/
 
 Questions?  Email me at **dmuth@dmuth.org** or open an issue here.
 
