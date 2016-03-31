@@ -138,7 +138,7 @@ class Train extends Base {
 				$query = 'search index="septa_analytics" earliest=-20h '
 					. 'trainno=' . $value . ' '
 					. '| eval time=strftime(_time,"%Y-%m-%d %H:%M:%S") '
-					. '| fields trainno nextstop late lat lon'
+					. '| fields time trainno nextstop late lat lon'
 					. '| head 1'
 					;
 
@@ -168,6 +168,7 @@ class Train extends Base {
 
 			foreach ($retval["data"] as $key => $value) {
 				unset($retval["data"][$key]["_raw"]);
+				unset($retval["data"][$key]["_time"]);
 			}
 
 			$retval["metadata"]["trains"] = join(",", $trains);
