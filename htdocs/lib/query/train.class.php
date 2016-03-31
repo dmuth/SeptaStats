@@ -111,6 +111,78 @@ class Train extends Base {
 
 
 	/**
+	* Retrieve details for a specific train.
+	*
+	* @param integer $trainno Our train number.
+	*
+	* @return array An array of stops this train made and how 
+	*	many minutes late it was for each stop.
+	*/
+	function getLatest($trains) {
+
+		$retval = array();
+		$redis_key = "train/get-" . join(",", $trains);
+		//$redis_key .= time(); // Debugging
+
+		if ($retval = $this->redisGet($redis_key)) {
+			return($retval);
+
+		} else {
+
+			//
+			// Loop through our array and create a base query string for train
+			//
+			$query_parts = array();
+			foreach ($trains as $key => $value) {
+
+				$query = 'search index="septa_analytics" earliest=-20h '
+					. 'trainno=' . $value . ' '
+					. '| eval time=strftime(_time,"%Y-%m-%d %H:%M:%S") '
+					. '| fields trainno nextstop late lat lon'
+					. '| head 1'
+					;
+
+				$query_parts[] = $query;
+
+			}
+
+			//
+			// Now go through our query parts and glue them into a proper array.
+			//
+			$query = "";
+			foreach ($query_parts as $key => $value) {
+
+				if ($key == 0) {
+					$query .= $value;
+
+				} else {
+					$query .= "| append [ $value ] ";
+
+				}
+
+			}
+
+			//print $query; // Debugging
+
+			$retval = $this->query($query);
+
+			foreach ($retval["data"] as $key => $value) {
+				unset($retval["data"][$key]["_raw"]);
+			}
+
+			$retval["metadata"]["trains"] = join(",", $trains);
+			$retval["metadata"]["_comment"] = "What is the latest datapoint for each train?";
+
+			$this->redisSet($redis_key, $retval);		
+			return($retval);
+
+		}
+
+
+	} // End of get()
+
+
+	/**
 	* Retrieve history for a specific train.
 	*
 	* @param integer $trainno Our train number.

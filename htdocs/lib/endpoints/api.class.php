@@ -99,6 +99,32 @@ class Api {
 			});
 
 
+			$this->get("/latest", function(Request $request, Response $response, $args) 
+				use ($display, $train) {
+
+				//
+				// Grab our trains, explode on commas, can cap the array at 20
+				// trains so we don't murder the Splunk process. We'll also sort the
+				// array so we don't obliterate Redis.
+				//
+		    	$trainno = $request->getAttribute("trainno");
+				$trains = explode(",", $trainno);
+				$trains = array_slice($trains, 0, 20);
+				sort($trains);
+
+				$result = $display->splunkWrapper(function() 
+					use ($trains, $train, $response, $display) {
+
+					$output = $display->jsonPretty($train->getLatest($trains));
+			    	$response->getBody()->write($output);
+
+					}, $response);
+
+				return($result);
+
+			});
+
+
 			$this->get("/history/average", function(Request $request, Response $response, $args) 
 				use ($display, $train) {
 
