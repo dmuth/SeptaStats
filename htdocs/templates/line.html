@@ -138,7 +138,7 @@ var setTrainTable = function(trains, id) {
 
 		var html = '<table class=\"table table-striped\">\n';
 		html += "<tr>"
-			+ "<th>Train #</th>"
+			+ "<th>Train</th>"
 			+ "<th>Next Stop</th>"
 			+ "<th>Minutes Late</th>"
 			+ "<th>Last Update</th>"
@@ -150,9 +150,12 @@ var setTrainTable = function(trains, id) {
 			var next_stop = value.nextstop;
 			var late = value.late;
 			var time = value.time;
+			var source = value.source;
+			var dest = value.dest;
 
 			var row = "<tr>" 
-				+ "<td>" + "<a href=\"/train/" + encodeURIComponent(trainno) + "\">" + trainno + "</a>" + "</td>"
+				+ "<td>" + "<a href=\"/train/" + encodeURIComponent(trainno) + "\">" 
+					+ trainno + " - " + source + " to " + dest + "</a>" + "</td>"
 				+ "<td>" + "<a href=\"/station/" + encodeURIComponent(next_stop) + "\">" + next_stop + "</a>" + "</td>"
 				+ "<td>" + late + "</td>"
 				+ "<td>" + time + "</td>"

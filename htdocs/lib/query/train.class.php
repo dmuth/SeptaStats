@@ -138,7 +138,8 @@ class Train extends Base {
 				$query = 'search index="septa_analytics" earliest=-20h '
 					. 'trainno=' . $value . ' '
 					. '| eval time=strftime(_time,"%Y-%m-%d %H:%M:%S") '
-					. '| fields time trainno nextstop late lat lon'
+					. '| eval source=SOURCE '
+					. '| fields time trainno nextstop source dest late lat lon'
 					. '| head 1'
 					;
 
