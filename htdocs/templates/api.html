@@ -20,7 +20,7 @@ are the same ones used in the public facing graphs on this site.
 <br/>
 <br/>
 
-All data is returned in JSON format, with a field called "metadata" which holds data
+Unless specified otherwise, all data is returned in JSON format, with a field called "metadata" which holds data
 related to the query, and "data" which holds the results of the query itself.
 <br/>
 <br/>
@@ -72,6 +72,22 @@ Get a list of all train numbers seen in the last 24 hours.
 
 Get the current status of a train if it is running today.  Data includes
 a list of stops made in chronological order and the lateness for each stop.
+
+<h4>
+/api/current/train/{train nos}/latest
+</h4>
+
+Get the latest reported info for one or more trains.  If multiple trains are specified,
+they should be comma-delimited.
+
+The info returned includes: 
+<ul>
+<li>Next stop</li>
+<li>Minutes late</li>
+<li>Latitude</li>
+<li>Longitude</li>
+<li>Timestamp</li>
+</ul>
 
 
 <h4>
