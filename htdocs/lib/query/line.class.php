@@ -56,6 +56,7 @@ class Line extends Base {
 		$retval = array();
 		$redis_key = "line/getTrains-" . $line . "-" . $direction;
 
+		//$redis_key .= time(); // Debugging
 		if ($retval = $this->redisGet($redis_key)) {
 			return($retval);
 
@@ -65,7 +66,7 @@ class Line extends Base {
 			. 'train_line="' . $line . ' (' . $direction .')" '
 			. 'late != 999 '
 			. '| eval id = trainno . "-" . dest  ' // Debugging
-			. '| timechart span=' . $span_min . 'm max(late) by id';
+			. '| timechart limit=100 span=' . $span_min . 'm max(late) by id';
 		//print $query; // Debugging
 
 		$retval = $this->query($query);
