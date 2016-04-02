@@ -121,7 +121,7 @@ class Train extends Base {
 	function getLatest($trains) {
 
 		$retval = array();
-		$redis_key = "train/get-" . join(",", $trains);
+		$redis_key = "train/get-latest-" . join(",", $trains);
 		//$redis_key .= time(); // Debugging
 
 		if ($retval = $this->redisGet($redis_key)) {
