@@ -232,13 +232,102 @@ var trainHistory = function(results) {
 } // End of lineStatus()
 
 
+/**
+* Populate our "trainLatest" with up to the minute stats on the current train.
+*/
+var trainLatest = function(results) {
+
+	var id = "#trainLatest";
+	var html = "";
+	var data = results["data"][0];
+
+	var trainno = data["trainno"];
+	var source = data["source"];
+	var dest = data["dest"];
+	var nextstop = data["nextstop"];
+	var late = data["late"];
+	var time = data["time"];
+
+	var date = new Date(time);
+
+	var date_day = date.getFullYear() + "-" + ("0" + date.getMonth()).slice(-2) + "-" + ("0" + date.getDate()).slice(-2);
+	var date_time = ("0" + date.getHours()).slice(-2) 
+		+ ":" + ("0" + date.getMinutes()).slice(-2) 
+		+ ":" + ("0" + date.getSeconds()).slice(-2);
+
+	html += '<div class="row">';
+
+	html += '<div class="col-md-2">'
+		+ '<div class="current-top">'
+		+ 'Train #: ' 
+		+ '</div>'
+		+ '<div class="current-body" >'
+		+ trainno 
+		+ '</div>'
+		+ '</div>';
+
+	html += '<div class="col-md-2">'
+		+ '<div class="current-top">'
+		+ 'Minutes Late: ' 
+		+ '</div>'
+		+ '<div class="current-body" >'
+		+ late 
+		+ '</div>'
+		+ '</div>';
+
+	html += '<div class="col-md-2">'
+		+ '<div class="current-top">'
+		+ 'Next stop: ' 
+		+ '</div>'
+		+ '<div class="current-body" >'
+		+ nextstop 
+		+ '</div>'
+		+ '</div>';
+
+	html += '<div class="col-md-2">' 
+		+ '<div>'
+		+ source 
+		+ '</div>'
+		+ '<div>'
+		+ ' to ' 
+		+ '</div>'
+		+ '<div>'
+		+ dest 
+		+ '</div>'
+		+ '</div>';
+
+	html += '<div class="col-md-2">'
+		+ '<div class="current-top">'
+		+ 'Last Update: ' 
+		+ '</div>'
+		+ '<div>'
+		+ date_day
+		+ '</div>'
+		+ '<div>'
+		+ date_time
+		+ '</div>'
+		+ '</div>';
+
+	html += '</div>'; // row
+
+	$(id).html(html);
+
+} // End of trainLatest()
+
+
 $( document ).ready(function() {
 
+// TEST
+	var url = "/api/current/train/" + {{trainno}} + "/latest";
+	tryApi.try(url, trainLatest);
+
 	var url = "/api/current/train/" + {{trainno}};
-	tryApi.try(url, trainStatus);
+// TEST
+	//tryApi.try(url, trainStatus);
 
 	var url = "/api/current/train/" + {{trainno}} + "/history";
-	tryApi.try(url, trainHistory);
+// TEST
+	//tryApi.try(url, trainHistory);
 
 	//
 	// Check our width and set a handler to do the same
@@ -256,8 +345,7 @@ $( document ).ready(function() {
 
 
 <div class="row">
-
-	<div class="col-md-12">
+<div class="col-md-12">
 
 <div class="alert alert-block alert-danger width-alert" role="alert">
 Whoa there! Your screen is kinda narrow, and this may make some of the graphs look funny. 
@@ -268,9 +356,26 @@ You may want to turn your phone on its side for the best possible experience.
 
 </div>
 
+</div><!-- /col -->
+</div><!-- /row -->
 
-<h1>Current Status of Train {{trainno}}</h1>
-<br/>
+
+<div class="row">
+<div class="col-md-12">
+
+<h1>Train {{trainno}}</h1>
+
+<div id="trainLatest" >
+TEST latest
+</div>
+
+</div><!-- /col -->
+</div><!-- /row -->
+
+<div class="row">
+<div class="col-md-12">
+
+<h2>Lateness by Stop</h2>
 
 <div id="trainStatus" style="height: 300px; width: 100%;">
 {%include "lib/progress.html" %}
@@ -280,7 +385,7 @@ You may want to turn your phone on its side for the best possible experience.
 <a href="/api/current/train/{{trainno}}" >Download this graph as JSON data</a>
 </div>
 
-<h2>Status Over The Last 7 Days</h2>
+<h2>Lateness Over The Last 7 Days</h2>
 Note that some trains take different routes on different <em>days</em>. 
 In those cases, this graph can look really weird.  There is little that
 can be done about that until a date selector widget is built in.  For

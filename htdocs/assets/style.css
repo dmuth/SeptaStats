@@ -26,4 +26,19 @@ body {
 	display: none;
 }
 
+/**
+* Waste less horizontal space above the h1 tag.
+*/
+h1 {
+	margin-top: 0px;
+}
+
+.current-top {
+}
+
+.current-body {
+	font-size: 40px;
+	font-weight: 600;
+}
+
 
