@@ -248,16 +248,37 @@ var trainLatest = function(results) {
 	var late = data["late"];
 	var time = data["time"];
 
-	var date = new Date(time);
 
+	//
+	// Get our date and time, with leading zeros
+	//
+	var date = new Date(time);
 	var date_day = date.getFullYear() + "-" + ("0" + date.getMonth()).slice(-2) + "-" + ("0" + date.getDate()).slice(-2);
 	var date_time = ("0" + date.getHours()).slice(-2) 
 		+ ":" + ("0" + date.getMinutes()).slice(-2) 
 		+ ":" + ("0" + date.getSeconds()).slice(-2);
 
+	//
+	// How old is the data?  If it's too old, then we'll let the user know.
+	//
+	var diff = (new Date() - date) / 1000;
+
+	if (diff > 600) {
+		html += '<div class="alert alert-block alert-info" role="alert">'
+			+ 'This train data is older than 10 minutes old. Chances are that it has finished its trip.'
+			+ '</div>';
+
+	}
+
+
+	//
+	// Now create a row full of stats data.
+	// On a desktop or laptop display, this should all fit in a single row.
+	// On a mobile device, these should be neatly stacked.
+	//
 	html += '<div class="row">';
 
-	html += '<div class="col-md-2">'
+	html += '<div class="col-xs-6 col-md-2 current-cell">'
 		+ '<div class="current-top">'
 		+ 'Train #: ' 
 		+ '</div>'
@@ -266,7 +287,7 @@ var trainLatest = function(results) {
 		+ '</div>'
 		+ '</div>';
 
-	html += '<div class="col-md-2">'
+	html += '<div class="col-xs-6 col-md-2 current-cell">'
 		+ '<div class="current-top">'
 		+ 'Minutes Late: ' 
 		+ '</div>'
@@ -275,7 +296,7 @@ var trainLatest = function(results) {
 		+ '</div>'
 		+ '</div>';
 
-	html += '<div class="col-md-2">'
+	html += '<div class="col-xs-12 col-md-4 current-cell">'
 		+ '<div class="current-top">'
 		+ 'Next stop: ' 
 		+ '</div>'
@@ -284,26 +305,26 @@ var trainLatest = function(results) {
 		+ '</div>'
 		+ '</div>';
 
-	html += '<div class="col-md-2">' 
-		+ '<div>'
+	html += '<div class="col-xs-6 col-md-2 current-cell">' 
+		+ '<div class="current-top">'
+		+ 'Route: ' 
+		+ '</div>'
+		+ '<div class="current-source">'
 		+ source 
 		+ '</div>'
-		+ '<div>'
-		+ ' to ' 
-		+ '</div>'
-		+ '<div>'
-		+ dest 
+		+ '<div class="current-dest">'
+		+ ' to ' + dest 
 		+ '</div>'
 		+ '</div>';
 
-	html += '<div class="col-md-2">'
+	html += '<div class="col-xs-6 col-md-2 current-cell">'
 		+ '<div class="current-top">'
-		+ 'Last Update: ' 
+		+ 'Last Updated: ' 
 		+ '</div>'
-		+ '<div>'
+		+ '<div class="current-update-time">'
 		+ date_day
 		+ '</div>'
-		+ '<div>'
+		+ '<div class="current-update-time">'
 		+ date_time
 		+ '</div>'
 		+ '</div>';
@@ -317,17 +338,14 @@ var trainLatest = function(results) {
 
 $( document ).ready(function() {
 
-// TEST
 	var url = "/api/current/train/" + {{trainno}} + "/latest";
 	tryApi.try(url, trainLatest);
 
 	var url = "/api/current/train/" + {{trainno}};
-// TEST
-	//tryApi.try(url, trainStatus);
+	tryApi.try(url, trainStatus);
 
 	var url = "/api/current/train/" + {{trainno}} + "/history";
-// TEST
-	//tryApi.try(url, trainHistory);
+	tryApi.try(url, trainHistory);
 
 	//
 	// Check our width and set a handler to do the same
@@ -342,6 +360,15 @@ $( document ).ready(function() {
 
 
 </script>
+
+<div class="row">
+<div class="col-md-12">
+
+<div id="trainLatest" >
+</div>
+
+</div><!-- /col -->
+</div><!-- /row -->
 
 
 <div class="row">
@@ -359,18 +386,6 @@ You may want to turn your phone on its side for the best possible experience.
 </div><!-- /col -->
 </div><!-- /row -->
 
-
-<div class="row">
-<div class="col-md-12">
-
-<h1>Train {{trainno}}</h1>
-
-<div id="trainLatest" >
-TEST latest
-</div>
-
-</div><!-- /col -->
-</div><!-- /row -->
 
 <div class="row">
 <div class="col-md-12">

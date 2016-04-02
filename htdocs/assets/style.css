@@ -33,11 +33,30 @@ h1 {
 	margin-top: 0px;
 }
 
+/**
+* If on mobile, add some extra padding as the cells will be stacked.
+*/
+@media (max-width: 768px) {
+	.current-cell {
+		padding-bottom: 10px;
+	}
+}
+
 .current-top {
 }
 
 .current-body {
 	font-size: 40px;
+	font-weight: 600;
+}
+
+.current-source, .current-dest {
+	font-size: 20px;
+	font-weight: 600;
+}
+
+.current-update-time {
+	font-size: 20px;
 	font-weight: 600;
 }
 
