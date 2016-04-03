@@ -50,6 +50,10 @@ h1 {
 	font-weight: 600;
 }
 
+.current-body-warn {
+	color: red;
+}
+
 .current-source, .current-dest {
 	font-size: 20px;
 	font-weight: 600;

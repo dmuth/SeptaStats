@@ -236,7 +236,10 @@ var lineLatest = function(results) {
 	var data = results["data"];
 
 	if (!data.length) {
-		console.log("No train data returned, bailing out!");
+		html += '<div class="alert alert-block alert-info" role="alert">'
+			+ 'No current train data returned. Are there any trains currently running on this line?'
+			+ '</div>';
+		$(id).html(html);
 		return(null);
 	}
 
@@ -269,6 +272,15 @@ var lineLatest = function(results) {
 	trains_avg_late = Math.floor(trains_avg_late * 10) / 10;
 
 	//
+	// Optionally add some style if the average late time is over 5 minutes
+	//
+	var trains_avg_late_css = "";
+	if (trains_avg_late >= 5) {
+		trains_avg_late_css = "current-body-warn";
+	}
+
+
+	//
 	// Get our date and time, with leading zeros
 	//
 	var date = new Date(trains_latest);
@@ -298,7 +310,7 @@ var lineLatest = function(results) {
 
 	html += '<div class="col-xs-6 col-md-3 current-cell">'
 		+ '<div class="current-top">'
-		+ '# Trains On This Line: ' 
+		+ '# Trains Running: ' 
 		+ '</div>'
 		+ '<div class="current-body" >'
 		+ trains_num
@@ -309,7 +321,7 @@ var lineLatest = function(results) {
 		+ '<div class="current-top">'
 		+ 'Average Minutes Late: ' 
 		+ '</div>'
-		+ '<div class="current-body" >'
+		+ '<div class="current-body ' + trains_avg_late_css + '" >'
 		+ trains_avg_late
 		+ '</div>'
 		+ '</div>';
@@ -394,7 +406,7 @@ You may want to turn your phone on its side for the best possible experience.
 <div class="row">
 <div class="col-md-12">
 
-<h2>Current Trains on {{line}} Line ({{direction}})</h2>
+<h2>Trains on {{line}} Line ({{direction}})</h2>
 <br/>
 
 <div id="lineStatus" style="height: 300px; width: 100%;">
