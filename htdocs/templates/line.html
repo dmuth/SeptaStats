@@ -131,6 +131,11 @@ var getTrainNums = function(trains) {
 */
 var setTrainTable = function(trains, id) {
 
+	if (!trains.length) {
+		console.log("No trains passed in, bailing out!");
+		return(null);
+	}
+
 	var train_list = trains.join(",");
 	var url = "/api/current/train/" + train_list + "/latest";
 
