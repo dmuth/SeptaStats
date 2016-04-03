@@ -241,13 +241,20 @@ var trainLatest = function(results) {
 	var html = "";
 	var data = results["data"][0];
 
+	if (!data) {
+		html += '<div class="alert alert-block alert-info" role="alert">'
+			+ 'No current train data returned. Did this train run recently?'
+			+ '</div>';
+		$(id).html(html);
+		return(null);
+	}
+
 	var trainno = data["trainno"];
 	var source = data["source"];
 	var dest = data["dest"];
 	var nextstop = data["nextstop"];
 	var late = data["late"];
 	var time = data["time"];
-
 
 	//
 	// Get our date and time, with leading zeros
