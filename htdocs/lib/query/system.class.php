@@ -120,37 +120,38 @@ class System extends Base {
 			$data = $this->getLatestTrains();
 
 			$retval["data"] = array();
-			$retval["num_trains"] = 0;
-			$retval["total_min_late"] = 0;
-			$retval["avg_min_late"] = 0;
-			$retval["num_trains_over_5_min_late"] = 0;
-			$retval["num_trains_over_15_min_late"] = 0;
-			$retval["num_trains_over_30_min_late"] = 0;
-			$retval["timestamp"] = 0;
+			$retval["data"]["num_trains"] = 0;
+			$retval["data"]["total_min_late"] = 0;
+			$retval["data"]["avg_min_late"] = 0;
+			$retval["data"]["num_trains_over_5_min_late"] = 0;
+			$retval["data"]["num_trains_over_15_min_late"] = 0;
+			$retval["data"]["num_trains_over_30_min_late"] = 0;
+			$retval["data"]["timestamp"] = 0;
 
 			foreach ($data["data"] as $key => $value) {
 
-				$retval["num_trains"]++;
+				$retval["data"]["num_trains"]++;
 
 				$late = $value["late"];
 				//$late = 22; // Debugging
-				$retval["total_min_late"] += $late;
+				$retval["data"]["total_min_late"] += $late;
 
 				if ($late >= 5) {
-					$retval["num_trains_over_5_min_late"]++;
+					$retval["data"]["num_trains_over_5_min_late"]++;
 				}
 
 				if ($late >= 15) {
-					$retval["num_trains_over_15_min_late"]++;
+					$retval["data"]["num_trains_over_15_min_late"]++;
 				}
 
 				if ($late >= 30) {
-					$retval["num_trains_over_30_min_late"]++;
+					$retval["data"]["num_trains_over_30_min_late"]++;
 				}
 
 			}
 
-			$retval["avg_min_late"] = sprintf("%.1f", $retval["total_min_late"] / $retval["num_trains"]);
+			$retval["data"]["avg_min_late"] = sprintf("%.1f", 
+				$retval["data"]["total_min_late"] / $retval["data"]["num_trains"]);
 
 			$retval["metadata"] = array();
 			$retval["metadata"]["_comment"] = "Statas on all currently running trains.";
