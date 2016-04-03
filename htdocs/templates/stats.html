@@ -174,7 +174,136 @@ var graphStatusTotals = function(results) {
 } // End of graphStatus()
 
 
+/**
+* 
+*/
+var systemLatest = function(results) {
+
+	var id = "#systemLatest";
+	var html = "";
+	var data = results["data"];
+	//data.num_trains_over_5_min_late = 11; // Debugging
+	//data.num_trains_over_15_min_late = 12; // Debugging
+	//data.num_trains_over_30_min_late = 13; // Debugging
+
+	if (!Object.keys(data).length) {
+		html += '<div class="alert alert-block alert-info" role="alert">'
+			+ 'No current train data returned. Are there any trains currently running?'
+			+ '</div>';
+		$(id).html(html);
+		return(null);
+	}
+
+	//
+	// Get our date and time, with leading zeros
+	//
+	var date = new Date(data.timestamp);
+	var date_day = date.getFullYear() + "-" + ("0" + date.getMonth()).slice(-2) + "-" + ("0" + date.getDate()).slice(-2);
+	var date_time = ("0" + date.getHours()).slice(-2) 
+		+ ":" + ("0" + date.getMinutes()).slice(-2) 
+		+ ":" + ("0" + date.getSeconds()).slice(-2);
+
+	//
+	// How old is the data?  If it's too old, then we'll let the user know.
+	//
+	var diff = (new Date() - date) / 1000;
+
+	if (diff > 600) {
+		html += '<div class="alert alert-block alert-info" role="alert">'
+			+ 'This train data is more than 10 minutes old. It may not be entirely accurate.'
+			+ '</div>';
+
+	}
+
+	//
+	// Optionally add some style if we have trains over 15 minutes late
+	//
+	var trains_15m_late_css = "";
+	if (data.num_trains_over_15_min_late > 0) {
+		trains_15m_late_css = "current-body-warn";
+	}
+
+	var trains_30m_late_css = "";
+	if (data.num_trains_over_30_min_late > 0) {
+		trains_30m_late_css = "current-body-warn";
+	}
+
+
+	//
+	// Now create a row full of stats data.
+	// On a desktop or laptop display, this should all fit in a single row.
+	// On a mobile device, these should be neatly stacked.
+	//
+	html += '<div class="row">';
+
+	html += '<div class="col-xs-6 col-md-2 current-cell">'
+		+ '<div class="current-top">'
+		+ '# Trains Running: ' 
+		+ '</div>'
+		+ '<div class="current-body" >'
+		+ data.num_trains
+		+ '</div>'
+		+ '</div>';
+
+	html += '<div class="col-xs-6 col-md-2 current-cell">'
+		+ '<div class="current-top">'
+		+ 'Average Minutes Late: ' 
+		+ '</div>'
+		+ '<div class="current-body" >'
+		+ data.avg_min_late
+		+ '</div>'
+		+ '</div>';
+
+	html += '<div class="col-xs-6 col-md-2 current-cell">'
+		+ '<div class="current-top">'
+		+ '# Trains Over 5m Late: ' 
+		+ '</div>'
+		+ '<div class="current-body" >'
+		+ data.num_trains_over_5_min_late
+		+ '</div>'
+		+ '</div>';
+
+	html += '<div class="col-xs-6 col-md-2 current-cell">'
+		+ '<div class="current-top">'
+		+ '# Trains Over 15m Late: ' 
+		+ '</div>'
+		+ '<div class="current-body ' + trains_15m_late_css + '" >'
+		+ data.num_trains_over_15_min_late
+		+ '</div>'
+		+ '</div>';
+
+	html += '<div class="col-xs-6 col-md-2 current-cell">'
+		+ '<div class="current-top">'
+		+ '# Trains Over 30m Late: ' 
+		+ '</div>'
+		+ '<div class="current-body ' + trains_30m_late_css + '" >'
+		+ data.num_trains_over_30_min_late
+		+ '</div>'
+		+ '</div>';
+
+	html += '<div class="col-xs-6 col-md-2 current-cell">'
+		+ '<div class="current-top">'
+		+ 'Last Updated: ' 
+		+ '</div>'
+		+ '<div class="current-update-time">'
+		+ date_day
+		+ '</div>'
+		+ '<div class="current-update-time">'
+		+ date_time
+		+ '</div>'
+		+ '</div>';
+
+	html += '</div>'; // row
+
+
+	$(id).html(html);
+
+} // End of systemLatest()
+
+
 $( document ).ready(function() {
+
+	tryApi.try("/api/current/system/latest/stats", systemLatest);
 
 	tryApi.try("/api/current/system", graphStatus);
 	tryApi.try("/api/current/system/totals", graphStatusTotals);
@@ -193,6 +322,18 @@ $( document ).ready(function() {
 
 </script>
 
+<div class="row">
+<div class="col-md-12">
+
+<div id="systemLatest" >
+</div>
+
+</div><!-- /col -->
+</div><!-- /row -->
+
+
+<div class="row">
+<div class="col-md-12">
 
 <div class="alert alert-block alert-danger width-alert" role="alert">
 Whoa there! Your screen is kinda narrow, and this may make some of the graphs look funny. 
@@ -203,8 +344,14 @@ You may want to turn your phone on its side for the best possible experience.
 
 </div>
 
+</div><!-- /col -->
+</div><!-- /row -->
 
-<h1>Top 10 Latest Regional Rail Trains Right Now</h1>
+
+<div class="row">
+<div class="col-md-12">
+
+<h2>Top 10 Latest Regional Rail Trains Over Last Hour</h2>
 <div id="graphStatus" style="height: 300px; width: 100%;">
 {%include "lib/progress.html" %}
 </div>
@@ -224,6 +371,9 @@ You may want to turn your phone on its side for the best possible experience.
 <a href="/api/current/system/totals" >Download this graph as JSON data</a>
 </div>
 <br/>
+
+</div><!-- /col -->
+</div><!-- /row -->
 
 {% endblock %}
 
