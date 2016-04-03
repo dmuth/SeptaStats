@@ -84,6 +84,7 @@ $app->get("/test", function(Request $request, Response $response, $args) {
 		"/api/current/train/521,553/latest",
 		"/api/current/train/587,553,521,591,589,470,472,474,476/latest",
 		"/api/current/system",
+		"/api/current/system/latest",
 		"/api/current/system/totals",
 		"/api/current/lines",
 		"/api/current/line/paoli-thorndale/outbound",

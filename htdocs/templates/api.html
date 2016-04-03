@@ -42,10 +42,28 @@ I have data going back for months.
 /api/current/system
 </h4>
 
-Return a chronological list of which currently running trains are the latest.
-<br/>
-
+Return a chronological list of which currently running trains are the latest.  
 This is useful to get an overall picture of the Regional Rail train system.
+
+
+<h4>
+/api/current/system/latest <span class="badge">Added 3 Apr 2016</span>
+</h4>
+
+Return the latest reported info for each train in the entire system.  The
+following data will be returned for each train:
+
+<ul>
+<li>Next stop</li>
+<li>Minutes late</li>
+<li>Source</li>
+<li>Destination</li>
+<li>Latitude</li>
+<li>Longitude</li>
+<li>Timestamp</li>
+</ul>
+
+
 
 <h4>
 /api/current/system/totals

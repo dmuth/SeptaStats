@@ -55,6 +55,50 @@ class System extends Base {
 
 
 	/**
+	* 
+	* Get stats on trains across the entire system over the last 5 minutes
+	*
+	* @return array 
+	*/
+	function getLatestTrains() {
+
+		$retval = array();
+		$redis_key = "system/getLatestTrains";
+		//$redis_key .= time(); // Debugging
+		$redis_ttl = 300;
+
+		if ($retval = $this->redisGet($redis_key)) {
+			return($retval);
+
+		} else {
+
+			$query = 'search index="septa_analytics" earliest=-5m '
+				. 'late != 999 '
+				. '| eval id = trainno . "-" . dest '
+				. '| eval time=strftime(_time,"%Y-%m-%d %H:%M:%S") '
+				. '| eval source=SOURCE '
+				. '| stats '
+				. 'latest(time) AS time, '
+				. 'latest(late) AS late, '
+				. 'latest(lat) AS lat, latest(lon) AS lon, '
+				. 'latest(nextstop) AS nextstop, '
+				. 'latest(source) AS source, '
+				. 'latest(dest) AS dest '
+				. 'by id '
+				;
+
+			$retval = $this->query($query);
+			$retval["metadata"]["_comment"] = "Info on all currently running trains.";
+			$this->redisSetEx($redis_key, $retval, $redis_ttl);
+
+			return($retval);
+
+		}
+		
+	} // End of getTopLatestTrains()
+
+
+	/**
 	* Get the day over day list of total minutes late of the entire system.
 	*
 	* @param integer $num_days How many days to go back?
