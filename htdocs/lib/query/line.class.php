@@ -82,6 +82,56 @@ class Line extends Base {
 
 
 	/**
+	* Get a snapshot of the status of trains for a specific line.
+	*
+	* @param string $line What line are we searching?
+	*
+	* @return array An array of the latest trains over time.
+	*/
+	function getTrainsLatest($line, $direction) {
+
+		$retval = array();
+		$redis_key = "line/getTrains-" . $line . "-" . $direction . "-latest";
+		//$redis_key .= time(); // Debugging
+
+		if ($retval = $this->redisGet($redis_key)) {
+			return($retval);
+
+		} else {
+
+			$query = 'search index="septa_analytics" earliest=-5m '
+				. 'train_line="' . $line . ' (' . $direction .')" '
+				. 'late != 999 '
+				. '| eval id = trainno . "-" . dest  ' // Debugging
+				. '| eval time=strftime(_time,"%Y-%m-%d %H:%M:%S") '
+				. '| eval source=SOURCE '
+				. '| stats '
+				. 'latest(time) AS time, '
+				. 'latest(late) AS late, '
+				. 'latest(lat) AS lat, latest(lon) AS lon, '
+				. 'latest(nextstop) AS nextstop, '
+				. 'latest(source) AS source, '
+				. 'latest(dest) AS dest '
+				. 'by id '
+				;
+			//print $query; // Debugging
+
+			$retval = $this->query($query);
+			$retval["metadata"]["_comment"] = "Latest train info for this line over the last 5 minutes.";
+			$retval["metadata"]["line"] = $line;
+			$retval["metadata"]["direction"] = $direction;
+
+			$this->redisSet($redis_key, $retval);
+
+			return($retval);
+
+		}
+
+	} // End of getTrains()
+
+
+
+	/**
 	* Get all late trains for a specific line.
 	*
 	* @param integer $line What line are we searching?

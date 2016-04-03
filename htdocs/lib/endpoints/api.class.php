@@ -222,6 +222,33 @@ class Api {
 		});
 
 
+		$app->get("/api/current/line/{line}/{direction}/latest", function(Request $request, Response $response, $args) 
+			use ($display, $line) {
+
+			$line_name = $line->checkLineKey($args["line"]);
+			$direction = $line->checkDirection($args["direction"]);
+
+			if ($line_name && $direction) {
+
+				$data = $line->getTrainsLatest($line_name, $direction, 1, 10);
+				$response->getBody()->write($display->jsonPretty($data));
+
+			} else {
+				$error = sprintf("Line '%s' and/or direction '%s' not found!\n", $args["line"], $args["direction"]);
+				$output = array(
+					"error" => $error,
+					);
+				$output_json = $display->jsonPretty($output);
+				$new_response = $response->withStatus(404, "Line or direction not found");
+				$new_response->getBody()->write($output_json);
+
+				return($new_response);
+
+			}
+
+		});
+
+
 		$app->group("/api/current/station", function() use ($display, $station) {
 
 			$this->get("/{station}/trains", function(Request $request, Response $response, $args) 

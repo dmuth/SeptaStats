@@ -129,6 +129,23 @@ Get a list of all outbound trains for this line, and their lateness.
 
 Get a list of all inbound trains for this line, and their lateness.
 
+<h4>
+/api/current/line/{train line}/{inbound, outbound}/latest <span class="badge">Added 3 Apr 2016</span>
+</h4>
+
+Return the latest reported info for each train in the specified line and direction.  The
+following data will be returned for each train.
+
+<ul>
+<li>Next stop</li>
+<li>Minutes late</li>
+<li>Source</li>
+<li>Destination</li>
+<li>Latitude</li>
+<li>Longitude</li>
+<li>Timestamp</li>
+</ul>
+
 
 <h2>Station API calls</h2>
 
