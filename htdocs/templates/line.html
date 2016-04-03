@@ -226,7 +226,126 @@ var lineStatus = function(results) {
 } // End of lineStatus()
 
 
+/**
+* Populate our "lineLatest" with up to the minute stats on the current line.
+*/
+var lineLatest = function(results) {
+
+	var id = "#lineLatest";
+	var html = "";
+	var data = results["data"];
+
+	if (!data.length) {
+		console.log("No train data returned, bailing out!");
+		return(null);
+	}
+
+	//
+	// Loop through our trains and get the total number and lateness of trains
+	//
+	var trains_num = 0;
+	var trains_total_min_late = 0;
+	var trains_avg_late = 0;
+	var trains_late_5m = 0;
+	var trains_latest = "";
+
+	for (var k in data) {
+		var row = data[k];
+
+		trains_num++;
+		trains_total_min_late += parseInt(row.late);
+		trains_latest = row.time;
+
+		if (row.late >= 5) {
+			trains_late_5m++;
+		}
+
+	}
+
+	//
+	// Compute the average then cut off everything after 1 decimal place.
+	//
+	trains_avg_late = trains_total_min_late / trains_num;
+	trains_avg_late = Math.floor(trains_avg_late * 10) / 10;
+
+	//
+	// Get our date and time, with leading zeros
+	//
+	var date = new Date(trains_latest);
+	var date_day = date.getFullYear() + "-" + ("0" + date.getMonth()).slice(-2) + "-" + ("0" + date.getDate()).slice(-2);
+	var date_time = ("0" + date.getHours()).slice(-2) 
+		+ ":" + ("0" + date.getMinutes()).slice(-2) 
+		+ ":" + ("0" + date.getSeconds()).slice(-2);
+
+	//
+	// How old is the data?  If it's too old, then we'll let the user know.
+	//
+	var diff = (new Date() - date) / 1000;
+
+	if (diff > 600) {
+		html += '<div class="alert alert-block alert-info" role="alert">'
+			+ 'This train data is more than 10 minutes old. It may not be entirely accurate.'
+			+ '</div>';
+
+	}
+
+	//
+	// Now create a row full of stats data.
+	// On a desktop or laptop display, this should all fit in a single row.
+	// On a mobile device, these should be neatly stacked.
+	//
+	html += '<div class="row">';
+
+	html += '<div class="col-xs-6 col-md-3 current-cell">'
+		+ '<div class="current-top">'
+		+ '# Trains On This Line: ' 
+		+ '</div>'
+		+ '<div class="current-body" >'
+		+ trains_num
+		+ '</div>'
+		+ '</div>';
+
+	html += '<div class="col-xs-6 col-md-3 current-cell">'
+		+ '<div class="current-top">'
+		+ 'Average Minutes Late: ' 
+		+ '</div>'
+		+ '<div class="current-body" >'
+		+ trains_avg_late
+		+ '</div>'
+		+ '</div>';
+
+	html += '<div class="col-xs-6 col-md-3 current-cell">'
+		+ '<div class="current-top">'
+		+ '# Trains Over 5m Late: ' 
+		+ '</div>'
+		+ '<div class="current-body" >'
+		+ trains_late_5m
+		+ '</div>'
+		+ '</div>';
+
+	html += '<div class="col-xs-6 col-md-3 current-cell">'
+		+ '<div class="current-top">'
+		+ 'Last Updated: ' 
+		+ '</div>'
+		+ '<div class="current-update-time">'
+		+ date_day
+		+ '</div>'
+		+ '<div class="current-update-time">'
+		+ date_time
+		+ '</div>'
+		+ '</div>';
+
+	html += '</div>'; // row
+
+	$(id).html(html);
+
+} // End of lineLatest()
+
+
 $( document ).ready(function() {
+
+	var url = "/api/current/line/{{line_api}}/{{direction_api}}/latest";
+	tryApi.try(url, lineLatest);
 
 	var url = "/api/current/line/{{line_api}}/{{direction_api}}";
 	tryApi.try(url, lineStatus);
@@ -246,6 +365,19 @@ $( document ).ready(function() {
 </script>
 
 
+<div class="row">
+<div class="col-md-12">
+
+<div id="lineLatest" >
+</div>
+
+</div><!-- /col -->
+</div><!-- /row -->
+
+
+<div class="row">
+<div class="col-md-12">
+
 <div class="alert alert-block alert-danger width-alert" role="alert">
 Whoa there! Your screen is kinda narrow, and this may make some of the graphs look funny. 
 <br/>
@@ -255,8 +387,14 @@ You may want to turn your phone on its side for the best possible experience.
 
 </div>
 
+</div><!-- /col -->
+</div><!-- /row -->
 
-<h1>Current Status of {{line}} Line ({{direction}})</h1>
+
+<div class="row">
+<div class="col-md-12">
+
+<h2>Current Trains on {{line}} Line ({{direction}})</h2>
 <br/>
 
 <div id="lineStatus" style="height: 300px; width: 100%;">
@@ -279,6 +417,8 @@ Train data goes back 7 days.
 </div>
 <br/>
 
+</div><!-- /col -->
+</div><!-- /row -->
 
 {% endblock %}
 
