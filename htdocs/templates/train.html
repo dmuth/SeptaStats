@@ -338,13 +338,13 @@ var trainLatest = function(results) {
 
 $( document ).ready(function() {
 
-	var url = "/api/current/train/" + {{trainno}} + "/latest";
+	var url = "/api/current/train/" + "{{trainno}}" + "/latest";
 	tryApi.try(url, trainLatest);
 
-	var url = "/api/current/train/" + {{trainno}};
+	var url = "/api/current/train/" + "{{trainno}}";
 	tryApi.try(url, trainStatus);
 
-	var url = "/api/current/train/" + {{trainno}} + "/history";
+	var url = "/api/current/train/" + "{{trainno}}" + "/history";
 	tryApi.try(url, trainHistory);
 
 	//
