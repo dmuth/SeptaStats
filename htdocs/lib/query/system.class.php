@@ -131,6 +131,7 @@ class System extends Base {
 			foreach ($data["data"] as $key => $value) {
 
 				$retval["data"]["num_trains"]++;
+				$retval["data"]["timestamp"] = $value["time"];
 
 				$late = $value["late"];
 				//$late = 22; // Debugging
