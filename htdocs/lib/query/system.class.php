@@ -58,7 +58,7 @@ class System extends Base {
 	* 
 	* Get stats on trains across the entire system over the last 5 minutes
 	*
-	* @return array 
+	* @return array An array of all trains currently running.
 	*/
 	function getLatestTrains() {
 
@@ -95,7 +95,73 @@ class System extends Base {
 
 		}
 		
-	} // End of getTopLatestTrains()
+	} // End of getLatestTrains()
+
+
+	/**
+	* This is a wrapper to getLatestTrains(), which then summarizes that data and returns it.
+	* This is so people who want stats don't need to keep hammering the endpoint that returns
+	* all of the the train data. 
+	*
+	* @return array An associative array with stats of all trains.
+	*/
+	function getLatestTrainsStats() {
+
+		$retval = array();
+		$redis_key = "system/getLatestTrainsStats";
+		//$redis_key .= time(); // Debugging
+		$redis_ttl = 300;
+
+		if ($retval = $this->redisGet($redis_key)) {
+			return($retval);
+
+		} else {
+
+			$data = $this->getLatestTrains();
+
+			$retval["data"] = array();
+			$retval["num_trains"] = 0;
+			$retval["total_min_late"] = 0;
+			$retval["avg_min_late"] = 0;
+			$retval["num_trains_over_5_min_late"] = 0;
+			$retval["num_trains_over_15_min_late"] = 0;
+			$retval["num_trains_over_30_min_late"] = 0;
+			$retval["timestamp"] = 0;
+
+			foreach ($data["data"] as $key => $value) {
+
+				$retval["num_trains"]++;
+
+				$late = $value["late"];
+				//$late = 22; // Debugging
+				$retval["total_min_late"] += $late;
+
+				if ($late >= 5) {
+					$retval["num_trains_over_5_min_late"]++;
+				}
+
+				if ($late >= 15) {
+					$retval["num_trains_over_15_min_late"]++;
+				}
+
+				if ($late >= 30) {
+					$retval["num_trains_over_30_min_late"]++;
+				}
+
+			}
+
+			$retval["avg_min_late"] = sprintf("%.1f", $retval["total_min_late"] / $retval["num_trains"]);
+
+			$retval["metadata"] = array();
+			$retval["metadata"]["_comment"] = "Statas on all currently running trains.";
+
+			$this->redisSetEx($redis_key, $retval, $redis_ttl);
+
+			return($retval);
+
+		}
+		
+	} // End of getLatestTrainsStats()
 
 
 	/**

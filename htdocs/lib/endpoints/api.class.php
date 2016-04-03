@@ -185,6 +185,27 @@ class Api {
 
 			});
 
+
+			$this->get("/latest/stats", function(Request $request, Response $response, $args) 
+				use ($display, $system) {
+	
+				$num_trains = 10;
+				$num_hours = 1;
+				$span_min = 10;
+
+				$result = $display->splunkWrapper(function() 
+					use ($system, $response, $num_trains, $num_hours, $span_min, $display) {
+
+					$output = $display->jsonPretty($system->getLatestTrainsStats());
+			    	$response->getBody()->write($output);
+
+					}, $response);
+
+				return($result);
+
+			});
+
+
 			$this->get("/totals", function(Request $request, Response $response, $args) 
 				use ($display, $system) {
 

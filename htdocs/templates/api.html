@@ -64,6 +64,22 @@ following data will be returned for each train:
 </ul>
 
 
+<h4>
+/api/current/system/latest/stats <span class="badge">Added 3 Apr 2016</span>
+</h4>
+
+Similar to <b>/api/current/system/latest</b> except that all of that train data
+is summarized on the server side and only the overall stats are returned, specifically:
+
+<ul>
+<li>Number of Trains Currently Running</li>
+<li>Average Minutes Late</li>
+<li>Number of Trains Over 5 minutes late</li>
+<li>Number of Trains Over 15 minutes late</li>
+<li>Number of Trains Over 30 minutes late</li>
+<li>Timestamp</li>
+</ul>
+
 
 <h4>
 /api/current/system/totals
