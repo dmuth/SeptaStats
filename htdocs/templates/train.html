@@ -257,6 +257,14 @@ var trainLatest = function(results) {
 	var time = data["time"];
 
 	//
+	// Optionally add some style if the late time is over 5 minutes
+	//
+	var train_late_css = "";
+	if (late >= 5) {
+		train_late_css = "current-body-warn";
+	}
+
+	//
 	// Get our date and time, with leading zeros
 	//
 	var date = new Date(time);
@@ -298,7 +306,7 @@ var trainLatest = function(results) {
 		+ '<div class="current-top">'
 		+ 'Minutes Late: ' 
 		+ '</div>'
-		+ '<div class="current-body" >'
+		+ '<div class="current-body ' + train_late_css + '" >'
 		+ late 
 		+ '</div>'
 		+ '</div>';
