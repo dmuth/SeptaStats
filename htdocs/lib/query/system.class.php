@@ -151,8 +151,11 @@ class System extends Base {
 
 			}
 
-			$retval["data"]["avg_min_late"] = sprintf("%.1f", 
-				$retval["data"]["total_min_late"] / $retval["data"]["num_trains"]);
+			//$retval["data"]["num_trains"] = 0; // Debugging
+			if ($retval["data"]["num_trains"] != 0) {
+				$retval["data"]["avg_min_late"] = sprintf("%.1f", 
+					$retval["data"]["total_min_late"] / $retval["data"]["num_trains"]);
+			}
 
 			$retval["metadata"] = array();
 			$retval["metadata"]["_comment"] = "Statas on all currently running trains.";
