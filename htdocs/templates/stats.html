@@ -197,18 +197,9 @@ var systemLatest = function(results) {
 	//
 	// Get our date and time, with leading zeros
 	//
-	var date = new Date(data.timestamp);
-	var date_day = date.getFullYear() + "-" + ("0" + date.getMonth()).slice(-2) + "-" + ("0" + date.getDate()).slice(-2);
-	var date_time = ("0" + date.getHours()).slice(-2) 
-		+ ":" + ("0" + date.getMinutes()).slice(-2) 
-		+ ":" + ("0" + date.getSeconds()).slice(-2);
+	var date = parseTimestamp(data.timestamp);
 
-	//
-	// How old is the data?  If it's too old, then we'll let the user know.
-	//
-	var diff = (new Date() - date) / 1000;
-
-	if (diff > 600) {
+	if (date["diff"] > 600) {
 		html += '<div class="alert alert-block alert-info" role="alert">'
 			+ 'This train data is more than 10 minutes old. It may not be entirely accurate.'
 			+ '</div>';
@@ -286,15 +277,14 @@ var systemLatest = function(results) {
 		+ 'Last Updated: ' 
 		+ '</div>'
 		+ '<div class="current-update-time">'
-		+ date_day
+		+ date["day"]
 		+ '</div>'
 		+ '<div class="current-update-time">'
-		+ date_time
+		+ date["time"]
 		+ '</div>'
 		+ '</div>';
 
 	html += '</div>'; // row
-
 
 	$(id).html(html);
 
