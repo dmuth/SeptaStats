@@ -112,5 +112,51 @@ var checkWidth = {
 } // End of checkWidth
 
 
+/**
+* Parse a timestamp returned from an API call.  Because Safari's Date.parse() function
+* is weird about dates, the API returns dates in YYYY-MM-DDTHH:MM:SS format.
+* Unfortunately, the timezone is treated as UTC with local conversion then applied.
+* This is an issue, since all timestamps from SEPTA come in EST, and are therefore
+* re-converted to EST, which causes them to be a few hours in the past.  So part
+* of this function's purpose is to then re-add the GMT offset since it was 
+* improperly applied in the first place.
+*
+* @param string The timestamp returned from the API
+*
+* @return array A data structure of the timestamp, as well as zero-padded values
+*	for the date and time.
+*
+*/
+var parseTimestamp = function(timestamp) {
+
+	var retval = {};
+
+	//
+	// Parse our date and then re-apply the GMT offset so we get the
+	// actual proper timestamp.
+	//
+	var date = new Date(timestamp);
+	var tz_offset_seconds = date.getTimezoneOffset() * 60;
+	retval["date"] = date = new Date( date.getTime() + (tz_offset_seconds * 1000 ) );
+
+	retval["day"] = date.getFullYear() 
+		+ "-" + ("0" + date.getMonth()).slice(-2) 
+		+ "-" + ("0" + date.getDate()).slice(-2)
+		;
+
+	retval["time"] = ("0" + date.getHours()).slice(-2) 
+		+ ":" + ("0" + date.getMinutes()).slice(-2) 
+		+ ":" + ("0" + date.getSeconds()).slice(-2)
+		;
+
+	//
+	// How old is the data?  If it's too old, then we'll let the user know.
+	//
+	retval["diff"] = (new Date() - date) / 1000;
+
+	return(retval);
+
+} // End of parseTimestamp()
+
 
 
