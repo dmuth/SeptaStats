@@ -84,6 +84,7 @@ class Train extends Base {
 
 		$retval = array();
 		$redis_key = "train/get-${trainno}";
+		//$redis_key .= time(); // Debugging
 
 		if ($retval = $this->redisGet($redis_key)) {
 			return($retval);
@@ -92,7 +93,7 @@ class Train extends Base {
 
 			$query = 'search index="septa_analytics" earliest=-20h '
 				. 'trainno=' . $trainno 
-				. '| eval time=strftime(_time,"%Y-%m-%d %H:%M:%S") '
+				. '| eval time=strftime(_time,"%Y-%m-%dT%H:%M:%S") '
 				. '| chart latest(late) AS  "Minutes Late", latest(time) by nextstop '
 				. '| sort latest(time) | fields nextstop "Minutes Late"'
 				;
@@ -137,7 +138,7 @@ class Train extends Base {
 
 				$query = 'search index="septa_analytics" earliest=-20h '
 					. 'trainno=' . $value . ' '
-					. '| eval time=strftime(_time,"%Y-%m-%d %H:%M:%S") '
+					. '| eval time=strftime(_time,"%Y-%m-%dT%H:%M:%S") '
 					. '| eval source=SOURCE '
 					. '| fields time trainno nextstop source dest late lat lon'
 					. '| head 1'

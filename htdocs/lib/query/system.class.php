@@ -75,7 +75,7 @@ class System extends Base {
 			$query = 'search index="septa_analytics" earliest=-5m '
 				. 'late != 999 '
 				. '| eval id = trainno . "-" . dest '
-				. '| eval time=strftime(_time,"%Y-%m-%d %H:%M:%S") '
+				. '| eval time=strftime(_time,"%Y-%m-%dT%H:%M:%S") '
 				. '| eval source=SOURCE '
 				. '| stats '
 				. 'latest(time) AS time, '

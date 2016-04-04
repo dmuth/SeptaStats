@@ -27,6 +27,7 @@ class Station extends Base {
 
 		$retval = array();
 		$redis_key = "station/getTrains-${station}";
+		//$redis_key .= time(); // Debugging
 
 		if ($retval = $this->redisGet($redis_key)) {
 			return($retval);
@@ -36,7 +37,7 @@ class Station extends Base {
 			$query = 'search index="septa_analytics" '
 				. 'earliest=-24h late != 999 '
 				. 'nextstop="' . $station . '" '
-				. '| eval time=strftime(_time,"%Y-%m-%d %H:%M:%S") '
+				. '| eval time=strftime(_time,"%Y-%m-%dT%H:%M:%S") '
 				. '| stats max(late) AS "Minutes Late", max(time) AS "time", max(train_line) AS "Train Line" by trainno '
 				. '| sort time desc';
 
@@ -71,7 +72,7 @@ class Station extends Base {
 			$query = 'search index="septa_analytics" '
 					. 'earliest=-24h late != 999 '
 					. 'nextstop="' . $station . '" '
-					. '| eval time=strftime(_time,"%Y-%m-%d %H:%M:%S") '
+					. '| eval time=strftime(_time,"%Y-%m-%dT%H:%M:%S") '
 					. '| eval id = trainno . "-" . dest '
 					. '| stats max(late) AS "Minutes Late", max(time) AS "time", max(train_line) AS "Train Line" by id '
 					. '| sort "Minutes Late" desc '
@@ -102,6 +103,7 @@ class Station extends Base {
 
 		$retval = array();
 		$redis_key = "station/getStats-${station}";
+		//$redis_key .= time(); // Debugging
 		$redis_ttl = 300;
 
 		if ($retval = $this->redisGet($redis_key)) {
@@ -112,7 +114,7 @@ class Station extends Base {
 			$query = 'search index="septa_analytics" '
 				. 'earliest=-24h late != 999 '
 				. 'nextstop="' . $station . '" '
-				. '| eval time=strftime(_time,"%Y-%m-%d %H:%M:%S") '
+				. '| eval time=strftime(_time,"%Y-%m-%dT%H:%M:%S") '
 				. '| eval id = trainno . "-" . dest | '
 				. 'timechart span=1h latest(late) AS late by id '
 				. '| addtotals '

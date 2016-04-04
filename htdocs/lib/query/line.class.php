@@ -103,7 +103,7 @@ class Line extends Base {
 				. 'train_line="' . $line . ' (' . $direction .')" '
 				. 'late != 999 '
 				. '| eval id = trainno . "-" . dest  ' // Debugging
-				. '| eval time=strftime(_time,"%Y-%m-%d %H:%M:%S") '
+				. '| eval time=strftime(_time,"%Y-%m-%dT%H:%M:%S") '
 				. '| eval source=SOURCE '
 				. '| stats '
 				. 'latest(time) AS time, '
