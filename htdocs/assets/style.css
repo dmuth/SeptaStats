@@ -42,7 +42,26 @@ h1 {
 	}
 }
 
-.current-top {
+
+#indexBackground {
+	height: 350px;
+}
+
+#frontPageStats .current-top {
+	font-size: 20px;
+	height: 50px;
+}
+
+@media (max-width: 768px) {
+	#frontPageStats .current-top {
+		font-size: 16px;
+		height: 40px;
+	}
+}
+
+#frontPageStats .current-body {
+	font-size: 48px;
+	font-weight: 600;
 }
 
 .current-body {

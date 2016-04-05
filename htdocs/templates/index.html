@@ -9,31 +9,46 @@
 <script src="/assets/script.js" ></script>
 <script language="javascript">
 
+$( document ).ready(function() {
+
+	tryApi.try("/api/current/system/latest/stats", systemLatest);
+
+});
+
+
 </script>
-
-
-<div class="row">
-
-	<div class="col-md-12">
-
-	<div style="
-	    background-image: url('/assets/SeptaStatsCard.png');
-	    background-repeat: no-repeat;
-	    background-size: cover;
-	    height: 400px;
-		height: 50vh;
-		width: 100%;
-		">
-
-	</div>
-
-	</div>
-
-</div>
+</script>
 
 
 <h1>Septa Stats</h1>
 
+
+<div class="row"
+		id="indexBackground" style="
+	    background-image: url('/assets/SeptaStatsCard.png');
+	    background-repeat: no-repeat;
+	    background-size: cover;
+		"
+	>
+
+	<div class="col-md-12">
+
+		<div class="row" 
+				style="
+				background-color: rgba(255, 255, 255, 0.7); padding-left: 10px; padding-top: 10px; 
+				" 
+				id="frontPageStats"
+				>
+
+			<div id="systemLatest" >
+			</div>
+
+		</div>
+
+	</div>
+
+</div>
+<br/>
 
 
 <div class="row">
