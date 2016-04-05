@@ -159,4 +159,121 @@ var parseTimestamp = function(timestamp) {
 } // End of parseTimestamp()
 
 
+/**
+* Create a dashboard from our latest system info.
+*/
+var systemLatest = function(results) {
+
+	var id = "#systemLatest";
+	var html = "";
+	var data = results["data"];
+	//data.num_trains_over_5_min_late = 11; // Debugging
+	//data.num_trains_over_15_min_late = 12; // Debugging
+	//data.num_trains_over_30_min_late = 13; // Debugging
+
+	if (!Object.keys(data).length) {
+		html += '<div class="alert alert-block alert-info" role="alert">'
+			+ 'No current train data returned. Are there any trains currently running?'
+			+ '</div>';
+		$(id).html(html);
+		return(null);
+	}
+
+	//
+	// Get our date and time, with leading zeros
+	//
+	var date = parseTimestamp(data.timestamp);
+
+	if (date["diff"] > 600) {
+		html += '<div class="alert alert-block alert-info" role="alert">'
+			+ 'This train data is more than 10 minutes old. It may not be entirely accurate.'
+			+ '</div>';
+
+	}
+
+	//
+	// Optionally add some style if we have trains over 15 minutes late
+	//
+	var trains_15m_late_css = "";
+	if (data.num_trains_over_15_min_late > 0) {
+		trains_15m_late_css = "current-body-warn";
+	}
+
+	var trains_30m_late_css = "";
+	if (data.num_trains_over_30_min_late > 0) {
+		trains_30m_late_css = "current-body-warn";
+	}
+
+
+	//
+	// Now create a row full of stats data.
+	// On a desktop or laptop display, this should all fit in a single row.
+	// On a mobile device, these should be neatly stacked.
+	//
+	html += '<div class="row">';
+
+	html += '<div class="col-xs-6 col-md-2 current-cell">'
+		+ '<div class="current-top">'
+		+ '# Trains Running: ' 
+		+ '</div>'
+		+ '<div class="current-body" >'
+		+ data.num_trains
+		+ '</div>'
+		+ '</div>';
+
+	html += '<div class="col-xs-6 col-md-2 current-cell">'
+		+ '<div class="current-top">'
+		+ 'Average Minutes Late: ' 
+		+ '</div>'
+		+ '<div class="current-body" >'
+		+ data.avg_min_late
+		+ '</div>'
+		+ '</div>';
+
+	html += '<div class="col-xs-6 col-md-2 current-cell">'
+		+ '<div class="current-top">'
+		+ '# Trains Over 5m Late: ' 
+		+ '</div>'
+		+ '<div class="current-body" >'
+		+ data.num_trains_over_5_min_late
+		+ '</div>'
+		+ '</div>';
+
+	html += '<div class="col-xs-6 col-md-2 current-cell">'
+		+ '<div class="current-top">'
+		+ '# Trains Over 15m Late: ' 
+		+ '</div>'
+		+ '<div class="current-body ' + trains_15m_late_css + '" >'
+		+ data.num_trains_over_15_min_late
+		+ '</div>'
+		+ '</div>';
+
+	html += '<div class="col-xs-6 col-md-2 current-cell">'
+		+ '<div class="current-top">'
+		+ '# Trains Over 30m Late: ' 
+		+ '</div>'
+		+ '<div class="current-body ' + trains_30m_late_css + '" >'
+		+ data.num_trains_over_30_min_late
+		+ '</div>'
+		+ '</div>';
+
+	html += '<div class="col-xs-6 col-md-2 current-cell">'
+		+ '<div class="current-top">'
+		+ 'Last Updated: ' 
+		+ '</div>'
+		+ '<div class="current-update-time">'
+		+ date["day"]
+		+ '</div>'
+		+ '<div class="current-update-time">'
+		+ date["time"]
+		+ '</div>'
+		+ '</div>';
+
+	html += '</div>'; // row
+
+	$(id).html(html);
+
+} // End of systemLatest()
+
+
 
