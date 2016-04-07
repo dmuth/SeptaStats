@@ -94,9 +94,13 @@ class Train extends Base {
 			$query = 'search index="septa_analytics" earliest=-20h '
 				. 'trainno=' . $trainno 
 				. '| eval time=strftime(_time,"%Y-%m-%dT%H:%M:%S") '
-				. '| chart latest(late) AS  "Minutes Late", latest(time) by nextstop '
-				. '| sort latest(time) | fields nextstop "Minutes Late"'
+				. '| chart latest(late) AS "Minutes Late", latest(time), '
+				. 'latest(lat) AS lat, latest(lon) AS lon '
+				. 'by nextstop, '
+				. '| sort latest(time) '
+				. '| fields nextstop "Minutes Late" lat lon'
 				;
+			//print $query; // Debugging
 
 			$retval = $this->query($query);
 			$retval["metadata"]["trainno"] = $trainno;
@@ -196,6 +200,7 @@ class Train extends Base {
 
 		$retval = array();
 		$redis_key = "train/getHistoryByDay-${trainno}";
+		//$redis_key .= time(); // Debugging
 
 		if ($retval = $this->redisGet($redis_key)) {
 			return($retval);
@@ -212,10 +217,14 @@ class Train extends Base {
 				. '| append [search index="septa_analytics" trainno=' . $trainno . ' earliest=-6d@d latest=-5d@d |eval late6=late] '
 				. '| append [search index="septa_analytics" trainno=' . $trainno . ' earliest=-7d@d latest=-6d@d |eval late7=late] '
 				. '| eval time=strftime(_time,"%Y-%m-%d %H:%M:%S") '
-				. '| chart latest(late0) AS "Minutes Late", latest(late1) AS "Minutes Late - Yesterday", latest(late2) AS "Minutes Late - 2 Days Ago", latest(late3) AS "Minutes Late - 3 Days Ago", latest(late4) AS "Minutes Late - 4 Days Ago", latest(late5) AS "Minutes Late - 5 Days Ago", latest(late6) AS "Minutes Late - 6 Days Ago", latest(late7) AS "Minutes Late - 7 Days Ago", latest(time) by nextstop '
+				. '| chart latest(late0) AS "Minutes Late", latest(late1) AS "Minutes Late - Yesterday", latest(late2) AS "Minutes Late - 2 Days Ago", latest(late3) AS "Minutes Late - 3 Days Ago", latest(late4) AS "Minutes Late - 4 Days Ago", latest(late5) AS "Minutes Late - 5 Days Ago", latest(late6) AS "Minutes Late - 6 Days Ago", latest(late7) AS "Minutes Late - 7 Days Ago", '
+				. 'latest(lat) AS lat, latest(lon) AS lon '
+				. 'latest(time) by nextstop '
 				. '| sort latest(time) '
-				. '| fields nextstop "Minutes Late" "Minutes Late - Yesterday" "Minutes Late - 2 Days Ago" "Minutes Late - 3 Days Ago" "Minutes Late - 4 Days Ago" "Minutes Late - 5 Days Ago" "Minutes Late - 6 Days Ago" "Minutes Late - 7 Days Ago"'
+				. '| fields nextstop "Minutes Late" "Minutes Late - Yesterday" "Minutes Late - 2 Days Ago" "Minutes Late - 3 Days Ago" "Minutes Late - 4 Days Ago" "Minutes Late - 5 Days Ago" "Minutes Late - 6 Days Ago" "Minutes Late - 7 Days Ago" '
+				. 'lat lon '
 				;
+			//print $query; // Debugging
 
 			$retval = $this->query($query);
 			$retval["metadata"]["_comment"] = "Multiple days worth of stops and lateness for train '$trainno'";
@@ -237,6 +246,7 @@ class Train extends Base {
 	
 		$retval = array();
 		$redis_key = "train/getHistoryHistoricalAvg-${trainno}";
+		//$redis_key .= time();
 
 		if ($retval = $this->redisGet($redis_key)) {
 			return($retval);
@@ -253,10 +263,12 @@ class Train extends Base {
 				. '| append [search index="septa_analytics" trainno=' . $trainno . ' earliest=-6d@d latest=-5d@d |eval late6=late] '
 				. '| append [search index="septa_analytics" trainno=' . $trainno . ' earliest=-7d@d latest=-6d@d |eval late7=late] '
 				. '| eval time=strftime(_time,"%Y-%m-%d %H:%M:%S") '
-				. '| chart latest(late0) AS "Minutes Late", latest(late1) AS "Minutes Late - Yesterday", latest(late2) AS "Minutes Late - 2 Days Ago", latest(late3) AS "Minutes Late - 3 Days Ago", latest(late4) AS "Minutes Late - 4 Days Ago", latest(late5) AS "Minutes Late - 5 Days Ago", latest(late6) AS "Minutes Late - 6 Days Ago", latest(late7) AS "Minutes Late - 7 Days Ago", latest(time) by nextstop '
+				. '| chart latest(late0) AS "Minutes Late", latest(late1) AS "Minutes Late - Yesterday", latest(late2) AS "Minutes Late - 2 Days Ago", latest(late3) AS "Minutes Late - 3 Days Ago", latest(late4) AS "Minutes Late - 4 Days Ago", latest(late5) AS "Minutes Late - 5 Days Ago", latest(late6) AS "Minutes Late - 6 Days Ago", latest(late7) AS "Minutes Late - 7 Days Ago", '
+				. 'latest(lat) AS lat, latest(lon) AS lon, '
+				. 'latest(time) by nextstop '
 				. '| sort latest(time) '
 				. '| eval "Average Minutes Late"= (if(isnotnull($Minutes Late - Yesterday$), $Minutes Late - Yesterday$, 0) + if(isnotnull($Minutes Late - 2 Days Ago$), $Minutes Late - 2 Days Ago$, 0) + if(isnotnull($Minutes Late - 3 Days Ago$), $Minutes Late - 3 Days Ago$, 0) + if(isnotnull($Minutes Late - 4 Days Ago$), $Minutes Late - 4 Days Ago$, 0) + if(isnotnull($Minutes Late - 5 Days Ago$), $Minutes Late - 5 Days Ago$, 0) + if(isnotnull($Minutes Late - 6 Days Ago$), $Minutes Late - 6 Days Ago$, 0) + if(isnotnull($Minutes Late - 7 Days Ago$), $Minutes Late - 7 Days Ago$, 0) ) / 7 '
-				. '| fields nextstop "Average Minutes Late" "Minutes Late"'
+				. '| fields nextstop "Average Minutes Late" "Minutes Late" lat lon'
 				;
 
 			$retval = $this->query($query);
