@@ -26,10 +26,12 @@ function test() {
 	VERB=$1
 	URI=$2
 
+	TARGET="${URL}${URI}"
+
 	echo "# "
-	echo "# Testing method '${VERB}' on URL '${URL}/${URI}'"
+	echo "# Testing method '${VERB}' on URL '${TARGET}'"
 	echo "# "
-	curl -s -X${VERB} -I ${URL}/${URI} | egrep "Access-Control|^HTTP"
+	curl -s -X${VERB} -I ${TARGET} | egrep "Access-Control|^HTTP"
 	echo
 
 }
@@ -37,6 +39,9 @@ function test() {
 
 test GET /
 test OPTIONS /
+
+test GET /api
+test OPTIONS /api
 
 test GET /api/current/system
 test OPTIONS /api/current/system
