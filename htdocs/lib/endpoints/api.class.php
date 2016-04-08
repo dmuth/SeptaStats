@@ -48,21 +48,28 @@ class Api {
 		$system = $this->system;
 		$station = $this->station;
 		$stations = $this->stations;
+		$self = $this;
 
 
 		$app->get("/api/current/trains", function(Request $request, Response $response, $args) 
-			use ($display, $train) {
+			use ($self, $display, $train) {
+
+			$response = $self->setJsonAndCorsHeadersGet($response);
 
 			$output = $display->jsonPretty($train->getTrains());
 			$response->getBody()->write($output);
 
+			return($response);
+
 		});
 
 
-		$app->group("/api/current/train/{trainno}", function() use ($display, $train) {
+		$app->group("/api/current/train/{trainno}", function() use ($self, $display, $train) {
 
 			$this->get("", function(Request $request, Response $response, $args) 
-				use ($display, $train) {
+				use ($self, $display, $train) {
+
+				$response = $self->setJsonAndCorsHeadersGet($response);
 
 		    	$trainno = $display->sanitizeInput($request->getAttribute("trainno"));
 
@@ -76,13 +83,15 @@ class Api {
 
 				}, $response);
 
-				return($result);
+				return($response);
 
 			});
 
 
 			$this->get("/history", function(Request $request, Response $response, $args) 
-				use ($display, $train) {
+				use ($self, $display, $train) {
+
+				$response = $self->setJsonAndCorsHeadersGet($response);
 
 		    	$trainno = $request->getAttribute("trainno");
 
@@ -94,13 +103,15 @@ class Api {
 
 					}, $response);
 
-				return($result);
+				return($response);
 
 			});
 
 
 			$this->get("/latest", function(Request $request, Response $response, $args) 
-				use ($display, $train) {
+				use ($self, $display, $train) {
+
+				$response = $self->setJsonAndCorsHeadersGet($response);
 
 				//
 				// Grab our trains, explode on commas, can cap the array at 20
@@ -120,13 +131,15 @@ class Api {
 
 					}, $response);
 
-				return($result);
+				return($response);
 
 			});
 
 
 			$this->get("/history/average", function(Request $request, Response $response, $args) 
-				use ($display, $train) {
+				use ($self, $display, $train) {
+
+				$response = $self->setJsonAndCorsHeadersGet($response);
 
 		    	$trainno = $request->getAttribute("trainno");
 
@@ -137,7 +150,7 @@ class Api {
 
 					}, $response);
 
-				return($result);
+				return($response);
 
 			});
 
@@ -145,11 +158,13 @@ class Api {
 
 
 		$app->group("/api/current/system", function() 
-			use ($display, $system) {
+			use ($self, $display, $system) {
 
 			$this->get("", function(Request $request, Response $response, $args) 
-				use ($display, $system) {
-	
+				use ($self, $display, $system) {
+
+				$response = $self->setJsonAndCorsHeadersGet($response);
+
 				$num_trains = 10;
 				$num_hours = 1;
 				$span_min = 10;
@@ -162,13 +177,15 @@ class Api {
 
 					}, $response);
 
-				return($result);
+					return($response);
 
 			});
 
 			$this->get("/latest", function(Request $request, Response $response, $args) 
-				use ($display, $system) {
+				use ($self, $display, $system) {
 	
+				$response = $self->setJsonAndCorsHeadersGet($response);
+
 				$num_trains = 10;
 				$num_hours = 1;
 				$span_min = 10;
@@ -181,14 +198,16 @@ class Api {
 
 					}, $response);
 
-				return($result);
+				return($response);
 
 			});
 
 
 			$this->get("/latest/stats", function(Request $request, Response $response, $args) 
-				use ($display, $system) {
+				use ($self, $display, $system) {
 	
+				$response = $self->setJsonAndCorsHeadersGet($response);
+
 				$num_trains = 10;
 				$num_hours = 1;
 				$span_min = 10;
@@ -201,13 +220,15 @@ class Api {
 
 					}, $response);
 
-				return($result);
+				return($response);
 
 			});
 
 
 			$this->get("/totals", function(Request $request, Response $response, $args) 
-				use ($display, $system) {
+				use ($self, $display, $system) {
+
+				$response = $self->setJsonAndCorsHeadersGet($response);
 
 				$num_days = 7;
 
@@ -219,7 +240,7 @@ class Api {
 
 					}, $response);
 
-				return($result);
+				return($response);
 
 			});
 
@@ -227,16 +248,22 @@ class Api {
 
 
 		$app->get("/api/current/lines", function(Request $request, Response $response, $args) 
-			use ($display, $line) {
+			use ($self, $display, $line) {
+
+			$response = $self->setJsonAndCorsHeadersGet($response);
 
 			$output = $display->jsonPretty($line->getLines());
 			$response->getBody()->write($output);
+
+			return($response);
 
 		});
 
 
 		$app->get("/api/current/line/{line}/{direction}", function(Request $request, Response $response, $args) 
-			use ($display, $line) {
+			use ($self, $display, $line) {
+
+			$response = $self->setJsonAndCorsHeadersGet($response);
 
 			$line_name = $line->checkLineKey($args["line"]);
 			$direction = $line->checkDirection($args["direction"]);
@@ -245,6 +272,7 @@ class Api {
 
 				$data = $line->getTrains($line_name, $direction, 1, 10);
 				$response->getBody()->write($display->jsonPretty($data));
+				return($response);
 
 			} else {
 				$error = sprintf("Line '%s' and/or direction '%s' not found!\n", $args["line"], $args["direction"]);
@@ -263,7 +291,9 @@ class Api {
 
 
 		$app->get("/api/current/line/{line}/{direction}/latest", function(Request $request, Response $response, $args) 
-			use ($display, $line) {
+			use ($self, $display, $line) {
+
+			$response = $self->setJsonAndCorsHeadersGet($response);
 
 			$line_name = $line->checkLineKey($args["line"]);
 			$direction = $line->checkDirection($args["direction"]);
@@ -272,6 +302,7 @@ class Api {
 
 				$data = $line->getTrainsLatest($line_name, $direction, 1, 10);
 				$response->getBody()->write($display->jsonPretty($data));
+				return($response);
 
 			} else {
 				$error = sprintf("Line '%s' and/or direction '%s' not found!\n", $args["line"], $args["direction"]);
@@ -289,11 +320,13 @@ class Api {
 		});
 
 
-		$app->group("/api/current/station", function() use ($display, $station) {
+		$app->group("/api/current/station", function() use ($self, $display, $station) {
 
 			$this->get("/{station}/trains", function(Request $request, Response $response, $args) 
-				use ($display, $station) {
+				use ($self, $display, $station) {
 	
+				$response = $self->setJsonAndCorsHeadersGet($response);
+
 				$station_name = $display->sanitizeInput($args["station"]);
 
 				$result = $display->splunkWrapper(function() 
@@ -304,13 +337,15 @@ class Api {
 
 					}, $response);
 
-				return($result);
+				return($response);
 
 			});
 
 			$this->get("/{station}/trains/latest", function(Request $request, Response $response, $args) 
-				use ($display, $station) {
+				use ($self, $display, $station) {
 	
+				$response = $self->setJsonAndCorsHeadersGet($response);
+
 				$station_name = $display->sanitizeInput($args["station"]);
 
 				$result = $display->splunkWrapper(function() 
@@ -321,13 +356,15 @@ class Api {
 
 					}, $response);
 
-				return($result);
+				return($response);
 
 			});
 
 			$this->get("/{station}/stats", function(Request $request, Response $response, $args) 
-				use ($display, $station) {
+				use ($self, $display, $station) {
 	
+				$response = $self->setJsonAndCorsHeadersGet($response);
+
 				$station_name = $display->sanitizeInput($args["station"]);
 
 				$result = $display->splunkWrapper(function() 
@@ -338,7 +375,7 @@ class Api {
 
 					}, $response);
 
-				return($result);
+				return($response);
 
 			});
 
@@ -346,7 +383,9 @@ class Api {
 
 
 		$app->get("/api/current/stations", function(Request $request, Response $response, $args) 
-			use ($stations, $display) {
+			use ($self, $stations, $display) {
+
+			$response = $self->setJsonAndCorsHeadersGet($response);
 
 			$output = $display->splunkWrapper(function() use ($stations, $display) {
 
@@ -359,11 +398,26 @@ class Api {
 				}, $response);
 
 			$response->getBody()->write($output);
+			return($response);
 
 		});
 
 
 	} // End of go()
+
+
+	/**
+	* Set our JSON and CORS headers for a GET request.
+	*/
+	private function setJsonAndCorsHeadersGet($response) {
+
+		$response = $response->withHeader("Access-Control-Allow-Origin", "*");
+		$response = $response->withHeader("Access-Control-Allow-Credentials", "true");
+		$response = $response->withHeader('Content-type', 'application/json');
+
+		return($response);
+
+	} // End of setJsonAndCoresHeaders()
 
 
 } // End of Content class
