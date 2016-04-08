@@ -10,12 +10,17 @@ set -e
 if test ! "$1"
 then
 	echo "! "
-	echo "! Syntax: $0 [https://]BASE_URL[:PORT]"
+	echo "! Syntax: $0 [https://]BASE_URL[:PORT] [ verb ]"
 	echo "! "
 	exit 1
 fi
 
 URL=$1
+VERB="GET"
+if test "$2"
+then
+	VERB=$2
+fi
 
 
 #
@@ -23,8 +28,7 @@ URL=$1
 #
 function test() {
 
-	VERB=$1
-	URI=$2
+	URI=$1
 
 	TARGET="${URL}${URI}"
 
@@ -37,33 +41,30 @@ function test() {
 }
 
 
-test GET /
-test GET /api
-test GET /api/current/trains
-test GET /api/current/train/521
-test GET /api/current/train/521/history
-test GET /api/current/train/521/history/average
-test GET /api/current/train/521/latest
-test GET /api/current/train/521,553/latest
-test GET /api/current/train/587,553,521,591,589,470,472,474,476/latest
-test GET /api/current/system
-test GET /api/current/system/latest
-test GET /api/current/system/latest/stats
-test GET /api/current/system/totals
-test GET /api/current/lines
-test GET /api/current/line/paoli-thorndale/outbound
-test GET /api/current/line/paoli-thorndale/inbound
-test GET /api/current/line/paoli-thorndale/inbound/latest
-test GET /api/current/line/paoli-thorndale/foobar
-test GET /api/current/line/foobar/foobar
-test GET /api/current/station/ardmore/trains
-test GET /api/current/station/ardmore/trains/latest
-test GET /api/current/station/ardmore/stats
-test GET /api/current/stations
+test /
+test /api
+test /api/current/trains
+test /api/current/train/521
+test /api/current/train/521/history
+test /api/current/train/521/history/average
+test /api/current/train/521/latest
+test /api/current/train/521,553/latest
+test /api/current/train/587,553,521,591,589,470,472,474,476/latest
+test /api/current/system
+test /api/current/system/latest
+test /api/current/system/latest/stats
+test /api/current/system/totals
+test /api/current/lines
+test /api/current/line/paoli-thorndale/outbound
+test /api/current/line/paoli-thorndale/inbound
+test /api/current/line/paoli-thorndale/inbound/latest
+test /api/current/line/paoli-thorndale/foobar
+test /api/current/line/foobar/foobar
+test /api/current/station/ardmore/trains
+test /api/current/station/ardmore/trains/latest
+test /api/current/station/ardmore/stats
+test /api/current/stations
 
-test OPTIONS /
-test OPTIONS /api
-test OPTIONS /api/current/system
 
 
 echo "# "
