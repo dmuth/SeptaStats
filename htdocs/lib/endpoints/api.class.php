@@ -403,6 +403,27 @@ class Api {
 		});
 
 
+	/**
+	* Our Handler for any OPTIONS request that starts with /api/, but not /api.
+	*/
+	$app->options("/api/{id}[/{id2}[/{id3}[/{id4}[/{id5}]]]]", function(Request $request, Response $response, $args)  // Works
+		use ($self) {
+
+			$response = $response->withHeader("Access-Control-Allow-Origin", "*");
+			$response = $response->withHeader("Access-Control-Allow-Credentials", "true");
+			$response = $response->withHeader("Access-Control-Max-Age", 1728000);
+			$response = $response->withHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
+			$response = $response->withHeader("Access-Control-Allow-Headers", "Authorization,Content-Type,Accept,Origin,User-Agent,DNT,Cache-Control,X-Mx-ReqToken,Keep-Alive,X-Requested-With,If-Modified-Since");
+			$response = $response->withHeader("Content-Length", 0);
+			$response = $response->withHeader("Content-Type", "text/plain charset=UTF-8");
+
+			$response = $response->withStatus(204, "OK");
+
+			return($response);
+
+		});
+
+
 	} // End of go()
 
 
