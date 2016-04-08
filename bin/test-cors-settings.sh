@@ -38,13 +38,33 @@ function test() {
 
 
 test GET /
-test OPTIONS /
-
 test GET /api
-test OPTIONS /api
-
+test GET /api/current/trains
+test GET /api/current/train/521
+test GET /api/current/train/521/history
+test GET /api/current/train/521/history/average
+test GET /api/current/train/521/latest
+test GET /api/current/train/521,553/latest
+test GET /api/current/train/587,553,521,591,589,470,472,474,476/latest
 test GET /api/current/system
+test GET /api/current/system/latest
+test GET /api/current/system/latest/stats
+test GET /api/current/system/totals
+test GET /api/current/lines
+test GET /api/current/line/paoli-thorndale/outbound
+test GET /api/current/line/paoli-thorndale/inbound
+test GET /api/current/line/paoli-thorndale/inbound/latest
+test GET /api/current/line/paoli-thorndale/foobar
+test GET /api/current/line/foobar/foobar
+test GET /api/current/station/ardmore/trains
+test GET /api/current/station/ardmore/trains/latest
+test GET /api/current/station/ardmore/stats
+test GET /api/current/stations
+
+test OPTIONS /
+test OPTIONS /api
 test OPTIONS /api/current/system
+
 
 echo "# "
 echo "# All done!"
