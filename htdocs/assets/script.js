@@ -140,7 +140,10 @@ var parseTimestamp = function(timestamp) {
 	retval["date"] = date = new Date( date.getTime() + (tz_offset_seconds * 1000 ) );
 
 	retval["day"] = date.getFullYear() 
-		+ "-" + ("0" + date.getMonth()).slice(-2) 
+		//
+		// Add 1 to the month since months start at zero on Javascript.
+		//
+		+ "-" + ("0" + (date.getMonth() + 1 ) ).slice(-2) 
 		+ "-" + ("0" + date.getDate()).slice(-2)
 		;
 
