@@ -158,12 +158,14 @@ var setTrainTable = function(trains, id) {
 			var source = value.source;
 			var dest = value.dest;
 
+			var date = parseTimestamp(time);
+
 			var row = "<tr>" 
 				+ "<td>" + "<a href=\"/train/" + encodeURIComponent(trainno) + "\">" 
 					+ trainno + " - " + source + " to " + dest + "</a>" + "</td>"
 				+ "<td>" + "<a href=\"/station/" + encodeURIComponent(next_stop) + "\">" + next_stop + "</a>" + "</td>"
 				+ "<td>" + late + "</td>"
-				+ "<td>" + time + "</td>"
+				+ "<td>" + date.day + " " + date.time + "</td>"
 				+ "</tr>\n"
 				;
 
