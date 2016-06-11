@@ -86,9 +86,9 @@ class Splunk {
 				throw new \Exception("Query '$query' is taking too long!");
 			}
 
-    		//printf("Progress: %03.1f%%\r\n", $job->getProgress() * 100);
-    		usleep(0.5 * 1000000);
-    		$job->refresh();
+    			//printf("Progress: %03.1f%%\r\n", $job->getProgress() * 100);
+    			usleep(0.5 * 1000000);
+    			$job->refresh();
 
 		}
 
