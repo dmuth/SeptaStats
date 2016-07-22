@@ -142,6 +142,8 @@ class Train extends Base {
 
 				$query = 'search index="septa_analytics" earliest=-20h '
 					. 'trainno=' . $value . ' '
+// TEST
+					. 'late != 999 '
 					. '| eval time=strftime(_time,"%Y-%m-%dT%H:%M:%S") '
 					. '| eval source=SOURCE '
 					. '| fields time trainno nextstop source dest late lat lon'
@@ -207,15 +209,15 @@ class Train extends Base {
 
 		} else {
 
-			$query = 'search index="septa_analytics" trainno=' . $trainno . ' earliest=-0d@d '
+			$query = 'search index="septa_analytics" trainno=' . $trainno . ' late != 999 earliest=-0d@d '
 				. '| eval late0=late '
-				. '| append [search index="septa_analytics" trainno=' . $trainno .' earliest=-1d@d latest=-0d@d |eval late1=late] '
-				. '| append [search index="septa_analytics" trainno=' . $trainno . ' earliest=-2d@d latest=-1d@d |eval late2=late] '
-				. '| append [search index="septa_analytics" trainno=' . $trainno . ' earliest=-3d@d latest=-2d@d |eval late3=late] '
-				. '| append [search index="septa_analytics" trainno=' . $trainno . ' earliest=-4d@d latest=-3d@d |eval late4=late] '
-				. '| append [search index="septa_analytics" trainno=' . $trainno . ' earliest=-5d@d latest=-4d@d |eval late5=late] '
-				. '| append [search index="septa_analytics" trainno=' . $trainno . ' earliest=-6d@d latest=-5d@d |eval late6=late] '
-				. '| append [search index="septa_analytics" trainno=' . $trainno . ' earliest=-7d@d latest=-6d@d |eval late7=late] '
+				. '| append [search index="septa_analytics" trainno=' . $trainno .' late != 999 earliest=-1d@d latest=-0d@d |eval late1=late] '
+				. '| append [search index="septa_analytics" trainno=' . $trainno . ' late != 999 earliest=-2d@d latest=-1d@d |eval late2=late] '
+				. '| append [search index="septa_analytics" trainno=' . $trainno . ' late != 999 earliest=-3d@d latest=-2d@d |eval late3=late] '
+				. '| append [search index="septa_analytics" trainno=' . $trainno . ' late != 999 earliest=-4d@d latest=-3d@d |eval late4=late] '
+				. '| append [search index="septa_analytics" trainno=' . $trainno . ' late != 999 earliest=-5d@d latest=-4d@d |eval late5=late] '
+				. '| append [search index="septa_analytics" trainno=' . $trainno . ' late != 999 earliest=-6d@d latest=-5d@d |eval late6=late] '
+				. '| append [search index="septa_analytics" trainno=' . $trainno . ' late != 999 earliest=-7d@d latest=-6d@d |eval late7=late] '
 				. '| eval time=strftime(_time,"%Y-%m-%d %H:%M:%S") '
 				. '| chart latest(late0) AS "Minutes Late", latest(late1) AS "Minutes Late - Yesterday", latest(late2) AS "Minutes Late - 2 Days Ago", latest(late3) AS "Minutes Late - 3 Days Ago", latest(late4) AS "Minutes Late - 4 Days Ago", latest(late5) AS "Minutes Late - 5 Days Ago", latest(late6) AS "Minutes Late - 6 Days Ago", latest(late7) AS "Minutes Late - 7 Days Ago", '
 				. 'latest(lat) AS lat, latest(lon) AS lon '
