@@ -39,7 +39,29 @@ class Splunk_Job extends Splunk_Entity
             'maxTries' => Splunk_Job::DEFAULT_FETCH_MAX_TRIES,
             'delayPerRetry' => Splunk_Job::DEFAULT_FETCH_DELAY_PER_RETRY,
         ), $fetchArgs);
-        
+
+
+	/**
+	* This is a bugfix.
+	*
+	* By default, the upcoming code loops 10 times and sleeps
+	* for .1 seconds between each try.  If, at the end of that loop
+	* the data isn't availalbe, it will throw an exception of
+	* type  Splunk_HttpException with the message of "HTTP 200 OK". Wat.
+	*
+	* I don't fully know what's going on inside of Splunk that this error
+	* happens in certain small queries in my app, but the "fix" for it
+	* seems to be to increase the number of maxTries.  And since a Google
+	* search doesn't turn up how to change that in the caller, I'm
+	* changing it here.
+	*
+	* Increasing maxTries to 50 should give us a window of 5 seconds, 
+	* doesn't use muchin the way of CPU resources, and seems to fix the 
+	* issue I was having.  Your mileage may vary.
+	*
+	*/
+	$fetchArgs["maxTries"] = 50;
+
         for ($numTries = 0; $numTries < $fetchArgs['maxTries']; $numTries++)
         {
             $response = parent::fetch($fetchArgs);
@@ -50,6 +72,7 @@ class Splunk_Job extends Splunk_Entity
         
         // Give up
         throw new Splunk_HttpException($response);
+
     }
     
     protected function extractEntryFromRootXmlElement($xml)
