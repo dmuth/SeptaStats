@@ -5,6 +5,11 @@ Source code for http://www.SeptaStats.com/
 This is a Splunk app which downloads Regional Rail train stats from SEPTA's public API
 once per minute and contains dashboards and reports for visualizing that data.
 
+<img src="https://raw.githubusercontent.com/dmuth/SeptaStats/master/img/septa-stats-1.jpg" width="260" />
+<img src="https://raw.githubusercontent.com/dmuth/SeptaStats/master/img/septa-stats-2.jpg" width="260" />
+<img src="https://raw.githubusercontent.com/dmuth/SeptaStats/master/img/septa-stats-3.jpg" width="260" />
+
+
 ## Installation Instructions
 
 - Clone this repo into $SPLUNK_HOME/etc/apps/
