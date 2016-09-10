@@ -5,3 +5,8 @@
 # Don't check in our log
 bin/train-log.txt
 
+#
+# Knock it off, OS/X!
+#
+.DS_Store
+
