@@ -106,6 +106,7 @@ function parse_line($json, $timestamp) {
 	$retval = "";
 
 	$data = json_decode($json, true);
+	//$data = "bad data"; // Debugging
 
 	if (is_array($data)) {
 
@@ -128,7 +129,7 @@ function parse_line($json, $timestamp) {
 		}
 
 	} else {
-		print "ERROR: I don't know what to do with this data: $line\n";
+		print "ERROR: I don't know what to do with this data: $data\n";
 
 	}
 
