@@ -3,6 +3,9 @@ version: "3"
 
 services:
 
+  #
+  # Splunk hits SEPTA's API regularly and ingests the data it gets.
+  #
   splunk:
     build:
       context: .
@@ -19,26 +22,10 @@ services:
       #
       # Our Splunk data
       #
-      #- ./splunk-data/septa:/opt/splunk/var/lib/splunk/defaultdb
       - ./splunk-data/septa-stats:/opt/splunk/var/lib/splunk/septa_analytics/
-      #- ./splunk-data/fishbucket:/opt/splunk/var/lib/splunk/fishbucket
     ports:
       - 8001:8000
     environment:
       - TZ=EST5EDT
-
-#  twitter-4-backup:
-#    build:
-#      context: .
-#      dockerfile: "Dockerfile-4-backup"
-#    restart: "always"
-#    privileged: true
-#    volumes:
-#      - ./..:/mnt
-#    environment:
-#      - TZ=EST5EDT
-#      - S3=s3://dmuth-furry-tweets/dev/
-#      - NUM_TO_KEEP=20
-
 
 
