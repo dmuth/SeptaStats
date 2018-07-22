@@ -41,16 +41,17 @@ class Splunk {
 
 		//
 		// Don't freak out TOO much over the horribly insecure password
-		// that is hardcoded here--if the Ansible playbook is used
-		// for configuring this server, port 8089 (splunkd) and 8000 (splunkweb)
-		// are both blocked from the outside world.
+		// that is hardcoded here--this is all in Docker, so the Splunk instance
+		// won't be exposed to the outside world.
 		//
-		$this->service = new \Splunk_Service(array(
-			"host" => "localhost",
+		$config = array(
+			"host" => "splunk",
 			"port" => "8089",
 			"username" => "admin",
-			"password" => "adminpw",
-			));
+			"password" => "password",
+			);
+
+		$this->service = new \Splunk_Service($config);
 
 		$this->service->login();
 

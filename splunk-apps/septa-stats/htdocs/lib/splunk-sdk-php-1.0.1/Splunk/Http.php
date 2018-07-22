@@ -104,6 +104,17 @@ class Splunk_Http
                 'follow_location' => 0,     // don't follow HTTP 3xx automatically
                 'max_redirects' => 0,       // [PHP 5.2] don't follow HTTP 3xx automatically
                 'ignore_errors' => TRUE,    // don't throw exceptions on bad status codes
+
+
+            ),
+			//
+			// In versions of PHP >= 5.6, an error is thrown with self-signed certs, so
+			// we need to turn off that checking here.
+			//
+			'ssl' => array(
+				//"allow_self_signed" => TRUE,
+            	'verify_peer_name' 			=> false,
+            	'verify_peer' 				=> false,
             ),
         ));
         

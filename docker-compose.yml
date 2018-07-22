@@ -48,9 +48,22 @@ services:
   #
   php:
     image: php:7.2.8-fpm
+    #image: php:5.6.37-fpm
     restart: "always"
     volumes: 
       - .:/mnt
       - ./splunk-apps/septa-stats/htdocs/:/htdocs
+
+
+  #
+  # Set up Redis
+  #
+  redis:
+    image: redis:4
+    restart: "always"
+    volumes: 
+      - .:/mnt
+      - ./redis-data:/data
+
 
 

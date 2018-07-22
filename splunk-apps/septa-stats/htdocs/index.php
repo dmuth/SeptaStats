@@ -50,7 +50,7 @@ $container["view"] = function ($container) {
 //
 // Create our Redis client
 //
-$redis = new Predis\Client();
+$redis = new Predis\Client("tcp://redis:6379");
 
 $display = new Septa\Display();
 $splunk = new \Septa\Splunk();
