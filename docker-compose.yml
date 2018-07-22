@@ -33,7 +33,7 @@ services:
   # Set up our web server
   #
   web:
-    image: nginx:latest
+    image: nginx:alpine
     ports: 
       - 8002:80
     restart: "always"
@@ -47,8 +47,7 @@ services:
   # Set up PHP running in FCGI mode
   #
   php:
-    #image: php:7-fpm
-    image: php:fpm
+    image: php:7.2.8-fpm
     restart: "always"
     volumes: 
       - .:/mnt
