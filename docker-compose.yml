@@ -11,7 +11,7 @@ services:
       context: .
       dockerfile: "Dockerfile-splunk"
     restart: "always"
-    privileged: true
+    #privileged: true
     volumes:
       - .:/mnt
       #
@@ -27,5 +27,31 @@ services:
       - 8001:8000
     environment:
       - TZ=EST5EDT
+
+
+  #
+  # Set up our web server
+  #
+  web:
+    image: nginx:latest
+    ports: 
+      - 8002:80
+    restart: "always"
+    volumes: 
+      - .:/mnt
+      - ./splunk-apps/septa-stats/htdocs/:/htdocs
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+
+
+  #
+  # Set up PHP running in FCGI mode
+  #
+  php:
+    #image: php:7-fpm
+    image: php:fpm
+    restart: "always"
+    volumes: 
+      - .:/mnt
+      - ./splunk-apps/septa-stats/htdocs/:/htdocs
 
 
