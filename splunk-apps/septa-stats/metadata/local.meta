@@ -34,3 +34,8 @@ export = none
 owner = admin
 version = 6.3.0
 modtime = 1446691505.167956000
+
+[props/test-raw]
+owner = admin
+version = 7.1.1
+modtime = 1532286193.608678000
