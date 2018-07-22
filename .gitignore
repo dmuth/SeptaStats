@@ -10,3 +10,8 @@ bin/train-log.txt
 #
 .DS_Store
 
+#
+# Don't check in our Splunk data
+#
+splunk-data/
+
