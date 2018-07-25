@@ -41,8 +41,8 @@ The Redis data is written to `redis-data/`, so that no data is lost when that co
 
 Assuming you exported the raw events from Splunk to a text file, you can import those events with these commands:
 
-- **docker-compose exec splunk bash**
-- **/opt/splunk/bin/splunk add oneshot ./septa-stats.txt -sourcetype oneshot -index septa_analytics**
+- `docker-compose exec splunk bash`
+- `/opt/splunk/bin/splunk add oneshot ./septa-stats.txt -sourcetype oneshot -index septa_analytics`
 
 
 ## FAQ: Why is Composer's vendor/ directory included?
