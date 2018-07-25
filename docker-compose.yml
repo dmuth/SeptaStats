@@ -41,6 +41,8 @@ services:
       - .:/mnt
       - ./splunk-apps/septa-stats/htdocs/:/htdocs
       - ./nginx.conf:/etc/nginx/conf.d/default.conf
+    environment:
+      - TZ=EST5EDT
 
 
   #
@@ -53,6 +55,8 @@ services:
     volumes: 
       - .:/mnt
       - ./splunk-apps/septa-stats/htdocs/:/htdocs
+    environment:
+      - TZ=EST5EDT
 
 
   #
@@ -64,6 +68,8 @@ services:
     volumes: 
       - .:/mnt
       - ./redis-data:/data
+    environment:
+      - TZ=EST5EDT
 
 
 
