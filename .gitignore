@@ -12,3 +12,8 @@
 #
 splunk-data/
 
+#
+# Don't check in Redis data
+#
+redis-data/
+

@@ -70,6 +70,7 @@ services:
       - ./redis-data:/data
     environment:
       - TZ=EST5EDT
+    command: redis-server /mnt/redis.conf
 
 
 
