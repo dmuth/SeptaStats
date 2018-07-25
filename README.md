@@ -17,6 +17,9 @@ once per minute and contains dashboards and reports for visualizing that data.
    - This instance should NOT be made available over the Internet.  Seriously. Don't do it.
 - The web app can be found at http://localhost:8002/ 
    - I recommend blocking this port off from the Internet and using your own instance of Nginx to proxy to it, with HTTPS.
+- AWS credentials should be in `aws-credentials.txt`
+   - Note that if you create a policy for your IAM credentials (as you should!), the ARN in the Resource array must end in `/*`. Exammple: `arn:aws:s3:::septa-stats/*`. There is a bug in the policy generator where this won't happen and your backups will fail. Be careful.
+
 
 
 ## Architecture Overview
@@ -28,6 +31,7 @@ The Docker containers in this project are as follows:
 - `web`: Nginx webserver
 - `php`: PHP running in FCGI mode to run PHP code
 - `redis`: Used to cache the results of Splunk queries
+- `backup`: Make regular backups of train data to AWS S3
 
 
 ## Exporting Data

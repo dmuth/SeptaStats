@@ -11,12 +11,12 @@ set -e
 
 
 UN="admin"
-PW="adminpw"
+PW="password"
 
 #
 # Our Splunk endpoint
 #
-URL="https://localhost:8089/services/search/jobs"
+URL="https://splunk:8089/services/search/jobs"
 
 #
 # Default query, this can be overridden
@@ -44,11 +44,6 @@ fi
 >&2 echo "# 	${QUERY}"
 >&2 echo "# "
 
-
-curl -4 -s -u ${UN}:${PW} -k "${URL}/export" -d "search=${QUERY}" -d "output_mode=json" \
-	| jq .result._raw \
-	| sed -e "s/^\"//" -e "s/\"$//" -e 's/\\//g' \
-	| egrep -v "^null$"
-
+curl -4 -s -u ${UN}:${PW} -k "${URL}/export" -d "search=${QUERY}" -d "output_mode=raw" 
 
 

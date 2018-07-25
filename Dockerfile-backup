@@ -1,0 +1,23 @@
+
+FROM alpine
+
+WORKDIR /mnt
+
+#
+# Run this with --no-cache so that a cache directory isn't created.
+# That will save us some disk space!
+#
+# coreutils: Gives us "date -d" functionality
+#
+RUN apk add --no-cache bash python3 curl coreutils pv
+RUN pip3 install awscli
+
+#
+# Copy in our AWS credentials
+#
+RUN mkdir /root/.aws/
+COPY aws-credentials.txt /root/.aws/credentials
+
+CMD /mnt/entrypoint-backup.sh
+
+

@@ -1,0 +1,8 @@
+
+#
+# Exclude directories we don't want with lots of files we don't want to speed up the build process.
+#
+.git/
+splunk-data/
+
+

@@ -17,3 +17,8 @@ splunk-data/
 #
 redis-data/
 
+#
+# Don't check in our AWS credentials
+#
+aws-credentials.txt
+

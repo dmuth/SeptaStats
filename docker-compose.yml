@@ -73,4 +73,21 @@ services:
     command: redis-server /mnt/redis.conf
 
 
+  backup:
+    build:
+      context: .
+      dockerfile: "Dockerfile-backup"
+    restart: "always"
+    privileged: true
+    volumes:
+      - .:/mnt
+    environment:
+      - TZ=EST5EDT
+      #
+      # This *MUST* end in a slash!
+      #
+      - S3=s3://dmuth-septa-stats/backups-dev/
+
+
+
 
