@@ -114,12 +114,7 @@ var checkWidth = {
 
 /**
 * Parse a timestamp returned from an API call.  Because Safari's Date.parse() function
-* is weird about dates, the API returns dates in YYYY-MM-DDTHH:MM:SS format.
-* Unfortunately, the timezone is treated as UTC with local conversion then applied.
-* This is an issue, since all timestamps from SEPTA come in EST, and are therefore
-* re-converted to EST, which causes them to be a few hours in the past.  So part
-* of this function's purpose is to then re-add the GMT offset since it was 
-* improperly applied in the first place.
+* is weird about dates, we break the timestamp down and then create the data programatically.
 *
 * @param string The timestamp returned from the API
 *
@@ -132,12 +127,15 @@ var parseTimestamp = function(timestamp) {
 	var retval = {};
 
 	//
-	// Parse our date and then re-apply the GMT offset so we get the
-	// actual proper timestamp.
+	// Got this idea from https://stackoverflow.com/a/6427318/196073
 	//
-	var date = new Date(timestamp);
-	var tz_offset_seconds = date.getTimezoneOffset() * 60;
-	retval["date"] = date = new Date( date.getTime() + (tz_offset_seconds * 1000 ) );
+	// Because date parsing in Safari is a little weird, we have to instead break
+	// the timestamp apart into its consitutent parts and make the date programatically.
+	//
+	var fields = timestamp.split(/[^0-9]/);
+	var date = new Date (fields[0], fields[1] - 1, fields[2], fields[3], fields[4], fields[5] );
+
+	retval["date"] = date;
 
 	retval["day"] = date.getFullYear() 
 		//
