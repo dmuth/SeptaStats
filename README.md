@@ -10,27 +10,39 @@ once per minute and contains dashboards and reports for visualizing that data.
 
 ## Installation Instructions
 
-- Clone this repo into $SPLUNK_HOME/etc/apps/
-    - If on a production instance:
-        - `cd /var/splunk/etc/apps && git clone git@bitbucket.org:dmuth/septa-analytics.git`
-    - If on a Vagrant instance
-        - Do nothing, you already have the code.
-- Install timewrap
-    - `tar xfvz septa-analytics/timewrap_24.tgz`
-    - For more information about Timewrap, visit it's webpage: https://splunkbase.splunk.com/app/1645/
-- Restart Splunk
-    - `/var/splunk/bin/splunk restart`
+- Clone this repo
+- Make sure Docker is installed
+- Run `docker-compose up -d` to start all the Docker containers
+- Splunk can be found at http://localhost:8001/, login is admin/password.  
+   - This instance should NOT be made available over the Internet.  Seriously. Don't do it.
+- The web app can be found at http://localhost:8002/ 
+   - I recommend blocking this port off from the Internet and using your own instance of Nginx to proxy to it, with HTTPS.
 
-At this point, the app will begin gathering statistics via SEPTA's Train API.
 
-## To Serve This App Over the web
+## Architecture Overview
 
-Set up your webserver of choice and point the DocumentRoot to $SPLUNK_HOME/etc/apps/septa-analytics/htdocs/.
+The Docker containers in this project are as follows:
 
-Dependences:
-- PHP.  5.5 or higher should work. (The Slim Microframework is included)
-- Redis. This is used for caching the results from queries made on the back end.
-- A running Splunk instance. :-)  A free/trial copy can be obtained at http://www.splunk.com/
+- `splunk`: Runs a PHP script to fetch from SEPTA's API every 55 seconds, and saves the data to a Splunk Index.
+  - Configuration of Splunk is saved in `splunk-files/`.
+- `web`: Nginx webserver
+- `php`: PHP running in FCGI mode to run PHP code
+- `redis`: Used to cache the results of Splunk queries
+
+
+## Exporting Data
+
+The Spunk Index is written to `splunk-data/`, so that when the container is restarted, no data is lost.
+
+The Redis data is written to `redis-data/`, so that no data is lost when that container is restarted.
+
+
+## Importing Data
+
+Assuming you exported the raw events from Splunk to a text file, you can import those events with these commands:
+
+- **docker-compose exec splunk bash**
+- **/opt/splunk/bin/splunk add oneshot ./septa-stats.txt -sourcetype oneshot -index septa_analytics**
 
 
 ## FAQ: Why is Composer's vendor/ directory included?
@@ -43,6 +55,11 @@ they acknowledged that my concern is legitimate, the risk is very low, and inclu
 just adds so much more noise to code reviews.  That's a valid point, and I am reconsidering my 
 decision to include the vendor/ directory.  Feel free to reach out to me if you feel strongly
 one way or the other on this issue.
+
+
+## Credits
+
+This package uses the `timewrap` command, available at <a href="https://splunkbase.splunk.com/app/1645/">https://splunkbase.splunk.com/app/1645/</a>.
 
 
 ## Additional Questions?
