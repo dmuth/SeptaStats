@@ -7,7 +7,8 @@
 set -e
 
 LOOP_SECONDS=${LOOP_SECONDS:=900}
-NUM_TO_KEEP=${NUM_TO_KEEP:=40}
+YESTERDAY_BACKUP_INTERVAL=4
+
 
 #
 # Change to the directoy where this script is.
@@ -38,13 +39,16 @@ fi
 echo "# "
 echo "# Starting Backup script"
 echo "# "
-echo "# Available env vars: LOOP_SECONDS"
+echo "# Available env vars: LOOP_SECONDS, YESTERDAY_BACKUP_INTERVAL, S3"
 echo "# "
 echo "# Backing up to S3 location: ${S3}"
 echo "# Looping this many seconds: ${LOOP_SECONDS}"
+echo "# Number of loop between backups of yesterday: ${YESTERDAY_BACKUP_INTERVAL}"
 echo "# "
 echo "# "
 
+
+YESTERDAY_BACKUPS_LEFT=1
 
 while true
 do
@@ -74,14 +78,35 @@ do
 	echo "# Backing up today to S3 ($TARGET)..."
 	aws s3 cp $TMP_GZ $TARGET
 
-	QUERY="index=septa_analytics earliest=\"${YESTERDAY_START}\" latest=\"${YESTERDAY_END}\""
-	/mnt/bin/splunk-query.sh "search $QUERY" > $TMP
-	echo "# Compressing backup..."
-	cat $TMP | gzip -v > $TMP_GZ
 
-	TARGET=$TARGET_YESTERDAY
-	echo "# Backing up yesterday to S3 ($TARGET)..."
-	aws s3 cp $TMP_GZ $TARGET
+	#
+	# We're only backing up yesterday every so many loops.
+	# A backup of yesterday will always be made on the first run, and then infrequently
+	# thereafter.  The reason for the infrequent backups is 
+	#
+	YESTERDAY_BACKUPS_LEFT=$(( $YESTERDAY_BACKUPS_LEFT - 1 ))
+	echo "# "
+	echo "# We have ${YESTERDAY_BACKUPS_LEFT} loops until we make a backup of yesterday..."
+	echo "# "
+
+	if test $YESTERDAY_BACKUPS_LEFT -le 0
+	then
+
+		echo "# Okay, we're making a backup of yesterday!"
+
+		QUERY="index=septa_analytics earliest=\"${YESTERDAY_START}\" latest=\"${YESTERDAY_END}\""
+		/mnt/bin/splunk-query.sh "search $QUERY" > $TMP
+		echo "# Compressing backup..."
+		cat $TMP | gzip -v > $TMP_GZ
+
+		TARGET=$TARGET_YESTERDAY
+		echo "# Backing up yesterday to S3 ($TARGET)..."
+		aws s3 cp $TMP_GZ $TARGET
+
+		YESTERDAY_BACKUPS_LEFT=$YESTERDAY_BACKUP_INTERVAL
+
+	fi
+
 
 	#
 	# Remove our temp file

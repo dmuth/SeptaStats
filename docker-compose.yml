@@ -87,7 +87,9 @@ services:
       # This *MUST* end in a slash!
       #
       - S3=s3://dmuth-septa-stats/backups-dev/
-
+      - LOOP_SECONDS=900
+      #- LOOP_SECONDS=3 # Debugging
+      - YESTERDAY_BACKUP_INTERVAL=4
 
 
 
