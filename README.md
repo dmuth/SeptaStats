@@ -34,6 +34,12 @@ The Docker containers in this project are as follows:
 - `backup`: Make regular backups of train data to AWS S3
 
 
+## Development
+
+How to run the `backup` script in the foreground for development:
+`docker-compose kill backup && docker-compose rm -f backup && docker-compose build backup && docker-compose up backup`
+
+
 ## Exporting Data
 
 The Spunk Index is written to `splunk-data/`, so that when the container is restarted, no data is lost.
