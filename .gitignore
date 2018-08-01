@@ -22,3 +22,9 @@ redis-data/
 #
 aws-credentials.txt
 
+#
+# Don't check in our production docker-compose.yml file
+#
+docker-compose.yml
+
+

@@ -24,7 +24,7 @@ services:
       #
       - ./splunk-data/septa-stats:/opt/splunk/var/lib/splunk/septa_analytics/
     ports:
-      - 8001:8000
+      - 8000:8000
     environment:
       - TZ=EST5EDT
 
@@ -35,7 +35,7 @@ services:
   web:
     image: nginx:alpine
     ports: 
-      - 8002:80
+      - 8001:80
     restart: "always"
     volumes: 
       - .:/mnt
@@ -86,7 +86,7 @@ services:
       #
       # This *MUST* end in a slash!
       #
-      - S3=s3://dmuth-septa-stats/backups-dev/
+      - S3=s3://YOUR_S3_BUCKET_GOES_HERE/backups/
       - LOOP_SECONDS=900
       #- LOOP_SECONDS=3 # Debugging
       - YESTERDAY_BACKUP_INTERVAL=4
