@@ -25,7 +25,10 @@ then
 	exit 1
 fi
 
-AWS_CREDS=$HOME/.aws/credentials
+#
+# Check for and copy in our AWS credentials from the host container.
+#
+AWS_CREDS=/mnt/aws-credentials.txt
 if test ! -f $AWS_CREDS
 then
 	echo "! "
@@ -34,6 +37,7 @@ then
 	exit 1
 fi
 
+cp $AWS_CREDS $HOME/.aws/credentials
 
 
 echo "# "
