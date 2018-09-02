@@ -36,7 +36,13 @@ The Docker containers in this project are as follows:
 
 ## Development
 
-How to run the `backup` script in the foreground for development:
+
+### Working on PHP Code
+
+`docker-compose up`
+
+
+### How to run the `backup` script in the foreground for development:
 `docker-compose kill backup && docker-compose rm -f backup && docker-compose build backup && docker-compose up backup`
 
 
