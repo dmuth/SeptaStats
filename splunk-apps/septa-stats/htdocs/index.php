@@ -12,6 +12,7 @@ require("./lib/display.class.php");
 require("./lib/splunk.php");
 require("./lib/endpoints/content.class.php");
 require("./lib/endpoints/api.class.php");
+require("./lib/query/health.class.php");
 require("./lib/query/train.class.php");
 require("./lib/query/line.class.php");
 require("./lib/query/system.class.php");
@@ -54,6 +55,7 @@ $redis = new Predis\Client("tcp://redis:6379");
 
 $display = new Septa\Display();
 $splunk = new \Septa\Splunk();
+$health = new \Septa\Query\Health($splunk);
 $line = new \Septa\Query\Line($splunk, $redis);
 $train = new \Septa\Query\Train($splunk, $redis);
 $system = new \Septa\Query\System($splunk, $redis);
@@ -63,7 +65,7 @@ $stations = new Septa\Query\Stations($splunk, $redis);
 $endpoints_content = new \Septa\Endpoints\Content($app, $display, $line, $stations, $train);
 $endpoints_content->go();
 
-$endpoints_api = new \Septa\Endpoints\Api($app, $display, $line, $train, $system, $station, $stations);
+$endpoints_api = new \Septa\Endpoints\Api($app, $display, $health, $line, $train, $system, $station, $stations);
 $endpoints_api->go();
 
 

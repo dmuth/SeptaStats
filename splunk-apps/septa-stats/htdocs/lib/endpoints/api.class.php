@@ -24,9 +24,10 @@ class Api {
 	* @param object $statiosn Class to query all stations
 	*
 	*/
-	function __construct($app, $display, $line, $train, $system, $station, $stations) {
+	function __construct($app, $display, $health, $line, $train, $system, $station, $stations) {
 		$this->app = $app;
 		$this->display = $display;
+		$this->health = $health;
 		$this->line = $line;
 		$this->train = $train;
 		$this->system = $system;
@@ -43,6 +44,7 @@ class Api {
 
 		$app = $this->app;
 		$display = $this->display;
+		$health = $this->health;
 		$line = $this->line;
 		$train = $this->train;
 		$system = $this->system;
@@ -398,6 +400,40 @@ class Api {
 				}, $response);
 
 			$response->getBody()->write($output);
+			return($response);
+
+		});
+
+
+		/**
+		* Handler for our health check.
+		* 
+		* In the real world, if Splunk is just down, an Exception will be thrown which means our HTTP 500
+		* code further down will never get executed.  But, if Splunk is up and just not returning recent trains,
+		* then we'll get an error.
+		*/
+		$app->get("/health", function(Request $request, Response $response, $args) 
+			use ($self, $display, $health) {
+
+			$response = $self->setJsonAndCorsHeadersGet($response);
+
+			$data = $display->splunkWrapper(function() 
+				use ($response, $display, $health) {
+
+				$data = $health->getHealth();
+
+				return($data);
+
+				}, $response);
+
+
+			$output = $display->jsonPretty($data);
+			if (!$data["ok"]) {
+				$response = $response->withStatus(500, "Health Check Failed");
+			}
+
+			$response->getBody()->write($output);
+
 			return($response);
 
 		});
