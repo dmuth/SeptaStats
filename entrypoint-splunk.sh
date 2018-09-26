@@ -5,7 +5,32 @@
 
 
 TZ="${TZ:=EST5EDT}"
-SPLUNK_PASSWORD="${SPLUNK_PASSWORD:=password}"
+
+
+if test ! "$SPLUNK_PASSWORD"
+then
+	echo "! " 
+	echo "! You need to specify a default Splunk password in the SPLUNK_PASSWORD variable to continue!" 
+	echo "! "
+	exit 1
+
+elif test "$SPLUNK_PASSWORD" == "password"
+then
+	echo "! "
+	echo "! Seriously?  Your Splunk password is 'password'!?"
+	echo "! "
+	echo "! Nope, we're not doing this.  I'm sorry, but if you're going to put "
+	echo "! a Splunk instance on the Internet, I need you to choose a better password."
+	echo "! "
+	echo "! Try https://diceware.dmuth.org/ if you need help creating a password that's easy to remember. :-)"
+	echo "! "
+	echo "! "
+	exit 1
+
+fi
+
+
+
 
 #
 # Set our default password

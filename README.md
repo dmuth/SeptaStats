@@ -42,6 +42,10 @@ The Docker containers in this project are as follows:
 `docker-compose up`
 
 
+### Working on Splunk
+docker-compose kill splunk ; docker-compose rm -f splunk; docker-compose build splunk; docker-compose up -d splunk; docker-compose exec splunk bash
+
+
 ### How to run the `backup` script in the foreground for development:
 `docker-compose kill backup && docker-compose rm -f backup && docker-compose build backup && docker-compose up backup`
 

@@ -48,7 +48,8 @@ class Splunk {
 			"host" => "splunk",
 			"port" => "8089",
 			"username" => "admin",
-			"password" => "password",
+			//"password" => "password",
+			"password" => getenv("SPLUNK_PASSWORD")
 			);
 
 		$this->service = new \Splunk_Service($config);

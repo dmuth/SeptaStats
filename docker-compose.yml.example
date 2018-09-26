@@ -27,6 +27,16 @@ services:
       - 8000:8000
     environment:
       - TZ=EST5EDT
+      #
+      # Set our password for Splunk to something.  This is a safety mechanism in case Splunk accidentally
+      # is exposed to the Internet.
+      #
+      # Note that if you set this to the default of 'password', the container will refuse to run. :-)
+      #
+      # If you need help picking a password you can remember, head on over to https://diceware.dmuth.org/
+      #
+      - SPLUNK_PASSWORD=password
+
 
 
   #
@@ -57,6 +67,10 @@ services:
       - ./splunk-apps/septa-stats/htdocs/:/htdocs
     environment:
       - TZ=EST5EDT
+      #
+      # Pass in our Splunk password (same as above) so that the PHP code can talk to Splunk.
+      #
+      - SPLUNK_PASSWORD=password12345
 
 
   #
