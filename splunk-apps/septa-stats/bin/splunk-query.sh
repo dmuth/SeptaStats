@@ -11,7 +11,7 @@ set -e
 
 
 UN="admin"
-PW="password"
+PW=${SPLUNK_PASSWORD}
 
 #
 # Our Splunk endpoint

@@ -104,6 +104,11 @@ services:
       - LOOP_SECONDS=900
       #- LOOP_SECONDS=3 # Debugging
       - YESTERDAY_BACKUP_INTERVAL=4
+      #
+      # Pass in our Splunk password (same as above) so that the backup script can talk to Splunk
+      #
+      - SPLUNK_PASSWORD=password12345
+
 
 
 
