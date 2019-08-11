@@ -39,11 +39,12 @@ fi
 
 
 >&2 echo "# " 
->&2 echo "# Executing query: "
+>&2 echo "# Executing query against ${URL}: "
 >&2 echo "# "
 >&2 echo "# 	${QUERY}"
 >&2 echo "# "
 
+echo $URL
 curl -4 -s -u ${UN}:${PW} -k "${URL}/export" -d "search=${QUERY}" -d "output_mode=raw" 
 
 
