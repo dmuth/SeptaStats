@@ -48,6 +48,7 @@ The Docker containers in this project are as follows:
 
 ### Working on Splunk
 
+This will stand up Splunk and spawn a shell in it:
 ```
 docker-compose kill splunk; \
 	docker-compose rm -f splunk; \
