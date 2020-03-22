@@ -35,7 +35,7 @@ services:
       #
       # If you need help picking a password you can remember, head on over to https://diceware.dmuth.org/
       #
-      - SPLUNK_PASSWORD=password
+      - SPLUNK_PASSWORD=password1
 
 
 
@@ -70,7 +70,7 @@ services:
       #
       # Pass in our Splunk password (same as above) so that the PHP code can talk to Splunk.
       #
-      - SPLUNK_PASSWORD=password12345
+      - SPLUNK_PASSWORD=password1
 
 
   #
@@ -107,7 +107,7 @@ services:
       #
       # Pass in our Splunk password (same as above) so that the backup script can talk to Splunk
       #
-      - SPLUNK_PASSWORD=password12345
+      - SPLUNK_PASSWORD=password1
 
 
 
