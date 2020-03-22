@@ -18,7 +18,6 @@ services:
       # Our Splunk app
       #
       - ./splunk-apps/septa-stats:/opt/splunk/etc/apps/septa-stats
-      - ./splunk-apps/timewrap:/opt/splunk/etc/apps/timewrap
       #
       # Our Splunk data
       #
@@ -27,6 +26,7 @@ services:
       - 8000:8000
     environment:
       - TZ=EST5EDT
+      - SPLUNK_START_ARGS=--accept-license
       #
       # Set our password for Splunk to something.  This is a safety mechanism in case Splunk accidentally
       # is exposed to the Internet.
