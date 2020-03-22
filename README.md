@@ -57,6 +57,9 @@ docker-compose kill splunk; \
 	docker-compose exec splunk bash
 ```
 
+Test the PHP script inside the container with:
+- `/opt/splunk/etc/apps/septa-stats/bin/get-regional-rail-trainview.php | jq .`
+
 
 ### How to run the `backup` script in the foreground for development:
 
