@@ -136,6 +136,17 @@ class Content {
 		});
 
 
+/*
+* This endpoint is being deprecated for now, because when I switched over from
+* the trainno CSV file to relying on the data that SEPTA now provides, I realized 
+* that I can't easily determine the train direction now.  Since the inbound line
+* doesn't always match the outbound line, I would instead have to have a CSV of trainno
+* to what it's destination line is, and that's a HUGE amount of effort for what
+* is basically my side project.
+*
+* I may give this a go in the future, but there's other things I'd rather work on
+* in the meantime. :-)
+* 
 		$this->app->get("/line/{line}/{direction}", function (Request $request, Response $response, $args) 
 			use ($display, $line) {
 
@@ -161,6 +172,36 @@ class Content {
 					);
 				$output_json = $display->jsonPretty($output);
 				$new_response = $response->withStatus(404, "Line or direction not found");
+				$new_response->getBody()->write($output_json);
+				return($new_response);
+
+			}
+
+		});
+*/
+
+		$this->app->get("/line/{line}", function (Request $request, Response $response, $args) 
+			use ($display, $line) {
+
+			//
+			// Sanity check our arguments
+			//
+			$line_name = $line->checkLineKey($args["line"]);
+
+			if ($line_name) {
+
+	    	return $this->view->render($response, "line.html", [
+				"line_api" => $args["line"],
+				"line" => $line_name,
+    			]);
+
+			} else {
+				$error = sprintf("Line '%s' not found!\n", $args["line"]);
+				$output = array(
+					"error" => $error,
+					);
+				$output_json = $display->jsonPretty($output);
+				$new_response = $response->withStatus(404, "Line not found");
 				$new_response->getBody()->write($output_json);
 				return($new_response);
 

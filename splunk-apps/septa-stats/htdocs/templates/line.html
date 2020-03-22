@@ -1,7 +1,7 @@
 
 {% extends "base.html" %}
 
-{% block title %}{{line}} {{direction}} Regional Rail Line - Septa Stats!{% endblock %}
+{% block title %}{{line}} Regional Rail Line - Septa Stats!{% endblock %}
 
 {% block content %}
 
@@ -349,10 +349,10 @@ var lineLatest = function(results) {
 
 $( document ).ready(function() {
 
-	var url = "/api/current/line/{{line_api}}/{{direction_api}}/latest";
+	var url = "/api/current/line/{{line_api}}/latest";
 	tryApi.try(url, lineLatest);
 
-	var url = "/api/current/line/{{line_api}}/{{direction_api}}";
+	var url = "/api/current/line/{{line_api}}";
 	tryApi.try(url, lineStatus);
 
 	//
@@ -399,7 +399,7 @@ You may want to turn your phone on its side for the best possible experience.
 <div class="row">
 <div class="col-md-12">
 
-<h2>Trains on {{line}} Line ({{direction}})</h2>
+<h2>Trains on {{line}} Line</h2>
 <br/>
 
 <div id="lineStatus" style="height: 300px; width: 100%;">
@@ -408,7 +408,7 @@ You may want to turn your phone on its side for the best possible experience.
 <br/>
 
 <div class="download-link">
-<a href="/api/current/line/{{line_api}}/{{direction_api}}" >Download this graph as JSON data</a>
+<a href="/api/current/line/{{line_api}}" >Download this graph as JSON data</a>
 </div>
 <br/>
 

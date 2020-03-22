@@ -261,6 +261,10 @@ class Api {
 
 		});
 
+/**
+* I'm turning off this endpoint for now because it's not easy to determine what line
+* is being used here.  There's a full explanation on content.class.php.
+*
 
 		$app->get("/api/current/line/{line}/{direction}", function(Request $request, Response $response, $args) 
 			use ($self, $display, $line) {
@@ -313,6 +317,36 @@ class Api {
 					);
 				$output_json = $display->jsonPretty($output);
 				$new_response = $response->withStatus(404, "Line or direction not found");
+				$new_response->getBody()->write($output_json);
+
+				return($new_response);
+
+			}
+
+		});
+*/
+
+
+		$app->get("/api/current/line/{line}", function(Request $request, Response $response, $args) 
+			use ($self, $display, $line) {
+
+			$response = $self->setJsonAndCorsHeadersGet($response);
+
+			$line_name = $line->checkLineKey($args["line"]);
+
+			if ($line_name) {
+
+				$data = $line->getTrains($line_name, 1, 10);
+				$response->getBody()->write($display->jsonPretty($data));
+				return($response);
+
+			} else {
+				$error = sprintf("Line '%s' not found!\n", $args["line"]);
+				$output = array(
+					"error" => $error,
+					);
+				$output_json = $display->jsonPretty($output);
+				$new_response = $response->withStatus(404, "Line not found");
 				$new_response->getBody()->write($output_json);
 
 				return($new_response);

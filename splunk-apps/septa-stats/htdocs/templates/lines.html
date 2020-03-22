@@ -46,11 +46,8 @@ $( document ).ready(function() {
 
 			{% for key, value in lines.data %}
 
-				<a class="list-group-item" href="/line/{{key}}/inbound"
-					><span>{{value}} - Inbound</span></a>
-
-				<a class="list-group-item" href="/line/{{key}}/outbound"
-					><span>{{value}} - Outbound</span></a>
+				<a class="list-group-item" href="/line/{{key}}"
+					><span>{{value}}</span></a>
 
 			{% endfor %}
 

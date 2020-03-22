@@ -45,32 +45,29 @@ class Line extends Base {
 	*
 	* @param string $line What line are we searching?
 	*
-	* @param string $direction What direction are we going in?
-	*
 	* @param integer $span_min How many minutes does each point in the graph span?
 	*
 	* @return array An array of the latest trains over time.
 	*/
-	function getTrains($line, $direction, $num_hours = 1, $span_min = 10) {
+	function getTrains($line, $num_hours = 1, $span_min = 10) {
 
 		$retval = array();
-		$redis_key = "line/getTrains-" . $line . "-" . $direction;
+		$redis_key = "line/getTrains-" . $line;
 
-		//$redis_key .= time(); // Debugging
+		$redis_key .= time(); // Debugging
 		if ($retval = $this->redisGet($redis_key)) {
 			return($retval);
 
 		} else {
 
 			$query = 'search index="septa_analytics" earliest=-' . $num_hours . 'h '
-				. 'train_line="' . $line . ' (' . $direction .')" '
+				. 'train_line="' . $line . '" '
 				. 'late != 999 '
-				. '| eval id = trainno . "-" . dest  ' // Debugging
+				. '| eval id = trainno . "-" . line ' // Debugging
 				. '| timechart limit=100 span=' . $span_min . 'm max(late) by id';
 
 			$retval = $this->query($query);
 			$retval["metadata"]["line"] = $line;
-			$retval["metadata"]["direction"] = $direction;
 
 			$this->redisSet($redis_key, $retval);
 
