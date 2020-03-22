@@ -39,10 +39,15 @@ The Docker containers in this project are as follows:
 
 ### Working on PHP Code
 
-`docker-compose up`
+- `cp docker-compose.yml.example docker-compose.yml`
+- `docker-compose up`
+- PHP code lives under `htdocs/`
+- Go to https://localhost:8000/ in your web browser for Splunk. Password is in `docker-compose.yml`.
+- Go to http://localhost:8001/ in your web browser to view the website
 
 
 ### Working on Splunk
+
 docker-compose kill splunk ; docker-compose rm -f splunk; docker-compose build splunk; docker-compose up -d splunk; docker-compose exec splunk bash
 
 
