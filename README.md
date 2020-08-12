@@ -71,6 +71,14 @@ docker-compose kill backup \
 ```
 
 
+## Deployment
+
+- SSH to the webserver
+- `cd /var/septa-stats/`
+- `git pull`
+- If you're doing an HTML or PHP update, you're done. Otherwise, restart the affected containers.
+
+
 ## Exporting Data
 
 The Spunk Index is written to `splunk-data/`, so that when the container is restarted, no data is lost.
