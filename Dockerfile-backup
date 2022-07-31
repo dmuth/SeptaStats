@@ -9,7 +9,7 @@ WORKDIR /mnt
 #
 # coreutils: Gives us "date -d" functionality
 #
-RUN apk add --no-cache bash python3 curl coreutils pv
+RUN apk add --no-cache bash python3 py3-pip curl coreutils pv
 RUN pip3 install awscli
 
 #
