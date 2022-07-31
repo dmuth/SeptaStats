@@ -3,6 +3,8 @@ User-Agent: *
 Disallow: /api
 Disallow: /train
 
+Crawl-Delay: 60
+
 #
 # A robot may not injure a human being or, through inaction, allow a human being to come to harm.
 #
