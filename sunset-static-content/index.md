@@ -7,6 +7,8 @@ I sunsetted the site on May 13th, 2026 because it wasn't getting much use anymor
 
 All of the source code is at <https://github.com/dmuth/SeptaStats> if you'd like to give a shot standing up the software.  Note that the Slim framework for this site will desperately need to be updated.
 
+All archived train data [is still available on Dropbox](https://www.dropbox.com/scl/fo/vacm4ox25nh1ot76d1pir/AKK1PlEPtsplTbecgwVvVhM?rlkey=p858uvzhbkedvisgvl8r67caf&e=2&dl=0).
+
 ## Other Things I've Made
 
 Here are some other things of mine that are still online:
@@ -15,6 +17,7 @@ Here are some other things of mine that are still online:
 - [Dead Simple QR Code Generator](https://httpbin.dmuth.org/qrcode/) - No ads, signups, or spam.  Just QR Codes when you want them.
 - [Is SEPTA F*cked?](https://www.isseptafucked.com/) - By far my most popular project.  I have no idea why.
 - [Is PECO Okay?](https://www.ispecookay.com/) - Current and historical electric outage stats in the Philadelphia region, on a lightweight website.
+- [FastAPI Httpbin](https://httpbin.dmuth.org/) - HTTP endpoints for testing. Heavily inspired by the original Httpbin project, with a few ideas of my own added in.
 
 ## Contact
 
