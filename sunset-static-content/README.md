@@ -18,5 +18,12 @@ pandoc -s index.md -c style.css -o index.html
 
 # To deploy to S3
 aws s3 sync . s3://septastats.com/
+```
 
+### Deployment Script
+
+This is a quicker way to convert the markdown to HTML, upload it, and invalidate the CloudFront cache:
+
+``` bash
+./deploy.sh
 ```

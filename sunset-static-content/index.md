@@ -14,6 +14,7 @@ All archived train data [is still available on Dropbox](https://www.dropbox.com/
 Here are some other things of mine that are still online:
 
 - [Diceware](https://diceware.dmuth.org/) - Generate passwords you can actually remember.
+- [Splunk Lab](https://github.com/dmuth/splunk-lab) - Run Splunk in a Docker container.  It's what was used as the back end of this website.
 - [Dead Simple QR Code Generator](https://httpbin.dmuth.org/qrcode/) - No ads, signups, or spam.  Just QR Codes when you want them.
 - [Is SEPTA F*cked?](https://www.isseptafucked.com/) - By far my most popular project.  I have no idea why.
 - [Is PECO Okay?](https://www.ispecookay.com/) - Current and historical electric outage stats in the Philadelphia region, on a lightweight website.
